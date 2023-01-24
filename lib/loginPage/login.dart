@@ -45,7 +45,7 @@ Widget buildEmail() {
               borderSide: BorderSide(color: Color.fromRGBO(255, 203, 205, 1))),
           hintText: 'Email',
           hintStyle:
-              TextStyle(color: Color.fromARGB(150, 68, 68, 130), fontSize: 15),
+          TextStyle(color: Color.fromARGB(150, 68, 68, 130), fontSize: 15),
           prefixIcon: Icon(
             Icons.person,
             color: Color.fromARGB(255, 68, 68, 130),
@@ -79,7 +79,7 @@ Widget buildPassword() {
               borderSide: BorderSide(color: Color.fromRGBO(255, 203, 205, 1))),
           hintText: 'Password',
           hintStyle:
-              TextStyle(color: Color.fromARGB(150, 68, 68, 130), fontSize: 15),
+          TextStyle(color: Color.fromARGB(150, 68, 68, 130), fontSize: 15),
           prefixIcon: Icon(
             Icons.lock,
             color: Color.fromARGB(255, 68, 68, 130),
@@ -134,8 +134,8 @@ Widget signUp(BuildContext context) {
               ),
             );
           }
-          //padding: EdgeInsets.only(right: 0),
-          ));
+        //padding: EdgeInsets.only(right: 0),
+      ));
 }
 
 Widget orLine() {
@@ -163,8 +163,8 @@ class LoginPageState extends State<LoginPage> {
   void signUserIn() async{
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: emailController.text,
-          password: passwordController.text,
+        email: emailController.text,
+        password: passwordController.text,
       );
     } on FirebaseAuthException catch (e) {
       if(e.code=='invalid-email'){
@@ -172,10 +172,10 @@ class LoginPageState extends State<LoginPage> {
       } else if (e.code=='wrong-password'){
         errorPassword();
       } else if (e.code=='user-not-found'){
-    errorPass();
-    }
-    }
+        errorPass();
+      }
 
+    }
     Navigator.of(context).push(MaterialPageRoute(builder: (context){
       return MainPage();
     }));
@@ -198,7 +198,27 @@ class LoginPageState extends State<LoginPage> {
 
   void fill(){
     showDialog(context: context, builder: (context){
-      return AlertDialog( title:Text("fill both Email and password"));
+      return AlertDialog( title:Text("Enter Email and password",
+        style: TextStyle(
+          color: Color.fromARGB(255, 68, 68, 130),
+          fontSize: 18,
+          fontFamily: 'OpenSans',
+          fontWeight: FontWeight.bold,
+          letterSpacing: 0.5,
+        ),),
+        actions: <Widget>[
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Color.fromRGBO(254, 109, 115, 1),
+            ),
+            child: new Text("OK"),
+            onPressed: () {
+              Navigator.of(context).pop();
+
+            },
+          ),
+        ],
+      );
     });
   }
 
@@ -206,19 +226,73 @@ class LoginPageState extends State<LoginPage> {
 
   void errorEmail(){
     showDialog(context: context, builder: (context){
-      return AlertDialog( title:Text("Invalid Email"));
+      return AlertDialog( title:Text("Invalid Email", style: TextStyle(
+        color: Color.fromARGB(255, 68, 68, 130),
+        fontSize: 18,
+        fontFamily: 'OpenSans',
+        fontWeight: FontWeight.bold,
+        letterSpacing: 0.5,
+      ),),
+        actions: <Widget>[
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Color.fromRGBO(254, 109, 115, 1),
+            ),
+            child: new Text("OK"),
+            onPressed: () {
+              Navigator.of(context).pop();
+
+            },
+          ),
+        ],);
     });
   }
 
   void errorPassword(){
     showDialog(context: context, builder: (context){
-      return AlertDialog( title:Text("Incorrect Password"));
+      return AlertDialog( title:Text("Incorrect Password", style: TextStyle(
+        color: Color.fromARGB(255, 68, 68, 130),
+        fontSize: 18,
+        fontFamily: 'OpenSans',
+        fontWeight: FontWeight.bold,
+        letterSpacing: 0.5,
+      ),),
+        actions: <Widget>[
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Color.fromRGBO(254, 109, 115, 1),
+            ),
+            child: new Text("OK"),
+            onPressed: () {
+              Navigator.of(context).pop();
+
+            },
+          ),
+        ],);
     });
   }
 
   void errorPass(){
     showDialog(context: context, builder: (context){
-      return AlertDialog( title:Text("Account doesn't Exist"));
+      return AlertDialog( title:Text("Account doesn't Exist", style: TextStyle(
+        color: Color.fromARGB(255, 68, 68, 130),
+        fontSize: 18,
+        fontFamily: 'OpenSans',
+        fontWeight: FontWeight.bold,
+        letterSpacing: 0.5,
+      ),),
+        actions: <Widget>[
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Color.fromRGBO(254, 109, 115, 1),
+            ),
+            child: new Text("OK"),
+            onPressed: () {
+              Navigator.of(context).pop();
+
+            },
+          ),
+        ],);
     });
   }
 
@@ -233,73 +307,73 @@ class LoginPageState extends State<LoginPage> {
               fit: BoxFit.cover),
         ),
         width: double.infinity,
-       height: double.infinity,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              // SizedBox(
-              //   height: 50,
-              // ),
-              Text(
-                "LOGIN",
-                style: TextStyle(
-                  color: Color.fromARGB(255, 68, 68, 130),
-                  fontSize: 20,
-                  fontFamily: 'OpenSans',
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 0,
+        height: double.infinity,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            // SizedBox(
+            //   height: 50,
+            // ),
+            Text(
+              "LOGIN",
+              style: TextStyle(
+                color: Color.fromARGB(255, 68, 68, 130),
+                fontSize: 20,
+                fontFamily: 'OpenSans',
+                fontWeight: FontWeight.bold,
+                letterSpacing: 0,
+              ),
+            ),
+            SizedBox(
+              height: 300,
+            ),
+            Padding(
+              padding:
+              const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+              child: Column(children: [
+                buildEmail(),
+                SizedBox(
+                  height: 20,
                 ),
-              ),
-              SizedBox(
-                height: 300,
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
-                child: Column(children: [
-                  buildEmail(),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  buildPassword(),
-                  buildForgotPassword(context),
-                  //buildLoginBtn(context),
-                  Container(
-                    width: 350,
-                    height: 60,
-                    child: ElevatedButton(onPressed: check,
-                        child: Text(
-                           "Login",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            ),
-
-                       style: ElevatedButton.styleFrom(
-                            elevation: 5,
-
-                            padding: EdgeInsets.all(18),
-                            shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30),
+                buildPassword(),
+                buildForgotPassword(context),
+                //buildLoginBtn(context),
+                Container(
+                  width: 350,
+                  height: 60,
+                  child: ElevatedButton(onPressed: check,
+                    child: Text(
+                      "Login",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
                       ),
-                         backgroundColor: Color.fromRGBO(254, 109, 115, 1),),
+                    ),
 
-                       ),
+                    style: ElevatedButton.styleFrom(
+                      elevation: 5,
+
+                      padding: EdgeInsets.all(18),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      backgroundColor: Color.fromRGBO(254, 109, 115, 1),),
+
                   ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  signUp(context),
-                  orLine(),
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                signUp(context),
+                orLine(),
 
-                ]),
-              ),
+              ]),
+            ),
 
-            ],
-          ),
+          ],
         ),
+      ),
     );
   }
 }

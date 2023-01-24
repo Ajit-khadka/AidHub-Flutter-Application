@@ -17,7 +17,6 @@ class WelcomeScreen extends StatelessWidget {
         ),
         width: double.infinity,
         height: double.infinity,
-        child: SingleChildScrollView(
         child: Column(
           children: [
             Container(
@@ -80,7 +79,6 @@ class WelcomeScreen extends StatelessWidget {
                 )),
           ],
         ),
-      ),
       ),
     );
   }
