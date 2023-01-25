@@ -32,6 +32,7 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   #email validation
+  fluttertoast: ^8.1.2
   form_field_validator: '^1.0.1'
   flutter:
     sdk: flutter

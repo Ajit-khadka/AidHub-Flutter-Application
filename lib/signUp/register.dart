@@ -15,9 +15,9 @@ Widget text(BuildContext context) {
   return Center(
     child: Column(
       children: const [
-        SizedBox(
-          height: 40,
-        ),
+        // SizedBox(
+        //   height: 0,
+        // ),
         Text(
           "  SIGNUP ",
           style: TextStyle(
@@ -73,15 +73,32 @@ class Register extends State<SignIn> {
     }
   }
 
+  final _emailController= TextEditingController();
+  final usernameController= TextEditingController();
+  final bloodController= TextEditingController();
+  final contactController= TextEditingController();
+  final _passwordController= TextEditingController();
+  final _confirmPasswordController= TextEditingController();
 
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading : IconButton(
+          icon: Icon(Icons.arrow_back,
+          color: Color.fromRGBO(254, 109, 115, 1) ),
+          onPressed: (){
+            Navigator.of(context).pop();
+          },
+        )
+    ),
       //resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(40),
+          padding: EdgeInsets.symmetric(vertical: 0, horizontal: 40),
           child: Center(
             child: Form(
               key: formkey,
@@ -89,10 +106,22 @@ class Register extends State<SignIn> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   text(context),
+                  //email
                   TextFormField(
+                    controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
-                    decoration: const InputDecoration(
-                        border: OutlineInputBorder(), labelText: "Email", labelStyle: TextStyle()),
+                    onSaved: (value){
+                      _emailController.text = value!;
+                    },
+                      textInputAction: TextInputAction.next,
+                    decoration: InputDecoration(
+                      prefixIcon: Icon(Icons.email),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      labelText: "Email", labelStyle: TextStyle(),
+                    ),
+
                         validator: (value) {
                                if (value!.isEmpty || !RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(value!)) {
                                    return "Not a valid Email";
@@ -101,9 +130,15 @@ class Register extends State<SignIn> {
                             }
                          }
                   ),
+                  //Username
                   Padding(
-                    padding: EdgeInsets.only(top: 20.0),
+                    padding: EdgeInsets.only(top: 25.0),
                     child: TextFormField(
+                      controller: usernameController,
+                      onSaved: (value){
+                        usernameController.text = value!;
+                      },
+                      textInputAction: TextInputAction.next,
                       validator: (value){
                         if(value!.isEmpty ||!RegExp(r'^[a-z A-Z]+$').hasMatch(value!)){
                           return "Not a valid Username";
@@ -112,56 +147,95 @@ class Register extends State<SignIn> {
                         }
                       },
                       decoration: InputDecoration(
-                          border: OutlineInputBorder(), labelText: "Username"),
+                          prefixIcon: Icon(Icons.person),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ), labelText: "Username"),
 
                     ),
                   ),
+                  //bloodType
                   Padding(
-                    padding: EdgeInsets.only(top: 20.0),
+                    padding: EdgeInsets.only(top: 25.0),
                     child: TextFormField(
+                      controller: bloodController,
+                      onSaved: (value){
+                        bloodController.text = value!;
+                      },
+                      textInputAction: TextInputAction.next,
                       decoration: InputDecoration(
-                          border: OutlineInputBorder(),
+                        prefixIcon: Icon(Icons.bloodtype),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                           labelText: "Blood Type"),
                       validator: MultiValidator([
                         RequiredValidator(errorText: "Required"),
                       ]),
                     ),
                   ),
+                  //contact
                   Padding(
-                    padding: EdgeInsets.only(top: 20.0),
+                    padding: EdgeInsets.only(top: 25.0),
                     child: TextFormField(
+                      controller: contactController,
+                      onSaved: (value){
+                        contactController.text = value!;
+                      },
+                      textInputAction: TextInputAction.next,
                       keyboardType: TextInputType.number,
                       inputFormatters: <TextInputFormatter>[
                         FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
                         FilteringTextInputFormatter.digitsOnly
                       ],
                       decoration: InputDecoration(
-                          border: OutlineInputBorder(), labelText: "Contact"),
+                          prefixIcon: Icon(Icons.phone),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ), labelText: "Contact"),
                       validator: privatenumber,
                     ),
                   ),
+                  //password
                   Padding(
-                    padding: EdgeInsets.only(top: 20.0),
+                    padding: EdgeInsets.only(top: 25.0),
                     child: TextFormField(
+                      controller: _passwordController,
+                      onSaved: (value){
+                        _passwordController.text = value!;
+                      },
+                      textInputAction: TextInputAction.next,
                       obscureText: true,
                       decoration: InputDecoration(
-                          border: OutlineInputBorder(), labelText: "Password"),
+                          prefixIcon: Icon(Icons.lock),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ), labelText: "Password"),
                       validator: requiredpass,
                     ),
                   ),
+                  //confirmPassword
                   Padding(
-                    padding: EdgeInsets.only(top: 20.0),
+                    padding: EdgeInsets.only(top: 25.0),
                     child: TextFormField(
+                      controller: _confirmPasswordController,
+                      onSaved: (value){
+                        _confirmPasswordController.text = value!;
+                      },
+                      textInputAction: TextInputAction.done,
                       obscureText: true,
                       decoration: InputDecoration(
-                          border: OutlineInputBorder(),
+                          prefixIcon: Icon(Icons.lock),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),),
                           labelText: "Confirm Password"),
                       validator: requiredpass,
                     ),
                   ),
+                  //signup button
                   Padding(
                     padding: const EdgeInsets.only(
-                      top: 20.0,
+                      top: 25.0,
                     ),
                     child: ElevatedButton(
                       child: Text(
@@ -182,7 +256,7 @@ class Register extends State<SignIn> {
                       style: ElevatedButton.styleFrom(
                         elevation: 5,
                         padding: EdgeInsets.symmetric(
-                            horizontal: 80, vertical: 13),
+                            horizontal: 120, vertical: 15),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15),
                         ),

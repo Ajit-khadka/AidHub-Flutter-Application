@@ -4,6 +4,7 @@ import 'package:blood_bank/signUp/register.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import '../Homepage/home_page.dart';
 import '../main_page.dart';
@@ -19,6 +20,7 @@ class LoginPage extends StatefulWidget {
 //text controller
 final emailController = TextEditingController();
 final passwordController = TextEditingController();
+GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
 Widget buildEmail() {
   return Material(
@@ -160,25 +162,41 @@ Widget orLine() {
 class LoginPageState extends State<LoginPage> {
 
 
-  void signUserIn() async{
-    try {
+  void signUserIn(String email, String password) async{
+    if(formKey.currentState!.validate()){
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: emailController.text,
         password: passwordController.text,
-      );
-    } on FirebaseAuthException catch (e) {
-      if(e.code=='invalid-email'){
-        errorEmail();
-      } else if (e.code=='wrong-password'){
-        errorPassword();
-      } else if (e.code=='user-not-found'){
-        errorPass();
-      }
+      ).then((uid) =>
+      {
+        Fluttertoast.showToast(msg: "Login Successful"),
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) => MainPage())),
+
+
+      }).catchError((e)
+      {
+          if(e.code=='invalid-email'){
+            errorEmail();
+          } else if (e.code=='wrong-password'){
+            errorPassword();
+          } else if (e.code=='user-not-found'){
+            errorPass();
+          }
+        });
+
+
+
+    // } on FirebaseAuthException catch (e) {
+    //   if(e.code=='invalid-email'){
+    //     errorEmail();
+    //   } else if (e.code=='wrong-password'){
+    //     errorPassword();
+    //   } else if (e.code=='user-not-found'){
+    //     errorPass();
+    //   }
 
     }
-    Navigator.of(context).push(MaterialPageRoute(builder: (context){
-      return MainPage();
-    }));
+
 
     emailController.clear();
     passwordController.clear();
@@ -192,13 +210,13 @@ class LoginPageState extends State<LoginPage> {
     if(email=='' || password==''){
       fill();
     }else{
-      signUserIn();
+      signUserIn(email, password);
     }
   }
 
   void fill(){
     showDialog(context: context, builder: (context){
-      return AlertDialog( title:Text("Enter Email and password",
+      return AlertDialog( title:Text("Enter Email and password",  textAlign: TextAlign.center,
         style: TextStyle(
           color: Color.fromARGB(255, 68, 68, 130),
           fontSize: 18,
@@ -226,7 +244,7 @@ class LoginPageState extends State<LoginPage> {
 
   void errorEmail(){
     showDialog(context: context, builder: (context){
-      return AlertDialog( title:Text("Invalid Email", style: TextStyle(
+      return AlertDialog( title:Text("Invalid Email", textAlign: TextAlign.center,style: TextStyle(
         color: Color.fromARGB(255, 68, 68, 130),
         fontSize: 18,
         fontFamily: 'OpenSans',
@@ -274,7 +292,7 @@ class LoginPageState extends State<LoginPage> {
 
   void errorPass(){
     showDialog(context: context, builder: (context){
-      return AlertDialog( title:Text("Account doesn't Exist", style: TextStyle(
+      return AlertDialog( title:Text("Account doesn't Exist", textAlign: TextAlign.center, style: TextStyle(
         color: Color.fromARGB(255, 68, 68, 130),
         fontSize: 18,
         fontFamily: 'OpenSans',
@@ -299,21 +317,18 @@ class LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage("images/Login.png"),
-              fit: BoxFit.cover),
-        ),
-        width: double.infinity,
-        height: double.infinity,
-        child: Column(
+      //resizeToAvoidBottomInset: false,
+      body: SingleChildScrollView(
+      child: Form(
+        key: formKey,
+        child: Container(
+        color: Colors.white,
+      child : Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            // SizedBox(
-            //   height: 50,
-            // ),
+            SizedBox(
+              height: 50,
+            ),
             Text(
               "LOGIN",
               style: TextStyle(
@@ -324,8 +339,9 @@ class LoginPageState extends State<LoginPage> {
                 letterSpacing: 0,
               ),
             ),
+            Image.asset("images/Login.png", scale: 0.5),
             SizedBox(
-              height: 300,
+              height: 10,
             ),
             Padding(
               padding:
@@ -373,6 +389,8 @@ class LoginPageState extends State<LoginPage> {
 
           ],
         ),
+      ),
+      ),
       ),
     );
   }
