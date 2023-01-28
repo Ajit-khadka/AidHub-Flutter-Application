@@ -1,8 +1,14 @@
 // ignore_for_file: prefer_const_constructors, sort_child_properties_last
 
+import 'package:blood_bank/Homepage/home_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:form_field_validator/form_field_validator.dart';
+
+import '../user_model.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({super.key});
@@ -51,7 +57,7 @@ class Register extends State<SignIn> {
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
 
 
-  String? requiredpass(value) {
+  String? requiredPass(value) {
 
      if (value.length < 6) {
       return "Minimum 6 digit";
@@ -62,7 +68,23 @@ class Register extends State<SignIn> {
     }
   }
 
-  String? privatenumber(value) {
+  String? requiredPass1(value) {
+
+
+    if (value.length < 6) {
+      return "Minimum 6 digit";
+    } else if (value.length > 10) {
+      return "Maximum 10 digit";
+    }else if(_passwordController != value){
+      return "Password don't match";
+    }else {
+      return null;
+    }
+  }
+
+
+
+  String? privateNumber(value) {
 
     if(value!.isEmpty){
       return "Required";
@@ -142,7 +164,9 @@ class Register extends State<SignIn> {
                       validator: (value){
                         if(value!.isEmpty ||!RegExp(r'^[a-z A-Z]+$').hasMatch(value!)){
                           return "Not a valid Username";
-                        }else{
+                        }if(!RegExp(r'^.{20,}$').hasMatch(value!)){
+                          return "Min 20 character";
+                        } else{
                           return null;
                         }
                       },
@@ -193,7 +217,7 @@ class Register extends State<SignIn> {
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                           ), labelText: "Contact"),
-                      validator: privatenumber,
+                      validator:  privateNumber,
                     ),
                   ),
                   //password
@@ -211,7 +235,7 @@ class Register extends State<SignIn> {
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                           ), labelText: "Password"),
-                      validator: requiredpass,
+                      validator: requiredPass,
                     ),
                   ),
                   //confirmPassword
@@ -229,7 +253,7 @@ class Register extends State<SignIn> {
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),),
                           labelText: "Confirm Password"),
-                      validator: requiredpass,
+                      validator: requiredPass1,
                     ),
                   ),
                   //signup button
@@ -271,5 +295,41 @@ class Register extends State<SignIn> {
         ),
       ),
     );
+  }
+
+  void register(String email, String password) async{
+    if(formkey.currentState!.validate()){
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password).then((value) => {
+        postDetailsToServer()
+
+      }).catchError((e){
+        Fluttertoast.showToast(msg: e!.message);
+      });
+    }
+  }
+  postDetailsToServer() async {
+    //calling firebase, user model then sending values
+
+    FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+    User? user = FirebaseAuth.instance.currentUser;
+
+    UserModel userModel = UserModel();
+
+    // writing all the values
+    userModel.email = user!.email;
+    userModel.uid = user.uid;
+    userModel.bloodType = bloodController.text;
+    // userModel.contact = .text;
+
+    await firebaseFirestore
+        .collection("users")
+        .doc(user.uid)
+        .set(userModel.toMap());
+    Fluttertoast.showToast(msg: "Account created successfully :) ");
+
+    Navigator.pushAndRemoveUntil(
+        (context),
+        MaterialPageRoute(builder: (context) => HomePage()),
+            (route) => false);
   }
 }
