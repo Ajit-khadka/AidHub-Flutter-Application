@@ -1,8 +1,12 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:ffi';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
 
 import '../loginPage/login.dart';
 import '../user_model.dart';
@@ -21,21 +25,44 @@ class _HomePageState extends State<HomePage> {
   UserModel loggedInUser = UserModel();
 
   @override
-  void initState() {
-    super.initState();
-    FirebaseFirestore.instance
-        .collection("users")
-        .doc(user!.uid)
-        .get()
-        .then((value) {
-      loggedInUser = UserModel.fromMap(value.data());
-      setState(() {});
-    });
-  }
+  // void initState() {
+  //   super.initState();
+  //   FirebaseFirestore.instance
+  //       .collection("users")
+  //       .doc(user!.uid)
+  //       .get()
+  //       .then((value) {
+  //     loggedInUser = UserModel.fromMap(value.data());
+  //     setState(() {});
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: SafeArea(
+          child: Container(
+            padding: EdgeInsets.all(12),
+            margin: EdgeInsets.symmetric(horizontal: 24, vertical: 0),
+            decoration: const BoxDecoration(
+              color: Color.fromRGBO(254, 109, 115, 1),
+              borderRadius: BorderRadius.all(Radius.circular((24)),
+              )
+            ),
+            child: Row(
+              children: [
+                SizedBox(
+                  height: 36,
+                  width: 36,
+                //   child: RiveAnimation.asset{
+                //
+                // },
+                )
+              ],
+            ),
+
+          ),
+      ),
       appBar: AppBar(
         automaticallyImplyLeading: false,
         actions: [
@@ -63,7 +90,7 @@ class _HomePageState extends State<HomePage> {
                       ),
 
     ),
-                      // Text('${loggedInUser.userName}'
+                      //  Text('${loggedInUser.userName}'
                       //   style: TextStyle(
                       //   fontSize: 36,
                       //   fontFamily: 'OpenSans',

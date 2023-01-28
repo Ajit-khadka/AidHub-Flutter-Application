@@ -161,19 +161,15 @@ Widget orLine() {
 
 class LoginPageState extends State<LoginPage> {
 
-
   void signUserIn(String email, String password) async{
-    if(formKey.currentState!.validate()){
+    try{
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: emailController.text,
         password: passwordController.text,
-      ).then((uid) =>
-      {
-        Fluttertoast.showToast(msg: "Login Successful"),
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) => MainPage())),
+      ).then((value) => Navigator.of(context).push(MaterialPageRoute(builder: (context) => MainPage())));
 
-
-      }).catchError((e)
+      }
+    on FirebaseAuthException catch(e)
       {
           if(e.code=='invalid-email'){
             errorEmail();
@@ -182,21 +178,7 @@ class LoginPageState extends State<LoginPage> {
           } else if (e.code=='user-not-found'){
             errorPass();
           }
-        });
-
-
-
-    // } on FirebaseAuthException catch (e) {
-    //   if(e.code=='invalid-email'){
-    //     errorEmail();
-    //   } else if (e.code=='wrong-password'){
-    //     errorPassword();
-    //   } else if (e.code=='user-not-found'){
-    //     errorPass();
-    //   }
-
-    }
-
+        };
 
     emailController.clear();
     passwordController.clear();
@@ -268,7 +250,7 @@ class LoginPageState extends State<LoginPage> {
 
   void errorPassword(){
     showDialog(context: context, builder: (context){
-      return AlertDialog( title:Text("Incorrect Password", style: TextStyle(
+      return AlertDialog( title:Text("Incorrect Password", textAlign: TextAlign.center, style: TextStyle(
         color: Color.fromARGB(255, 68, 68, 130),
         fontSize: 18,
         fontFamily: 'OpenSans',

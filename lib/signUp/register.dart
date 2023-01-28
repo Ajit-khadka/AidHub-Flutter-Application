@@ -58,8 +58,7 @@ class Register extends State<SignIn> {
 
 
   String? requiredPass(value) {
-
-     if (value.length < 6) {
+    if (value.length < 6) {
       return "Minimum 6 digit";
     } else if (value.length > 10) {
       return "Maximum 10 digit";
@@ -69,24 +68,20 @@ class Register extends State<SignIn> {
   }
 
   String? requiredPass1(value) {
-
-
     if (value.length < 6) {
       return "Minimum 6 digit";
     } else if (value.length > 10) {
       return "Maximum 10 digit";
-    }else if(_confirmPasswordController.text != _passwordController.text){
+    } else if (_confirmPasswordController.text != _passwordController.text) {
       return "Password don't match";
-    }else {
+    } else {
       return null;
     }
   }
 
 
-
   String? privateNumber(value) {
-
-    if(value!.isEmpty){
+    if (value!.isEmpty) {
       return "Required";
     } else if (value.length > 10) {
       return "Maximum 10 digit";
@@ -95,12 +90,12 @@ class Register extends State<SignIn> {
     }
   }
 
-  final _emailController= TextEditingController();
-  final usernameController= TextEditingController();
-  final bloodController= TextEditingController();
-  final contactController= TextEditingController();
-  final _passwordController= TextEditingController();
-  final _confirmPasswordController= TextEditingController();
+  final _emailController = TextEditingController();
+  final usernameController = TextEditingController();
+  final bloodController = TextEditingController();
+  final contactController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
 
   String? errorMessage;
 
@@ -109,16 +104,16 @@ class Register extends State<SignIn> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading : IconButton(
-          icon: Icon(Icons.arrow_back,
-          color: Color.fromRGBO(254, 109, 115, 1) ),
-          onPressed: (){
-            Navigator.of(context).pop();
-          },
-        )
-    ),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back,
+                color: Color.fromRGBO(254, 109, 115, 1)),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          )
+      ),
       //resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
         child: Padding(
@@ -132,43 +127,47 @@ class Register extends State<SignIn> {
                   text(context),
                   //email
                   TextFormField(
-                    controller: _emailController,
-                    keyboardType: TextInputType.emailAddress,
-                    onSaved: (value){
-                      _emailController.text = value!;
-                    },
+                      controller: _emailController,
+                      keyboardType: TextInputType.emailAddress,
+                      onSaved: (value) {
+                        _emailController.text = value!;
+                      },
                       textInputAction: TextInputAction.next,
-                    decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.email),
+                      decoration: InputDecoration(
+                        prefixIcon: Icon(Icons.email),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
-                      labelText: "Email", labelStyle: TextStyle(),
-                    ),
+                        labelText: "Email", labelStyle: TextStyle(),
+                      ),
 
-                        validator: (value) {
-                               if (value!.isEmpty || !RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(value!)) {
-                                   return "Not a valid Email";
-                              } else {
-                                   return null;
-                            }
-                         }
+                      validator: (value) {
+                        if (value!.isEmpty || !RegExp(
+                            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                            .hasMatch(value!)) {
+                          return "Not a valid Email";
+                        } else {
+                          return null;
+                        }
+                      }
                   ),
                   //Username
                   Padding(
                     padding: EdgeInsets.only(top: 25.0),
                     child: TextFormField(
                       controller: usernameController,
-                      onSaved: (value){
+                      onSaved: (value) {
                         usernameController.text = value!;
                       },
                       textInputAction: TextInputAction.next,
-                      validator: (value){
-                        if(value!.isEmpty ||!RegExp(r'^[a-z A-Z]+$').hasMatch(value!)){
+                      validator: (value) {
+                        if (value!.isEmpty || !RegExp(r'^[a-z A-Z]+$').hasMatch(
+                            value!)) {
                           return "Not a valid Username";
-                        }if(!RegExp(r'^.{5,}$').hasMatch(value!)){
+                        }
+                        if (!RegExp(r'^.{5,}$').hasMatch(value!)) {
                           return "Min 5 character";
-                        } else{
+                        } else {
                           return null;
                         }
                       },
@@ -185,12 +184,12 @@ class Register extends State<SignIn> {
                     padding: EdgeInsets.only(top: 25.0),
                     child: TextFormField(
                       controller: bloodController,
-                      onSaved: (value){
+                      onSaved: (value) {
                         bloodController.text = value!;
                       },
                       textInputAction: TextInputAction.next,
                       decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.bloodtype),
+                          prefixIcon: Icon(Icons.bloodtype),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
@@ -205,8 +204,8 @@ class Register extends State<SignIn> {
                     padding: EdgeInsets.only(top: 25.0),
                     child: TextFormField(
                       controller: contactController,
-                      onSaved: (value){
-                        contactController.text = '+977'+value!;
+                      onSaved: (value) {
+                        contactController.text = '+977' + value!;
                       },
                       textInputAction: TextInputAction.next,
                       keyboardType: TextInputType.number,
@@ -219,7 +218,7 @@ class Register extends State<SignIn> {
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                           ), labelText: "Contact"),
-                      validator:  privateNumber,
+                      validator: privateNumber,
                     ),
                   ),
                   //password
@@ -227,7 +226,7 @@ class Register extends State<SignIn> {
                     padding: EdgeInsets.only(top: 25.0),
                     child: TextFormField(
                       controller: _passwordController,
-                      onSaved: (value){
+                      onSaved: (value) {
                         _passwordController.text = value!;
                       },
                       textInputAction: TextInputAction.next,
@@ -245,7 +244,7 @@ class Register extends State<SignIn> {
                     padding: EdgeInsets.only(top: 25.0),
                     child: TextFormField(
                       controller: _confirmPasswordController,
-                      onSaved: (value){
+                      onSaved: (value) {
                         _confirmPasswordController.text = value!;
                       },
                       textInputAction: TextInputAction.done,
@@ -253,7 +252,7 @@ class Register extends State<SignIn> {
                       decoration: InputDecoration(
                           prefixIcon: Icon(Icons.lock),
                           border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),),
+                            borderRadius: BorderRadius.circular(10),),
                           labelText: "Confirm Password"),
                       validator: requiredPass1,
                     ),
@@ -272,8 +271,11 @@ class Register extends State<SignIn> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      onPressed: (){
-                        register( _emailController.text, _passwordController.text);
+                      onPressed: () {
+                        register(
+                            _emailController.text, _passwordController.text);
+                        debugPrint(contactController.text);
+
                       },
                       style: ElevatedButton.styleFrom(
                         elevation: 5,
@@ -295,69 +297,69 @@ class Register extends State<SignIn> {
     );
   }
 
-  void register(String email, String password) async{
-    if(formkey.currentState!.validate()){
-      try{
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password).then((value) => {
-        postDetailsToServer()
+  Future register(String email, String password) async {
+    if (formkey.currentState!.validate()) {
+      try {
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+            email: email, password: password);
+      } on FirebaseAuthException catch (error) {
+        switch (error.code) {
+          case "invalid-email":
+            errorMessage = "Your email address appears to be malformed.";
+            break;
+          case "wrong-password":
+            errorMessage = "Your password is wrong.";
+            break;
+          case "user-not-found":
+            errorMessage = "User with this email doesn't exist.";
+            break;
+          case "user-disabled":
+            errorMessage = "User with this email has been disabled.";
+            break;
+          case "too-many-requests":
+            errorMessage = "Too many requests";
+            break;
+          case "operation-not-allowed":
+            errorMessage = "Signing in with Email and Password is not enabled.";
+            break;
+          default:
+            errorMessage = "An undefined Error happened.";
+        }
 
-      }).catchError((e){
-        Fluttertoast.showToast(msg: e!.message);
-      });
-    } on FirebaseAuthException  catch (error) {
-    switch (error.code) {
-    case "invalid-email":
-    errorMessage = "Your email address appears to be malformed.";
-    break;
-    case "wrong-password":
-    errorMessage = "Your password is wrong.";
-    break;
-    case "user-not-found":
-    errorMessage = "User with this email doesn't exist.";
-    break;
-    case "user-disabled":
-    errorMessage = "User with this email has been disabled.";
-    break;
-    case "too-many-requests":
-    errorMessage = "Too many requests";
-    break;
-    case "operation-not-allowed":
-    errorMessage = "Signing in with Email and Password is not enabled.";
-    break;
-    default:
-    errorMessage = "An undefined Error happened.";
+        Fluttertoast.showToast(msg: errorMessage!);
+        debugPrint(error.code);
+      }
+      postDetailsToServer();
     }
-    Fluttertoast.showToast(msg: errorMessage!);
-    debugPrint(error.code);
-    }
+
+  }
+    Future postDetailsToServer() async {
+      //calling firebase, user model then sending values
+
+      FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+      User? user = FirebaseAuth.instance.currentUser;
+
+      UserModel userModel = UserModel();
+
+      // writing all the values
+      userModel.email = user!.email;
+      userModel.uid = user.uid;
+      userModel.userName = usernameController.text;
+      userModel.bloodType = bloodController.text;
+      userModel.contact = '+977${contactController.text}';
+      userModel.password = _passwordController.text;
+      userModel.confirmPass = _confirmPasswordController.text;
+
+      await firebaseFirestore
+          .collection("users")
+          .doc(user.uid)
+          .set(userModel.toMap());
+      Fluttertoast.showToast(msg: "Account created successfully :) ");
+
+      Navigator.pushAndRemoveUntil(
+          (context),
+          MaterialPageRoute(builder: (context) => HomePage()),
+              (route) => false);
     }
   }
-  postDetailsToServer() async {
-    //calling firebase, user model then sending values
 
-    FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-    User? user = FirebaseAuth.instance.currentUser;
-
-    UserModel userModel = UserModel();
-
-    // writing all the values
-    userModel.email = user!.email;
-    userModel.uid = user.uid;
-    userModel.userName = usernameController.text;
-    userModel.bloodType = bloodController.text;
-    userModel.contact = contactController.text;
-    userModel.password = _passwordController.text;
-    userModel.confirmPass = _confirmPasswordController.text;
-
-    await firebaseFirestore
-        .collection("users")
-        .doc(user.uid)
-        .set(userModel.toMap());
-    Fluttertoast.showToast(msg: "Account created successfully :) ");
-
-    Navigator.pushAndRemoveUntil(
-        (context),
-        MaterialPageRoute(builder: (context) => HomePage()),
-            (route) => false);
-  }
-}
