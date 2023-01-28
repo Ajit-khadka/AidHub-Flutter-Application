@@ -75,7 +75,7 @@ class Register extends State<SignIn> {
       return "Minimum 6 digit";
     } else if (value.length > 10) {
       return "Maximum 10 digit";
-    }else if(_passwordController != value){
+    }else if(_confirmPasswordController.text != _passwordController.text){
       return "Password don't match";
     }else {
       return null;
@@ -101,6 +101,8 @@ class Register extends State<SignIn> {
   final contactController= TextEditingController();
   final _passwordController= TextEditingController();
   final _confirmPasswordController= TextEditingController();
+
+  String? errorMessage;
 
 
   @override
@@ -164,8 +166,8 @@ class Register extends State<SignIn> {
                       validator: (value){
                         if(value!.isEmpty ||!RegExp(r'^[a-z A-Z]+$').hasMatch(value!)){
                           return "Not a valid Username";
-                        }if(!RegExp(r'^.{20,}$').hasMatch(value!)){
-                          return "Min 20 character";
+                        }if(!RegExp(r'^.{5,}$').hasMatch(value!)){
+                          return "Min 5 character";
                         } else{
                           return null;
                         }
@@ -204,7 +206,7 @@ class Register extends State<SignIn> {
                     child: TextFormField(
                       controller: contactController,
                       onSaved: (value){
-                        contactController.text = value!;
+                        contactController.text = '+977'+value!;
                       },
                       textInputAction: TextInputAction.next,
                       keyboardType: TextInputType.number,
@@ -271,11 +273,7 @@ class Register extends State<SignIn> {
                         ),
                       ),
                       onPressed: (){
-                        if(formkey.currentState!.validate()){
-                          //checks data
-                          // final snackBar = SnackBar(content: Text("form submitted"));
-                          // ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                        }
+                        register( _emailController.text, _passwordController.text);
                       },
                       style: ElevatedButton.styleFrom(
                         elevation: 5,
@@ -299,12 +297,39 @@ class Register extends State<SignIn> {
 
   void register(String email, String password) async{
     if(formkey.currentState!.validate()){
+      try{
       await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password).then((value) => {
         postDetailsToServer()
 
       }).catchError((e){
         Fluttertoast.showToast(msg: e!.message);
       });
+    } on FirebaseAuthException  catch (error) {
+    switch (error.code) {
+    case "invalid-email":
+    errorMessage = "Your email address appears to be malformed.";
+    break;
+    case "wrong-password":
+    errorMessage = "Your password is wrong.";
+    break;
+    case "user-not-found":
+    errorMessage = "User with this email doesn't exist.";
+    break;
+    case "user-disabled":
+    errorMessage = "User with this email has been disabled.";
+    break;
+    case "too-many-requests":
+    errorMessage = "Too many requests";
+    break;
+    case "operation-not-allowed":
+    errorMessage = "Signing in with Email and Password is not enabled.";
+    break;
+    default:
+    errorMessage = "An undefined Error happened.";
+    }
+    Fluttertoast.showToast(msg: errorMessage!);
+    debugPrint(error.code);
+    }
     }
   }
   postDetailsToServer() async {
@@ -318,8 +343,11 @@ class Register extends State<SignIn> {
     // writing all the values
     userModel.email = user!.email;
     userModel.uid = user.uid;
+    userModel.userName = usernameController.text;
     userModel.bloodType = bloodController.text;
-    // userModel.contact = .text;
+    userModel.contact = contactController.text;
+    userModel.password = _passwordController.text;
+    userModel.confirmPass = _confirmPasswordController.text;
 
     await firebaseFirestore
         .collection("users")

@@ -2,6 +2,7 @@ import 'package:blood_bank/loginPage/login.dart';
 import 'package:blood_bank/main_page.dart';
 import 'package:flutter/material.dart';
 
+import '../Homepage/home_page.dart';
 import '../loginPage/test.dart';
 
 class WelcomeScreen extends StatelessWidget {
@@ -71,7 +72,7 @@ class WelcomeScreen extends StatelessWidget {
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: ((context) {
-                          return const LoginPage();
+                          return const HomePage();
                         }),
                       ),
                     );

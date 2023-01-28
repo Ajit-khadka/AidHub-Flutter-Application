@@ -67,6 +67,17 @@ class Recover extends State<ForgotPass> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldKey,
+      appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading : IconButton(
+            icon: Icon(Icons.arrow_back,
+                color: Color.fromRGBO(254, 109, 115, 1) ),
+            onPressed: (){
+              Navigator.of(context).pop();
+            },
+          )
+      ),
     //  resizeToAvoidBottomInset: false,
       body: SingleChildScrollView(
         child: Padding(

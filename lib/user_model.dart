@@ -5,11 +5,11 @@ class UserModel{
   String? email;
   String? userName;
   String? bloodType;
-  int? contact;
+  String? contact;
   String? password;
   String? confirmPass;
 
-  UserModel({this.uid, this.email,this.userName});
+  UserModel({this.uid, this.email,this.userName,this.bloodType,this.contact,this.password,this.confirmPass});
 
   //receive data from database
   factory UserModel.fromMap(map){
@@ -17,6 +17,11 @@ class UserModel{
       uid: map['uid'],
       email: map['email'],
       userName: map['username'],
+      bloodType: map['bloodType'],
+      contact: map['contact'],
+      password: map['password'],
+      confirmPass: map['confirmpass']
+
     );
   }
 //sending data to database
@@ -25,6 +30,10 @@ class UserModel{
       'uid':uid,
       'email': email,
       'username': userName,
+      'bloodType':bloodType,
+      'contact': contact,
+      'password': password,
+      'confirmpass':confirmPass
     };
   }
 
