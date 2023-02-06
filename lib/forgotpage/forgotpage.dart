@@ -14,9 +14,9 @@ Widget text(BuildContext context) {
   return Center(
     child: Column(
       children: const [
-        //SizedBox(
-        //height: 80,
-        // ),
+        SizedBox(
+          height: 0,
+        ),
         Text(
           "  FORGOT PASSWORD ",
           style: TextStyle(
@@ -48,9 +48,7 @@ Widget text(BuildContext context) {
 class Recover extends State<ForgotPass> {
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
 
-
   String? requiredpass(value) {
-
     if (value.length < 6) {
       return "Minimum 6 digit";
     } else if (value.length > 10) {
@@ -59,7 +57,6 @@ class Recover extends State<ForgotPass> {
       return null;
     }
   }
-
 
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -70,15 +67,14 @@ class Recover extends State<ForgotPass> {
       appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
-          leading : IconButton(
-            icon: Icon(Icons.arrow_back,
-                color: Color.fromRGBO(254, 109, 115, 1) ),
-            onPressed: (){
+          leading: IconButton(
+            icon:
+                Icon(Icons.arrow_back, color: Color.fromRGBO(254, 109, 115, 1)),
+            onPressed: () {
               Navigator.of(context).pop();
             },
-          )
-      ),
-    //  resizeToAvoidBottomInset: false,
+          )),
+      //  resizeToAvoidBottomInset: false,
       body: SingleChildScrollView(
         child: Padding(
             padding: const EdgeInsets.all(40),
@@ -135,17 +131,19 @@ class Recover extends State<ForgotPass> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          onPressed: (){
-                            if(formkey.currentState!.validate()){
+                          onPressed: () {
+                            if (formkey.currentState!.validate()) {
                               //checks data
-                              final snackBar = SnackBar(content: Text("form submitted"));
-                              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                              final snackBar =
+                                  SnackBar(content: Text("form submitted"));
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
                             }
                           },
                           style: ElevatedButton.styleFrom(
                             elevation: 5,
                             padding: EdgeInsets.symmetric(
-                                horizontal: 80, vertical: 13),
+                                horizontal: 80, vertical: 15),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(15),
                             ),

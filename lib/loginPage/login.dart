@@ -9,7 +9,6 @@ import 'package:form_field_validator/form_field_validator.dart';
 import '../Homepage/home_page.dart';
 import '../main_page.dart';
 
-
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -47,7 +46,7 @@ Widget buildEmail() {
               borderSide: BorderSide(color: Color.fromRGBO(255, 203, 205, 1))),
           hintText: 'Email',
           hintStyle:
-          TextStyle(color: Color.fromARGB(150, 68, 68, 130), fontSize: 15),
+              TextStyle(color: Color.fromARGB(150, 68, 68, 130), fontSize: 15),
           prefixIcon: Icon(
             Icons.person,
             color: Color.fromARGB(255, 68, 68, 130),
@@ -64,7 +63,7 @@ Widget buildPassword() {
     shadowColor: Colors.black,
     child: TextFormField(
       controller: passwordController,
-      obscureText: true ,
+      obscureText: true,
       keyboardType: TextInputType.visiblePassword,
       style: TextStyle(
         color: Color.fromARGB(255, 68, 68, 130),
@@ -81,13 +80,12 @@ Widget buildPassword() {
               borderSide: BorderSide(color: Color.fromRGBO(255, 203, 205, 1))),
           hintText: 'Password',
           hintStyle:
-          TextStyle(color: Color.fromARGB(150, 68, 68, 130), fontSize: 15),
+              TextStyle(color: Color.fromARGB(150, 68, 68, 130), fontSize: 15),
           prefixIcon: Icon(
             Icons.lock,
             color: Color.fromARGB(255, 68, 68, 130),
           )),
     ),
-
   );
 }
 
@@ -100,6 +98,7 @@ Widget buildForgotPassword(BuildContext context) {
           style: TextStyle(
             color: Color.fromARGB(255, 68, 68, 130),
             fontSize: 12,
+            fontWeight: FontWeight.bold,
           ),
         ),
 
@@ -125,6 +124,7 @@ Widget signUp(BuildContext context) {
             style: TextStyle(
               color: Color.fromARGB(255, 68, 68, 130),
               fontSize: 12,
+              fontWeight: FontWeight.bold,
             ),
           ),
           onPressed: () {
@@ -136,8 +136,8 @@ Widget signUp(BuildContext context) {
               ),
             );
           }
-        //padding: EdgeInsets.only(right: 0),
-      ));
+          //padding: EdgeInsets.only(right: 0),
+          ));
 }
 
 Widget orLine() {
@@ -160,140 +160,163 @@ Widget orLine() {
 }
 
 class LoginPageState extends State<LoginPage> {
-
-  void signUserIn(String email, String password) async{
-    try{
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: emailController.text,
-        password: passwordController.text,
-      ).then((value) => Navigator.of(context).push(MaterialPageRoute(builder: (context) => MainPage())));
-
+  void signUserIn(String email, String password) async {
+    try {
+      await FirebaseAuth.instance
+          .signInWithEmailAndPassword(
+            email: emailController.text,
+            password: passwordController.text,
+          )
+          .then((value) => Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => MainPage())));
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'invalid-email') {
+        errorEmail();
+      } else if (e.code == 'wrong-password') {
+        errorPassword();
+      } else if (e.code == 'user-not-found') {
+        errorPass();
       }
-    on FirebaseAuthException catch(e)
-      {
-          if(e.code=='invalid-email'){
-            errorEmail();
-          } else if (e.code=='wrong-password'){
-            errorPassword();
-          } else if (e.code=='user-not-found'){
-            errorPass();
-          }
-        };
+    }
+    ;
 
     emailController.clear();
     passwordController.clear();
-
   }
 
-  void check(){
+  void check() {
     String email = emailController.text;
     String password = passwordController.text;
 
-    if(email=='' || password==''){
+    if (email == '' || password == '') {
       fill();
-    }else{
+    } else {
       signUserIn(email, password);
     }
   }
 
-  void fill(){
-    showDialog(context: context, builder: (context){
-      return AlertDialog( title:Text("Enter Email and password",  textAlign: TextAlign.center,
-        style: TextStyle(
-          color: Color.fromARGB(255, 68, 68, 130),
-          fontSize: 18,
-          fontFamily: 'OpenSans',
-          fontWeight: FontWeight.bold,
-          letterSpacing: 0.5,
-        ),),
-        actions: <Widget>[
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Color.fromRGBO(254, 109, 115, 1),
+  void fill() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text(
+              "Enter Email and Password",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Color.fromARGB(255, 68, 68, 130),
+                fontSize: 18,
+                fontFamily: 'Poppins',
+                fontWeight: FontWeight.bold,
+                letterSpacing: 0.5,
+              ),
             ),
-            child: new Text("OK"),
-            onPressed: () {
-              Navigator.of(context).pop();
-
-            },
-          ),
-        ],
-      );
-    });
+            actions: <Widget>[
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color.fromRGBO(254, 109, 115, 1),
+                ),
+                child: new Text("OK"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
   }
 
-
-
-  void errorEmail(){
-    showDialog(context: context, builder: (context){
-      return AlertDialog( title:Text("Invalid Email", textAlign: TextAlign.center,style: TextStyle(
-        color: Color.fromARGB(255, 68, 68, 130),
-        fontSize: 18,
-        fontFamily: 'OpenSans',
-        fontWeight: FontWeight.bold,
-        letterSpacing: 0.5,
-      ),),
-        actions: <Widget>[
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Color.fromRGBO(254, 109, 115, 1),
+  void errorEmail() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text(
+              "Invalid Email",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Color.fromARGB(255, 68, 68, 130),
+                fontSize: 18,
+                fontFamily: 'Poppins',
+                fontWeight: FontWeight.bold,
+                letterSpacing: 0.5,
+              ),
             ),
-            child: new Text("OK"),
-            onPressed: () {
-              Navigator.of(context).pop();
-
-            },
-          ),
-        ],);
-    });
+            actions: <Widget>[
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color.fromRGBO(254, 109, 115, 1),
+                ),
+                child: new Text("OK"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
   }
 
-  void errorPassword(){
-    showDialog(context: context, builder: (context){
-      return AlertDialog( title:Text("Incorrect Password", textAlign: TextAlign.center, style: TextStyle(
-        color: Color.fromARGB(255, 68, 68, 130),
-        fontSize: 18,
-        fontFamily: 'OpenSans',
-        fontWeight: FontWeight.bold,
-        letterSpacing: 0.5,
-      ),),
-        actions: <Widget>[
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Color.fromRGBO(254, 109, 115, 1),
+  void errorPassword() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text(
+              "Incorrect Password",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Color.fromARGB(255, 68, 68, 130),
+                fontSize: 18,
+                fontFamily: 'Poppins',
+                fontWeight: FontWeight.bold,
+                letterSpacing: 0.5,
+              ),
             ),
-            child: new Text("OK"),
-            onPressed: () {
-              Navigator.of(context).pop();
-
-            },
-          ),
-        ],);
-    });
+            actions: <Widget>[
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color.fromRGBO(254, 109, 115, 1),
+                ),
+                child: new Text("OK"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
   }
 
-  void errorPass(){
-    showDialog(context: context, builder: (context){
-      return AlertDialog( title:Text("Account doesn't Exist", textAlign: TextAlign.center, style: TextStyle(
-        color: Color.fromARGB(255, 68, 68, 130),
-        fontSize: 18,
-        fontFamily: 'OpenSans',
-        fontWeight: FontWeight.bold,
-        letterSpacing: 0.5,
-      ),),
-        actions: <Widget>[
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Color.fromRGBO(254, 109, 115, 1),
+  void errorPass() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text(
+              "Account doesn't Exist",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Color.fromARGB(255, 68, 68, 130),
+                fontSize: 18,
+                fontFamily: 'Poppins',
+                fontWeight: FontWeight.bold,
+                letterSpacing: 0.5,
+              ),
             ),
-            child: new Text("OK"),
-            onPressed: () {
-              Navigator.of(context).pop();
-
-            },
-          ),
-        ],);
-    });
+            actions: <Widget>[
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color.fromRGBO(254, 109, 115, 1),
+                ),
+                child: new Text("OK"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
   }
 
   @override
@@ -301,78 +324,76 @@ class LoginPageState extends State<LoginPage> {
     return Scaffold(
       //resizeToAvoidBottomInset: false,
       body: SingleChildScrollView(
-      child: Form(
-        key: formKey,
-        child: Container(
-        color: Colors.white,
-      child : Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            SizedBox(
-              height: 50,
-            ),
-            Text(
-              "LOGIN",
-              style: TextStyle(
-                color: Color.fromARGB(255, 68, 68, 130),
-                fontSize: 20,
-                fontFamily: 'OpenSans',
-                fontWeight: FontWeight.bold,
-                letterSpacing: 0,
-              ),
-            ),
-            Image.asset("images/Login.png", scale: 0.5),
-            SizedBox(
-              height: 10,
-            ),
-            Padding(
-              padding:
-              const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
-              child: Column(children: [
-                buildEmail(),
+        child: Form(
+          key: formKey,
+          child: Container(
+            color: Colors.white,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
                 SizedBox(
-                  height: 20,
+                  height: 50,
                 ),
-                buildPassword(),
-                buildForgotPassword(context),
-                //buildLoginBtn(context),
-                Container(
-                  width: 350,
-                  height: 60,
-                  child: ElevatedButton(onPressed: check,
-                    child: Text(
-                      "Login",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-
-                    style: ElevatedButton.styleFrom(
-                      elevation: 5,
-
-                      padding: EdgeInsets.all(18),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      backgroundColor: Color.fromRGBO(254, 109, 115, 1),),
-
+                Text(
+                  "LOGIN",
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 68, 68, 130),
+                    fontSize: 20,
+                    fontFamily: 'OpenSans',
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 0,
                   ),
                 ),
+                Image.asset("images/Login.png", scale: 0.5),
                 SizedBox(
-                  height: 5,
+                  height: 10,
                 ),
-                signUp(context),
-                orLine(),
-
-              ]),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+                  child: Column(children: [
+                    buildEmail(),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    buildPassword(),
+                    buildForgotPassword(context),
+                    //buildLoginBtn(context),
+                    Container(
+                      width: 350,
+                      height: 60,
+                      child: ElevatedButton(
+                        onPressed: check,
+                        child: Text(
+                          "Login",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'OpenSans',
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          elevation: 5,
+                          padding: EdgeInsets.all(18),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          backgroundColor: Color.fromRGBO(254, 109, 115, 1),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    signUp(context),
+                    orLine(),
+                  ]),
+                ),
+              ],
             ),
-
-          ],
+          ),
         ),
-      ),
-      ),
       ),
     );
   }

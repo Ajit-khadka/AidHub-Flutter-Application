@@ -8,7 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 
-import '../user_model.dart';
+import '../model/user_model.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({super.key});
@@ -53,9 +53,7 @@ Widget text(BuildContext context) {
 }
 
 class Register extends State<SignIn> {
-
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
-
 
   String? requiredPass(value) {
     if (value.length < 6) {
@@ -79,7 +77,6 @@ class Register extends State<SignIn> {
     }
   }
 
-
   String? privateNumber(value) {
     if (value!.isEmpty) {
       return "Required";
@@ -99,7 +96,6 @@ class Register extends State<SignIn> {
 
   String? errorMessage;
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -107,13 +103,12 @@ class Register extends State<SignIn> {
           backgroundColor: Colors.transparent,
           elevation: 0,
           leading: IconButton(
-            icon: Icon(Icons.arrow_back,
-                color: Color.fromRGBO(254, 109, 115, 1)),
+            icon:
+                Icon(Icons.arrow_back, color: Color.fromRGBO(254, 109, 115, 1)),
             onPressed: () {
               Navigator.of(context).pop();
             },
-          )
-      ),
+          )),
       //resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
         child: Padding(
@@ -138,19 +133,18 @@ class Register extends State<SignIn> {
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        labelText: "Email", labelStyle: TextStyle(),
+                        labelText: "Email",
+                        labelStyle: TextStyle(),
                       ),
-
                       validator: (value) {
-                        if (value!.isEmpty || !RegExp(
-                            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                            .hasMatch(value!)) {
+                        if (value!.isEmpty ||
+                            !RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                                .hasMatch(value!)) {
                           return "Not a valid Email";
                         } else {
                           return null;
                         }
-                      }
-                  ),
+                      }),
                   //Username
                   Padding(
                     padding: EdgeInsets.only(top: 25.0),
@@ -161,8 +155,8 @@ class Register extends State<SignIn> {
                       },
                       textInputAction: TextInputAction.next,
                       validator: (value) {
-                        if (value!.isEmpty || !RegExp(r'^[a-z A-Z]+$').hasMatch(
-                            value!)) {
+                        if (value!.isEmpty ||
+                            !RegExp(r'^[a-z A-Z]+$').hasMatch(value!)) {
                           return "Not a valid Username";
                         }
                         if (!RegExp(r'^.{5,}$').hasMatch(value!)) {
@@ -175,8 +169,8 @@ class Register extends State<SignIn> {
                           prefixIcon: Icon(Icons.person),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
-                          ), labelText: "Username"),
-
+                          ),
+                          labelText: "Username"),
                     ),
                   ),
                   //bloodType
@@ -217,7 +211,8 @@ class Register extends State<SignIn> {
                           prefixIcon: Icon(Icons.phone),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
-                          ), labelText: "Contact"),
+                          ),
+                          labelText: "Contact"),
                       validator: privateNumber,
                     ),
                   ),
@@ -235,7 +230,8 @@ class Register extends State<SignIn> {
                           prefixIcon: Icon(Icons.lock),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
-                          ), labelText: "Password"),
+                          ),
+                          labelText: "Password"),
                       validator: requiredPass,
                     ),
                   ),
@@ -252,7 +248,8 @@ class Register extends State<SignIn> {
                       decoration: InputDecoration(
                           prefixIcon: Icon(Icons.lock),
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                           labelText: "Confirm Password"),
                       validator: requiredPass1,
                     ),
@@ -275,12 +272,11 @@ class Register extends State<SignIn> {
                         register(
                             _emailController.text, _passwordController.text);
                         debugPrint(contactController.text);
-
                       },
                       style: ElevatedButton.styleFrom(
                         elevation: 5,
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 120, vertical: 15),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 80, vertical: 15),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15),
                         ),
@@ -300,8 +296,8 @@ class Register extends State<SignIn> {
   Future register(String email, String password) async {
     if (formkey.currentState!.validate()) {
       try {
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
-            email: email, password: password);
+        await FirebaseAuth.instance
+            .createUserWithEmailAndPassword(email: email, password: password);
       } on FirebaseAuthException catch (error) {
         switch (error.code) {
           case "invalid-email":
@@ -331,35 +327,32 @@ class Register extends State<SignIn> {
       }
       postDetailsToServer();
     }
-
-  }
-    Future postDetailsToServer() async {
-      //calling firebase, user model then sending values
-
-      FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-      User? user = FirebaseAuth.instance.currentUser;
-
-      UserModel userModel = UserModel();
-
-      // writing all the values
-      userModel.email = user!.email;
-      userModel.uid = user.uid;
-      userModel.userName = usernameController.text;
-      userModel.bloodType = bloodController.text;
-      userModel.contact = '+977${contactController.text}';
-      userModel.password = _passwordController.text;
-      userModel.confirmPass = _confirmPasswordController.text;
-
-      await firebaseFirestore
-          .collection("users")
-          .doc(user.uid)
-          .set(userModel.toMap());
-      Fluttertoast.showToast(msg: "Account created successfully :) ");
-
-      Navigator.pushAndRemoveUntil(
-          (context),
-          MaterialPageRoute(builder: (context) => HomePage()),
-              (route) => false);
-    }
   }
 
+  Future postDetailsToServer() async {
+    //calling firebase, user model then sending values
+
+    FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+    User? user = FirebaseAuth.instance.currentUser;
+
+    UserModel userModel = UserModel();
+
+    // writing all the values
+    userModel.email = user!.email;
+    userModel.uid = user.uid;
+    userModel.userName = usernameController.text;
+    userModel.bloodType = bloodController.text;
+    userModel.contact = '+977${contactController.text}';
+    userModel.password = _passwordController.text;
+    userModel.confirmPass = _confirmPasswordController.text;
+
+    await firebaseFirestore
+        .collection("users")
+        .doc(user.uid)
+        .set(userModel.toMap());
+    Fluttertoast.showToast(msg: "Account created successfully :) ");
+
+    Navigator.pushAndRemoveUntil((context),
+        MaterialPageRoute(builder: (context) => HomePage()), (route) => false);
+  }
+}

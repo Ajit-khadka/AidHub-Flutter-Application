@@ -2,9 +2,7 @@ import 'package:blood_bank/loginPage/login.dart';
 import 'package:blood_bank/main_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-
 import '../Homepage/home_page.dart';
-import '../loginPage/test.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
@@ -29,7 +27,7 @@ class WelcomeScreen extends StatelessWidget {
               style: TextStyle(
                 color: Color.fromARGB(255, 68, 68, 130),
                 fontSize: 20,
-                fontFamily: 'OpenSans',
+                fontFamily: 'Poppins',
                 fontWeight: FontWeight.bold,
                 letterSpacing: 0,
               ),
@@ -42,7 +40,7 @@ class WelcomeScreen extends StatelessWidget {
               style: TextStyle(
                 color: Color.fromARGB(255, 68, 68, 130),
                 fontSize: 20,
-                fontFamily: 'OpenSans',
+                fontFamily: 'Poppins',
                 fontWeight: FontWeight.bold,
                 letterSpacing: 0,
               ),
