@@ -29,6 +29,13 @@
             {
               "client_id": "166944444888-8lrg7pirinhqee35fcrl97rqd6bjd18g.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "166944444888-pkmqp9otm07oses4g46k6h9346t7g11d.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.bloodBank"
+              }
             }
           ]
         }

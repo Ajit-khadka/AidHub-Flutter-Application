@@ -1,14 +1,13 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:blood_bank/Homepage/hospital_feed.dart';
-import 'package:blood_bank/Homepage/nearest_hospital.dart';
-import 'package:blood_bank/Homepage/par_event.dart';
-import 'package:blood_bank/Homepage/request.dart';
-import 'package:blood_bank/profile/profile_screen.dart';
+import 'package:blood_bank/Homepage/Nav/hospital_feed.dart';
+import 'package:blood_bank/Homepage/Nav/nearest_hospital.dart';
+import 'package:blood_bank/Homepage/Nav/par_event.dart';
+import 'package:blood_bank/Homepage/Nav/request.dart';
+import 'package:blood_bank/Homepage/profile/profile_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import '../loginPage/login.dart';
 import '../model/user_model.dart';
 
 class HomePage extends StatefulWidget {
@@ -59,7 +58,7 @@ class _HomePageState extends State<HomePage> {
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: ((context) {
-                            return const ProfileScreen();
+                            return ProfileScreen();
                           }),
                         ),
                       );

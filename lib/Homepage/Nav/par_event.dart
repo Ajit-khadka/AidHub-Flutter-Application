@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import '../model/user_model.dart';
-import '../profile/profile_screen.dart';
 
 class Events extends StatefulWidget {
   const Events({super.key});

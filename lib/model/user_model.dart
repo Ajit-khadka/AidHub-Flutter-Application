@@ -26,6 +26,7 @@ class UserModel {
 
   //receive data from database
   factory UserModel.fromMap(map) {
+    final data = map.data()!;
     return UserModel(
         uid: map['uid'],
         email: map['email'],

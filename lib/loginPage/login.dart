@@ -1,12 +1,8 @@
 // ignore_for_file: prefer_const_constructors, sort_child_properties_last
-import 'package:blood_bank/forgotpage/forgotpage.dart';
 import 'package:blood_bank/signUp/register.dart';
+import 'package:blood_bank/verification/verify.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:form_field_validator/form_field_validator.dart';
-import '../Homepage/home_page.dart';
 import '../main_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -16,150 +12,169 @@ class LoginPage extends StatefulWidget {
   State<LoginPage> createState() => LoginPageState();
 }
 
-//text controller
-final emailController = TextEditingController();
-final passwordController = TextEditingController();
-GlobalKey<FormState> formKey = GlobalKey<FormState>();
+class LoginPageState extends State<LoginPage> {
+  //text controller
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-Widget buildEmail() {
-  return Material(
-    elevation: 3.5,
-    color: Colors.transparent,
-    borderRadius: BorderRadius.all(Radius.circular(30)),
-    shadowColor: Colors.black,
-    child: TextField(
-      controller: emailController,
-      obscureText: false,
-      keyboardType: TextInputType.emailAddress,
-      style: TextStyle(
-        color: Color.fromARGB(255, 68, 68, 130),
-        fontSize: 14,
-      ),
-      decoration: InputDecoration(
-          filled: true,
-          fillColor: Color.fromRGBO(255, 203, 205, 1),
-          enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(30)),
-              borderSide: BorderSide(color: Color.fromRGBO(255, 203, 205, 1))),
-          focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(30)),
-              borderSide: BorderSide(color: Color.fromRGBO(255, 203, 205, 1))),
-          hintText: 'Email',
-          hintStyle:
-              TextStyle(color: Color.fromARGB(150, 68, 68, 130), fontSize: 15),
-          prefixIcon: Icon(
-            Icons.person,
-            color: Color.fromARGB(255, 68, 68, 130),
-          )),
-    ),
-  );
-}
+  @override
+  void initState() {
+    emailController.addListener(() {
+      setState(() {});
+    });
+    super.initState();
+  }
 
-Widget buildPassword() {
-  return Material(
-    elevation: 3.5,
-    color: Colors.transparent,
-    borderRadius: BorderRadius.all(Radius.circular(30)),
-    shadowColor: Colors.black,
-    child: TextFormField(
-      controller: passwordController,
-      obscureText: true,
-      keyboardType: TextInputType.visiblePassword,
-      style: TextStyle(
-        color: Color.fromARGB(255, 68, 68, 130),
-        fontSize: 14,
-      ),
-      decoration: InputDecoration(
-          filled: true,
-          fillColor: Color.fromRGBO(255, 203, 205, 1),
-          enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(30)),
-              borderSide: BorderSide(color: Color.fromRGBO(255, 203, 205, 1))),
-          focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(30)),
-              borderSide: BorderSide(color: Color.fromRGBO(255, 203, 205, 1))),
-          hintText: 'Password',
-          hintStyle:
-              TextStyle(color: Color.fromARGB(150, 68, 68, 130), fontSize: 15),
-          prefixIcon: Icon(
-            Icons.lock,
-            color: Color.fromARGB(255, 68, 68, 130),
-          )),
-    ),
-  );
-}
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
 
-Widget buildForgotPassword(BuildContext context) {
-  return Container(
-      alignment: Alignment.centerRight,
-      child: TextButton(
-        child: Text(
-          "Forgot Password ?",
-          style: TextStyle(
-            color: Color.fromARGB(255, 68, 68, 130),
-            fontSize: 12,
-            fontWeight: FontWeight.bold,
-          ),
+  Widget buildEmail() {
+    return Material(
+      elevation: 3.5,
+      color: Colors.transparent,
+      borderRadius: BorderRadius.all(Radius.circular(30)),
+      shadowColor: Colors.black,
+      child: TextField(
+        controller: emailController,
+        obscureText: false,
+        keyboardType: TextInputType.emailAddress,
+        style: TextStyle(
+          color: Color.fromARGB(255, 68, 68, 130),
+          fontSize: 14,
         ),
+        decoration: InputDecoration(
+            filled: true,
+            fillColor: Color.fromRGBO(255, 203, 205, 1),
+            enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(30)),
+                borderSide:
+                    BorderSide(color: Color.fromRGBO(255, 203, 205, 1))),
+            focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(30)),
+                borderSide:
+                    BorderSide(color: Color.fromRGBO(255, 203, 205, 1))),
+            hintText: 'Email',
+            hintStyle: TextStyle(
+                color: Color.fromARGB(150, 68, 68, 130), fontSize: 15),
+            prefixIcon: Icon(
+              Icons.person,
+              color: Color.fromARGB(255, 68, 68, 130),
+            )),
+      ),
+    );
+  }
 
-        onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: ((context) {
-                return ForgotPass();
-              }),
-            ),
-          );
-        },
-        //padding: EdgeInsets.only(right: 0),
-      ));
-}
+  Widget buildPassword() {
+    return Material(
+      elevation: 3.5,
+      color: Colors.transparent,
+      borderRadius: BorderRadius.all(Radius.circular(30)),
+      shadowColor: Colors.black,
+      child: TextFormField(
+        controller: passwordController,
+        obscureText: true,
+        keyboardType: TextInputType.visiblePassword,
+        style: TextStyle(
+          color: Color.fromARGB(255, 68, 68, 130),
+          fontSize: 14,
+        ),
+        decoration: InputDecoration(
+            filled: true,
+            fillColor: Color.fromRGBO(255, 203, 205, 1),
+            enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(30)),
+                borderSide:
+                    BorderSide(color: Color.fromRGBO(255, 203, 205, 1))),
+            focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(30)),
+                borderSide:
+                    BorderSide(color: Color.fromRGBO(255, 203, 205, 1))),
+            hintText: 'Password',
+            hintStyle: TextStyle(
+                color: Color.fromARGB(150, 68, 68, 130), fontSize: 15),
+            prefixIcon: Icon(
+              Icons.lock,
+              color: Color.fromARGB(255, 68, 68, 130),
+            )),
+      ),
+    );
+  }
 
-Widget signUp(BuildContext context) {
-  return Container(
-      alignment: Alignment.center,
-      child: TextButton(
+  Widget buildForgotPassword(BuildContext context) {
+    return Container(
+        alignment: Alignment.centerRight,
+        child: TextButton(
           child: Text(
-            "Don’t have an Account ? Sign Up ",
+            "Forgot Password ?",
             style: TextStyle(
               color: Color.fromARGB(255, 68, 68, 130),
               fontSize: 12,
               fontWeight: FontWeight.bold,
             ),
           ),
+
           onPressed: () {
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: ((context) {
-                  return SignIn();
+                  return Verify();
                 }),
               ),
             );
-          }
+          },
           //padding: EdgeInsets.only(right: 0),
-          ));
-}
+        ));
+  }
 
-Widget orLine() {
-  return RichText(
-    text: TextSpan(children: const [
-      TextSpan(
-        text: ("_________________  "),
-        style: TextStyle(color: Colors.red),
-      ),
-      TextSpan(
-        text: ("  OR  "),
-        style: TextStyle(color: Color.fromARGB(255, 68, 68, 130)),
-      ),
-      TextSpan(
-        text: ("  _________________"),
-        style: TextStyle(color: Colors.red),
-      ),
-    ]),
-  );
-}
+  Widget signUp(BuildContext context) {
+    return Container(
+        alignment: Alignment.center,
+        child: TextButton(
+            child: Text(
+              "Don’t have an Account ? Sign Up ",
+              style: TextStyle(
+                color: Color.fromARGB(255, 68, 68, 130),
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: ((context) {
+                    return SignIn();
+                  }),
+                ),
+              );
+            }
+            //padding: EdgeInsets.only(right: 0),
+            ));
+  }
 
-class LoginPageState extends State<LoginPage> {
+  Widget orLine() {
+    return RichText(
+      text: TextSpan(children: const [
+        TextSpan(
+          text: ("_________________  "),
+          style: TextStyle(color: Colors.red),
+        ),
+        TextSpan(
+          text: ("  OR  "),
+          style: TextStyle(color: Color.fromARGB(255, 68, 68, 130)),
+        ),
+        TextSpan(
+          text: ("  _________________"),
+          style: TextStyle(color: Colors.red),
+        ),
+      ]),
+    );
+  }
+
   void signUserIn(String email, String password) async {
     try {
       await FirebaseAuth.instance
@@ -178,10 +193,6 @@ class LoginPageState extends State<LoginPage> {
         errorPass();
       }
     }
-    ;
-
-    emailController.clear();
-    passwordController.clear();
   }
 
   void check() {

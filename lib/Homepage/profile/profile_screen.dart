@@ -1,16 +1,42 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:blood_bank/profile/update_profile_screen.dart';
-import 'package:blood_bank/profile/widgets/profile_menu.dart';
+import 'package:blood_bank/Homepage/profile/update_profile_screen.dart';
+import 'package:blood_bank/Homepage/profile/widgets/profile_menu.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
-import 'package:flutter/rendering.dart';
+import '../../loginPage/login.dart';
 
-import '../loginPage/login.dart';
-
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  String name = '...';
+  String uid = '';
+
+  @override
+  void initState() {
+    super.initState();
+    getData();
+  }
+
+  Future<void> getData() async {
+    User? user = _auth.currentUser;
+    uid = user!.uid;
+    debugPrint("user.uid $uid");
+    final DocumentSnapshot userDoc =
+        await FirebaseFirestore.instance.collection('users').doc(uid).get();
+    setState(() {
+      name = userDoc.get('username');
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,15 +80,20 @@ class ProfileScreen extends StatelessWidget {
                 Positioned(
                   bottom: 0,
                   right: 0,
-                  child: Container(
-                    width: 35,
-                    height: 35,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(100),
-                      color: const Color.fromRGBO(254, 109, 115, 1),
+                  child: GestureDetector(
+                    child: Container(
+                      width: 35,
+                      height: 35,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100),
+                        color: const Color.fromRGBO(254, 109, 115, 1),
+                      ),
+                      child: const Icon(
+                        LineAwesomeIcons.alternate_pencil,
+                        size: 20,
+                        color: Color.fromARGB(255, 255, 255, 255),
+                      ),
                     ),
-                    child: const Icon(LineAwesomeIcons.alternate_pencil,
-                        size: 20, color: Color.fromARGB(255, 255, 255, 255)),
                   ),
                 ),
               ],
@@ -71,10 +102,10 @@ class ProfileScreen extends StatelessWidget {
             Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: const <Widget>[
+                children: <Widget>[
                   Text(
-                    "Ajit Khadka",
-                    style: TextStyle(
+                    name,
+                    style: const TextStyle(
                         fontSize: 25,
                         fontFamily: 'Poppins',
                         fontWeight: FontWeight.bold,
@@ -90,7 +121,7 @@ class ProfileScreen extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const UpdateProfileScreen()));
+                      builder: (context) => UpdateProfileScreen()));
                 },
                 style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromRGBO(254, 109, 115, 1),
@@ -116,6 +147,11 @@ class ProfileScreen extends StatelessWidget {
               onPress: () {},
             ),
             ProfileMenuWidget(
+              title: "Delete Account",
+              icon: LineAwesomeIcons.remove_user,
+              onPress: () {},
+            ),
+            ProfileMenuWidget(
               title: "Logout",
               icon: LineAwesomeIcons.alternate_sign_out,
               onPress: () {
@@ -131,6 +167,6 @@ class ProfileScreen extends StatelessWidget {
 
 Future<void> logout(BuildContext context) async {
   await FirebaseAuth.instance.signOut();
-  Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (context) => const LoginPage()));
+  Navigator.of(context)
+      .push(MaterialPageRoute(builder: (context) => const LoginPage()));
 }

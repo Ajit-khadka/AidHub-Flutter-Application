@@ -7,11 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:form_field_validator/form_field_validator.dart';
-
 import '../model/user_model.dart';
 
 class SignIn extends StatefulWidget {
-  const SignIn({super.key});
+  SignIn({super.key});
 
   @override
   State<SignIn> createState() => Register();
@@ -28,7 +27,7 @@ Widget text(BuildContext context) {
           "  SIGNUP ",
           style: TextStyle(
             color: Color.fromARGB(255, 68, 68, 130),
-            fontSize: 20,
+            fontSize: 22,
             fontFamily: 'OpenSans',
             fontWeight: FontWeight.bold,
             letterSpacing: 0,
@@ -40,8 +39,8 @@ Widget text(BuildContext context) {
         Text(
           "Create an account it's Free",
           style: TextStyle(
-              color: Color.fromARGB(255, 68, 68, 130),
-              fontSize: 10,
+              color: Colors.black38,
+              fontSize: 14,
               fontFamily: 'OpenSans'),
         ),
         SizedBox(
@@ -276,9 +275,9 @@ class Register extends State<SignIn> {
                       style: ElevatedButton.styleFrom(
                         elevation: 5,
                         padding:
-                            EdgeInsets.symmetric(horizontal: 80, vertical: 15),
+                            EdgeInsets.symmetric(horizontal: 70, vertical: 12),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
+                          borderRadius: BorderRadius.circular(100),
                         ),
                         backgroundColor: Color.fromRGBO(254, 109, 115, 1),
                       ),
@@ -329,6 +328,7 @@ class Register extends State<SignIn> {
     }
   }
 
+  //store data
   Future postDetailsToServer() async {
     //calling firebase, user model then sending values
 

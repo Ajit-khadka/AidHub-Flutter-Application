@@ -143,9 +143,9 @@ class Recover extends State<ForgotPass> {
                           style: ElevatedButton.styleFrom(
                             elevation: 5,
                             padding: EdgeInsets.symmetric(
-                                horizontal: 80, vertical: 15),
+                                horizontal: 70, vertical: 12),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
+                              borderRadius: BorderRadius.circular(100),
                             ),
                             backgroundColor: Color.fromRGBO(254, 109, 115, 1),
                           ),
