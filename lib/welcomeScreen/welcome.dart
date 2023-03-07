@@ -1,8 +1,7 @@
 import 'package:blood_bank/loginPage/login.dart';
 import 'package:blood_bank/main_page.dart';
 import 'package:flutter/material.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
-import '../Homepage/home_page.dart';
+
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});

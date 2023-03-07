@@ -1,9 +1,9 @@
 // ignore_for_file: prefer_const_constructors, sort_child_properties_last
-import 'package:blood_bank/signUp/register.dart';
-import 'package:blood_bank/verification/verify.dart';
+import 'package:blood_bank/signUp/accept_terms.dart';
+import 'package:blood_bank/verification/verify_email.dart';
+import 'package:blood_bank/verification/forgotpassword.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import '../main_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -122,7 +122,7 @@ class LoginPageState extends State<LoginPage> {
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: ((context) {
-                  return Verify();
+                  return ForgetPass();
                 }),
               ),
             );
@@ -132,11 +132,13 @@ class LoginPageState extends State<LoginPage> {
   }
 
   Widget signUp(BuildContext context) {
-    return Container(
-        alignment: Alignment.center,
-        child: TextButton(
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Text("Don’t have an Account ?"),
+        TextButton(
             child: Text(
-              "Don’t have an Account ? Sign Up ",
+              "Sign Up ",
               style: TextStyle(
                 color: Color.fromARGB(255, 68, 68, 130),
                 fontSize: 12,
@@ -147,13 +149,15 @@ class LoginPageState extends State<LoginPage> {
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: ((context) {
-                    return SignIn();
+                    return Terms();
                   }),
                 ),
               );
             }
             //padding: EdgeInsets.only(right: 0),
-            ));
+            ),
+      ],
+    );
   }
 
   Widget orLine() {
@@ -182,8 +186,11 @@ class LoginPageState extends State<LoginPage> {
             email: emailController.text,
             password: passwordController.text,
           )
-          .then((value) => Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => MainPage())));
+          .then(
+            (value) => Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => VerifyEmail()),
+            ),
+          );
     } on FirebaseAuthException catch (e) {
       if (e.code == 'invalid-email') {
         errorEmail();
@@ -227,7 +234,7 @@ class LoginPageState extends State<LoginPage> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color.fromRGBO(254, 109, 115, 1),
                 ),
-                child: new Text("OK"),
+                child: Text("OK"),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -258,7 +265,7 @@ class LoginPageState extends State<LoginPage> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color.fromRGBO(254, 109, 115, 1),
                 ),
-                child: new Text("OK"),
+                child: Text("OK"),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -289,7 +296,7 @@ class LoginPageState extends State<LoginPage> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color.fromRGBO(254, 109, 115, 1),
                 ),
-                child: new Text("OK"),
+                child: Text("OK"),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -320,7 +327,7 @@ class LoginPageState extends State<LoginPage> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color.fromRGBO(254, 109, 115, 1),
                 ),
-                child: new Text("OK"),
+                child: Text("OK"),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -332,76 +339,80 @@ class LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      //resizeToAvoidBottomInset: false,
-      body: SingleChildScrollView(
-        child: Form(
-          key: formKey,
-          child: Container(
-            color: Colors.white,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                SizedBox(
-                  height: 50,
-                ),
-                Text(
-                  "LOGIN",
-                  style: TextStyle(
-                    color: Color.fromARGB(255, 68, 68, 130),
-                    fontSize: 20,
-                    fontFamily: 'OpenSans',
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 0,
+    return WillPopScope(
+      onWillPop: () async {
+        return false; // This will prevent the user from navigating back
+      },
+      child: Scaffold(
+        //resizeToAvoidBottomInset: false,
+        body: SingleChildScrollView(
+          child: Form(
+            key: formKey,
+            child: Container(
+              color: Colors.white,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  SizedBox(
+                    height: 50,
                   ),
-                ),
-                Image.asset("images/Login.png", scale: 0.5),
-                SizedBox(
-                  height: 10,
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
-                  child: Column(children: [
-                    buildEmail(),
-                    SizedBox(
-                      height: 20,
+                  Text(
+                    "LOGIN",
+                    style: TextStyle(
+                      color: Color.fromARGB(255, 68, 68, 130),
+                      fontSize: 20,
+                      fontFamily: 'OpenSans',
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 0,
                     ),
-                    buildPassword(),
-                    buildForgotPassword(context),
-                    //buildLoginBtn(context),
-                    Container(
-                      width: 350,
-                      height: 60,
-                      child: ElevatedButton(
-                        onPressed: check,
-                        child: Text(
-                          "Login",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontFamily: 'OpenSans',
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
+                  ),
+                  Image.asset("images/Login.png", scale: 0.5),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 25, vertical: 10),
+                    child: Column(children: [
+                      buildEmail(),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      buildPassword(),
+                      buildForgotPassword(context),
+                      //buildLoginBtn(context),
+                      SizedBox(
+                        width: 350,
+                        height: 60,
+                        child: ElevatedButton(
+                          onPressed: check,
+                          child: Text(
+                            "Login",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'OpenSans',
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          elevation: 5,
-                          padding: EdgeInsets.all(18),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30),
+                          style: ElevatedButton.styleFrom(
+                            elevation: 5,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            backgroundColor: Color.fromRGBO(254, 109, 115, 1),
                           ),
-                          backgroundColor: Color.fromRGBO(254, 109, 115, 1),
                         ),
                       ),
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    signUp(context),
-                    orLine(),
-                  ]),
-                ),
-              ],
+                      SizedBox(
+                        height: 5,
+                      ),
+                      signUp(context),
+                      orLine(),
+                    ]),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

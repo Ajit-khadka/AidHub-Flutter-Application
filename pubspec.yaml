@@ -55,7 +55,8 @@ dependencies:
   provider: ^6.0.5
   shared_preferences: ^2.0.17
   image_picker: ^0.8.6+1
-  pinput: ^2.2.23
+  basic_utils: ^5.5.1
+  
 
 dev_dependencies:
   flutter_test:

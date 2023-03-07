@@ -1,6 +1,5 @@
 // ignore_for_file: prefer_const_constructors, sort_child_properties_last
-
-import 'package:blood_bank/Homepage/home_page.dart';
+import 'package:blood_bank/verification/verify_email.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +9,7 @@ import 'package:form_field_validator/form_field_validator.dart';
 import '../model/user_model.dart';
 
 class SignIn extends StatefulWidget {
-  SignIn({super.key});
+  const SignIn({super.key});
 
   @override
   State<SignIn> createState() => Register();
@@ -37,11 +36,13 @@ Widget text(BuildContext context) {
           height: 25,
         ),
         Text(
-          "Create an account it's Free",
+          "Create an account it's free.",
           style: TextStyle(
-              color: Colors.black38,
-              fontSize: 14,
-              fontFamily: 'OpenSans'),
+            fontSize: 16,
+            color: Colors.black38,
+            fontWeight: FontWeight.bold,
+          ),
+          textAlign: TextAlign.center,
         ),
         SizedBox(
           height: 30,
@@ -138,7 +139,7 @@ class Register extends State<SignIn> {
                       validator: (value) {
                         if (value!.isEmpty ||
                             !RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                                .hasMatch(value!)) {
+                                .hasMatch(value)) {
                           return "Not a valid Email";
                         } else {
                           return null;
@@ -155,10 +156,10 @@ class Register extends State<SignIn> {
                       textInputAction: TextInputAction.next,
                       validator: (value) {
                         if (value!.isEmpty ||
-                            !RegExp(r'^[a-z A-Z]+$').hasMatch(value!)) {
+                            !RegExp(r'^[a-z A-Z]+$').hasMatch(value)) {
                           return "Not a valid Username";
                         }
-                        if (!RegExp(r'^.{5,}$').hasMatch(value!)) {
+                        if (!RegExp(r'^.{5,}$').hasMatch(value)) {
                           return "Min 5 character";
                         } else {
                           return null;
@@ -198,7 +199,7 @@ class Register extends State<SignIn> {
                     child: TextFormField(
                       controller: contactController,
                       onSaved: (value) {
-                        contactController.text = '+977' + value!;
+                        contactController.text = value!;
                       },
                       textInputAction: TextInputAction.next,
                       keyboardType: TextInputType.number,
@@ -270,12 +271,12 @@ class Register extends State<SignIn> {
                       onPressed: () {
                         register(
                             _emailController.text, _passwordController.text);
-                        debugPrint(contactController.text);
+                        // debugPrint(contactController.text);
                       },
                       style: ElevatedButton.styleFrom(
                         elevation: 5,
                         padding:
-                            EdgeInsets.symmetric(horizontal: 70, vertical: 12),
+                            EdgeInsets.symmetric(horizontal: 55, vertical: 12),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(100),
                         ),
@@ -299,26 +300,17 @@ class Register extends State<SignIn> {
             .createUserWithEmailAndPassword(email: email, password: password);
       } on FirebaseAuthException catch (error) {
         switch (error.code) {
+          case "email-already-in-use":
+            errorMessage = "Email already exists.";
+            break;
           case "invalid-email":
             errorMessage = "Your email address appears to be malformed.";
-            break;
-          case "wrong-password":
-            errorMessage = "Your password is wrong.";
-            break;
-          case "user-not-found":
-            errorMessage = "User with this email doesn't exist.";
-            break;
-          case "user-disabled":
-            errorMessage = "User with this email has been disabled.";
             break;
           case "too-many-requests":
             errorMessage = "Too many requests";
             break;
-          case "operation-not-allowed":
-            errorMessage = "Signing in with Email and Password is not enabled.";
-            break;
           default:
-            errorMessage = "An undefined Error happened.";
+            errorMessage = "Something went wrong Try again later";
         }
 
         Fluttertoast.showToast(msg: errorMessage!);
@@ -342,9 +334,10 @@ class Register extends State<SignIn> {
     userModel.uid = user.uid;
     userModel.userName = usernameController.text;
     userModel.bloodType = bloodController.text;
-    userModel.contact = '+977${contactController.text}';
+    userModel.contact = contactController.text;
     userModel.password = _passwordController.text;
     userModel.confirmPass = _confirmPasswordController.text;
+    userModel.status = "I am a new user";
 
     await firebaseFirestore
         .collection("users")
@@ -352,7 +345,9 @@ class Register extends State<SignIn> {
         .set(userModel.toMap());
     Fluttertoast.showToast(msg: "Account created successfully :) ");
 
-    Navigator.pushAndRemoveUntil((context),
-        MaterialPageRoute(builder: (context) => HomePage()), (route) => false);
+    Navigator.pushAndRemoveUntil(
+        (context),
+        MaterialPageRoute(builder: (context) => VerifyEmail()),
+        (route) => false);
   }
 }
