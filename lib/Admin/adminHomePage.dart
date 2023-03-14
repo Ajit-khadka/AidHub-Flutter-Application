@@ -1,5 +1,7 @@
 // ignore_for_file: use_build_context_synchronously, avoid_unnecessary_containers
 
+import 'package:blood_bank/Admin/Admin_nav/Admin_hospitafeed.dart';
+import 'package:blood_bank/Admin/Admin_nav/adminProfile.dart';
 import 'package:blood_bank/Homepage/Nav/hospital_feed.dart';
 import 'package:blood_bank/Homepage/Nav/nearest_hospital.dart';
 import 'package:blood_bank/Homepage/Nav/par_event.dart';
@@ -9,30 +11,32 @@ import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+import 'Admin_nav/adminProfileUpdate.dart';
+
+class AdminHomePage extends StatefulWidget {
+  const AdminHomePage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<AdminHomePage> createState() => _AdminHomePageState();
 }
 
-var styleList = const TextStyle(color: Colors.white, fontSize: 24);
+var styleList = const TextStyle(color: Colors.black, fontSize: 24);
 
-class _HomePageState extends State<HomePage> {
+class _AdminHomePageState extends State<AdminHomePage> {
   // User? user = FirebaseAuth.instance.currentUser;
   // UserModel loggedInUser = UserModel();
 
-  var padding = const EdgeInsets.symmetric(horizontal: 15, vertical: 20);
+  var padding = const EdgeInsets.symmetric(horizontal: 15, vertical: 200);
   double gap = 10;
 
   int _index = 0;
 
   List<Widget> widgetsList = const [
-    HospitalFeed(),
+    AdminHospitalFeed(),
     BloodRequest(),
     NearestHospital(),
     Events(),
-    ProfileScreen(),
+    AdminProfilePage(),
   ];
 
   PageController controller = PageController();

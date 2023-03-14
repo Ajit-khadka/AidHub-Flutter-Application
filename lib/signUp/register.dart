@@ -1,11 +1,10 @@
-// ignore_for_file: prefer_const_constructors, sort_child_properties_last
+// ignore_for_file: prefer_const_constructors, sort_child_properties_last, prefer_typing_uninitialized_variables
 import 'package:blood_bank/verification/verify_email.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:form_field_validator/form_field_validator.dart';
 import '../model/user_model.dart';
 
 class SignIn extends StatefulWidget {
@@ -19,9 +18,6 @@ Widget text(BuildContext context) {
   return Center(
     child: Column(
       children: const [
-        // SizedBox(
-        //   height: 0,
-        // ),
         Text(
           "  SIGNUP ",
           style: TextStyle(
@@ -77,6 +73,16 @@ class Register extends State<SignIn> {
     }
   }
 
+  String? wordLimit(value) {
+    if (value!.isEmpty) {
+      return "Required";
+    } else if (value.length > 30) {
+      return "Maximum 30 characters";
+    } else {
+      return null;
+    }
+  }
+
   String? privateNumber(value) {
     if (value!.isEmpty) {
       return "Required";
@@ -93,8 +99,19 @@ class Register extends State<SignIn> {
   final contactController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+  final locationController = TextEditingController();
 
   String? errorMessage;
+
+  var _isObscured;
+  var _isObscured1;
+
+  @override
+  void initState() {
+    super.initState();
+    _isObscured = true;
+    _isObscured1 = true;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -160,7 +177,9 @@ class Register extends State<SignIn> {
                           return "Not a valid Username";
                         }
                         if (!RegExp(r'^.{5,}$').hasMatch(value)) {
-                          return "Min 5 character";
+                          return "Minimum 5 characters";
+                        } else if (value.length > 20) {
+                          return ("Maximum 20 characters");
                         } else {
                           return null;
                         }
@@ -188,9 +207,25 @@ class Register extends State<SignIn> {
                             borderRadius: BorderRadius.circular(10),
                           ),
                           labelText: "Blood Type"),
-                      validator: MultiValidator([
-                        RequiredValidator(errorText: "Required"),
-                      ]),
+                      validator: wordLimit,
+                    ),
+                  ),
+                  //location
+                  Padding(
+                    padding: EdgeInsets.only(top: 25.0),
+                    child: TextFormField(
+                      controller: locationController,
+                      onSaved: (value) {
+                        locationController.text = value!;
+                      },
+                      textInputAction: TextInputAction.next,
+                      decoration: InputDecoration(
+                          prefixIcon: Icon(Icons.location_city),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          labelText: "Location"),
+                      validator: wordLimit,
                     ),
                   ),
                   //contact
@@ -225,8 +260,20 @@ class Register extends State<SignIn> {
                         _passwordController.text = value!;
                       },
                       textInputAction: TextInputAction.next,
-                      obscureText: true,
+                      obscureText: _isObscured,
                       decoration: InputDecoration(
+                          suffixIcon: IconButton(
+                            padding:
+                                const EdgeInsetsDirectional.only(end: 12.0),
+                            icon: _isObscured
+                                ? const Icon(Icons.visibility)
+                                : const Icon(Icons.visibility_off),
+                            onPressed: () {
+                              setState(() {
+                                _isObscured = !_isObscured;
+                              });
+                            },
+                          ),
                           prefixIcon: Icon(Icons.lock),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
@@ -244,8 +291,20 @@ class Register extends State<SignIn> {
                         _confirmPasswordController.text = value!;
                       },
                       textInputAction: TextInputAction.done,
-                      obscureText: true,
+                      obscureText: _isObscured1,
                       decoration: InputDecoration(
+                          suffixIcon: IconButton(
+                            padding:
+                                const EdgeInsetsDirectional.only(end: 12.0),
+                            icon: _isObscured1
+                                ? const Icon(Icons.visibility)
+                                : const Icon(Icons.visibility_off),
+                            onPressed: () {
+                              setState(() {
+                                _isObscured1 = !_isObscured1;
+                              });
+                            },
+                          ),
                           prefixIcon: Icon(Icons.lock),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
@@ -310,7 +369,7 @@ class Register extends State<SignIn> {
             errorMessage = "Too many requests";
             break;
           default:
-            errorMessage = "Something went wrong Try again later";
+            errorMessage = "Something went wrong Try again late!";
         }
 
         Fluttertoast.showToast(msg: errorMessage!);
@@ -335,9 +394,10 @@ class Register extends State<SignIn> {
     userModel.userName = usernameController.text;
     userModel.bloodType = bloodController.text;
     userModel.contact = contactController.text;
-    userModel.password = _passwordController.text;
-    userModel.confirmPass = _confirmPasswordController.text;
+    userModel.location = locationController.text;
     userModel.status = "I am a new user";
+    userModel.imagePath = "images/avatar.jpg";
+    userModel.role = "User";
 
     await firebaseFirestore
         .collection("users")

@@ -1,15 +1,17 @@
+// ignore_for_file: file_names
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class HospitalFeed extends StatefulWidget {
-  const HospitalFeed({super.key});
+class AdminHospitalFeed extends StatefulWidget {
+  const AdminHospitalFeed({super.key});
 
   @override
-  State<HospitalFeed> createState() => _HospitalFeedState();
+  State<AdminHospitalFeed> createState() => _AdminHospitalFeedState();
 }
 
-class _HospitalFeedState extends State<HospitalFeed> {
+class _AdminHospitalFeedState extends State<AdminHospitalFeed> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   String name = '...';

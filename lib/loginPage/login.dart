@@ -2,8 +2,13 @@
 import 'package:blood_bank/signUp/accept_terms.dart';
 import 'package:blood_bank/verification/verify_email.dart';
 import 'package:blood_bank/verification/forgotpassword.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+
+import '../Admin/adminHomePage.dart';
+import '../Homepage/home_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -18,12 +23,16 @@ class LoginPageState extends State<LoginPage> {
   final passwordController = TextEditingController();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
+  // ignore: prefer_typing_uninitialized_variables
+  var _isObscured;
+
   @override
   void initState() {
     emailController.addListener(() {
       setState(() {});
     });
     super.initState();
+    _isObscured = true;
   }
 
   @override
@@ -40,6 +49,7 @@ class LoginPageState extends State<LoginPage> {
       borderRadius: BorderRadius.all(Radius.circular(30)),
       shadowColor: Colors.black,
       child: TextField(
+        textInputAction: TextInputAction.next,
         controller: emailController,
         obscureText: false,
         keyboardType: TextInputType.emailAddress,
@@ -76,14 +86,27 @@ class LoginPageState extends State<LoginPage> {
       borderRadius: BorderRadius.all(Radius.circular(30)),
       shadowColor: Colors.black,
       child: TextFormField(
+        textInputAction: TextInputAction.done,
         controller: passwordController,
-        obscureText: true,
+        obscureText: _isObscured,
         keyboardType: TextInputType.visiblePassword,
         style: TextStyle(
           color: Color.fromARGB(255, 68, 68, 130),
           fontSize: 14,
         ),
         decoration: InputDecoration(
+            suffixIcon: IconButton(
+              padding: const EdgeInsetsDirectional.only(end: 12.0),
+              color: Color.fromARGB(255, 68, 68, 130),
+              icon: _isObscured
+                  ? const Icon(Icons.visibility)
+                  : const Icon(Icons.visibility_off),
+              onPressed: () {
+                setState(() {
+                  _isObscured = !_isObscured;
+                });
+              },
+            ),
             filled: true,
             fillColor: Color.fromRGBO(255, 203, 205, 1),
             enabledBorder: OutlineInputBorder(
@@ -179,18 +202,47 @@ class LoginPageState extends State<LoginPage> {
     );
   }
 
+  void checkRole() async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+      var check = FirebaseFirestore.instance
+          .collection('users')
+          .doc(user!.uid)
+          .get()
+          .then((DocumentSnapshot documentSnapshot) {
+        if (documentSnapshot.exists) {
+          if (documentSnapshot.get('role') == "Admin") {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => AdminHomePage(),
+              ),
+            );
+          } else if (documentSnapshot.get('role') == "User") {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => HomePage(),
+              ),
+            );
+          }
+        } else {
+          errorPass();
+        }
+      });
+    } catch (e) {
+      Fluttertoast.showToast(msg: "Something went wrong try again later!");
+      // print(e);
+    }
+  }
+
   void signUserIn(String email, String password) async {
     try {
-      await FirebaseAuth.instance
-          .signInWithEmailAndPassword(
-            email: emailController.text,
-            password: passwordController.text,
-          )
-          .then(
-            (value) => Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => VerifyEmail()),
-            ),
-          );
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text,
+        password: passwordController.text,
+      );
+      checkRole();
     } on FirebaseAuthException catch (e) {
       if (e.code == 'invalid-email') {
         errorEmail();
@@ -198,6 +250,8 @@ class LoginPageState extends State<LoginPage> {
         errorPassword();
       } else if (e.code == 'user-not-found') {
         errorPass();
+      } else {
+        Fluttertoast.showToast(msg: "Something went wrong try again later!");
       }
     }
   }

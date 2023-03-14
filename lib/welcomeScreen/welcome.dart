@@ -2,7 +2,6 @@ import 'package:blood_bank/loginPage/login.dart';
 import 'package:blood_bank/main_page.dart';
 import 'package:flutter/material.dart';
 
-
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
 
@@ -82,7 +81,3 @@ class WelcomeScreen extends StatelessWidget {
     );
   }
 }
-
-
-// crossAxisAlignment: CrossAxisAlignment.start,
-//mainAxisAlignment: MainAxisAlignment.center,

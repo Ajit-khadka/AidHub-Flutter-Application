@@ -10,8 +10,17 @@ class NearestHospital extends StatefulWidget {
 class _NearestHospitalState extends State<NearestHospital> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        backgroundColor: const Color.fromRGBO(254, 109, 115, 1),
+        title: const Text(
+          'Nearest Hospital',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        automaticallyImplyLeading: false,
+      ),
+      body: const Center(
         child: Text(
           'Nearest Hospital,',
           style: TextStyle(fontSize: 24, fontFamily: 'OpenSans'),

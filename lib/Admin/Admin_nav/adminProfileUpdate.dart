@@ -1,6 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:blood_bank/Admin/Admin_nav/adminProfile.dart';
+import 'package:blood_bank/Admin/adminHomePage.dart';
 import 'package:blood_bank/Homepage/Nav/profile_screen.dart';
 import 'package:blood_bank/Homepage/home_page.dart';
 import 'package:blood_bank/model/user_model.dart';
@@ -10,14 +10,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-class UpdateProfileScreen extends StatefulWidget {
-  const UpdateProfileScreen({super.key});
+import '../adminModel.dart';
+
+class AdminUpdateProfile extends StatefulWidget {
+  const AdminUpdateProfile({super.key});
 
   @override
-  State<UpdateProfileScreen> createState() => _UpdateProfileScreenState();
+  State<AdminUpdateProfile> createState() => _AdminUpdateProfile();
 }
 
-class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
+class _AdminUpdateProfile extends State<AdminUpdateProfile> {
   @override
   void initState() {
     super.initState();
@@ -27,7 +29,6 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   var usernameController = TextEditingController();
-  var bloodController = TextEditingController();
   var contactController = TextEditingController();
   var statusController = TextEditingController();
   var locationController = TextEditingController();
@@ -76,7 +77,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     }
   }
 
-  var myUser = UserModel();
+  var myAdmin = AdminModel();
 
   String name = '...';
   String uid = '';
@@ -95,7 +96,6 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
           await FirebaseFirestore.instance.collection('users').doc(uid).get();
       setState(() {
         name = userDoc.get('username');
-        bloodType = userDoc.get('bloodType');
         email = userDoc.get('email');
         contact = userDoc.get('contact');
         status = userDoc.get("status");
@@ -105,7 +105,6 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
         // debugPrint(name);
       });
       usernameController = TextEditingController(text: name);
-      bloodController = TextEditingController(text: bloodType);
       contactController = TextEditingController(text: contact);
       locationController = TextEditingController(text: location);
       statusController = TextEditingController(text: status);
@@ -119,9 +118,8 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     User? user = _auth.currentUser;
     uid = user!.uid;
     try {
-      FirebaseFirestore.instance.collection('users').doc(uid).update({
+      FirebaseFirestore.instance.collection('admin').doc(uid).update({
         'username': usernameController.text.trim(),
-        'bloodType': bloodController.text.trim(),
         'contact': contactController.text.trim(),
         'status': statusController.text.trim(),
         'location': locationController.text.trim(),
@@ -148,30 +146,37 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
       ),
       body: SingleChildScrollView(
         child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 40),
+          padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 30),
           child: Column(
             children: [
-              const SizedBox(
+              SizedBox(
                 height: 35,
+              ),
+              const SizedBox(
+                height: 20,
               ),
               Image.asset("images/Login.png", scale: 0.5),
               const SizedBox(
                 height: 20,
               ),
+              const Text(
+                "  Change your details ",
+                style: TextStyle(
+                  color: Color.fromARGB(255, 68, 68, 130),
+                  fontSize: 20,
+                  fontFamily: 'OpenSans',
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 0,
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
               Form(
                   key: formkey,
                   child: Column(
                     children: <Widget>[
-                      const Text(
-                        "Change your details.",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.black38,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 0),
                       //status
                       Padding(
                         padding: const EdgeInsets.only(top: 18.0),
@@ -220,25 +225,6 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               labelText: "Username"),
-                        ),
-                      ),
-                      //bloodType
-                      Padding(
-                        padding: const EdgeInsets.only(top: 25.0),
-                        child: TextFormField(
-                          controller: bloodController,
-                          // initialValue: bloodType,
-                          onSaved: (value) {
-                            bloodController.text = value!;
-                          },
-                          textInputAction: TextInputAction.next,
-                          decoration: InputDecoration(
-                              prefixIcon: const Icon(Icons.bloodtype),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              labelText: "Blood Type"),
-                          validator: wordLimit,
                         ),
                       ),
                       //location
@@ -296,7 +282,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                               updateData();
                               Navigator.push(context, MaterialPageRoute(
                                 builder: (context) {
-                                  return HomePage();
+                                  return AdminHomePage();
                                 },
                               ));
                             }

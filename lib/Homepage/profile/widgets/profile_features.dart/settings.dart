@@ -30,6 +30,7 @@ Future deleteUserData() async {
     });
   } catch (e) {
     Fluttertoast.showToast(msg: "Something went wrong try again later!");
+    // print(e);
   }
 }
 
@@ -41,6 +42,7 @@ Future deleteUser() async {
     });
   } catch (e) {
     Fluttertoast.showToast(msg: "Something went wrong try again later!");
+    // print(e);
   }
 }
 
@@ -97,14 +99,14 @@ class _SettingProfileState extends State<SettingProfile> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
+        centerTitle: true,
+        backgroundColor: const Color.fromRGBO(254, 109, 115, 1),
         title: const Text(
-          'Profile',
+          'Settings',
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
         leading: IconButton(
-            icon: const Icon(Icons.arrow_back,
-                color: Color.fromRGBO(254, 109, 115, 1)),
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
             onPressed: () {
               Navigator.of(context).pop();
             }),
@@ -112,18 +114,8 @@ class _SettingProfileState extends State<SettingProfile> {
       body: SingleChildScrollView(
           child: Column(
         children: [
-          const Text(
-            " Settings ",
-            style: TextStyle(
-              color: Color.fromARGB(255, 68, 68, 130),
-              fontSize: 22,
-              fontFamily: 'OpenSans',
-              fontWeight: FontWeight.bold,
-              letterSpacing: 0,
-            ),
-          ),
           const SizedBox(
-            height: 25,
+            height: 10,
           ),
           //menu
           ProfileMenuWidget(
