@@ -8,7 +8,6 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../Homepage/profile/widgets/profile_features.dart/select_photo.dart';
-import 'employee_image_select.dart';
 import 'employee_list.dart';
 
 class EmployeeList extends StatefulWidget {
@@ -64,7 +63,6 @@ class _EmployeeListState extends State<EmployeeList> {
                   style: TextStyle(
                     color: Color.fromARGB(255, 68, 68, 130),
                     fontSize: 20,
-                    fontFamily: 'OpenSans',
                     fontWeight: FontWeight.bold,
                     letterSpacing: 0,
                   ),

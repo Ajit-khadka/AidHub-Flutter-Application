@@ -5,11 +5,9 @@ import 'dart:io';
 
 import 'package:blood_bank/Admin/Employeelist/employee.dart';
 import 'package:blood_bank/Admin/Admin_nav/adminProfileUpdate.dart';
-import 'package:blood_bank/Homepage/profile/update_profile_screen.dart';
 import 'package:blood_bank/Homepage/profile/widgets/profile_features.dart/select_photo.dart';
 import 'package:blood_bank/Homepage/profile/widgets/profile_features.dart/settings.dart';
 import 'package:blood_bank/Homepage/profile/widgets/profile_menu.dart';
-import 'package:blood_bank/welcomeScreen/welcome.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:firebase_auth/firebase_auth.dart';

@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously, avoid_unnecessary_containers
 
-import 'package:blood_bank/Admin/Admin_nav/Admin_hospitafeed.dart';
+import 'package:blood_bank/Admin/Admin_nav/admin_Event.dart';
+import 'package:blood_bank/Admin/Admin_nav/admin_hospitafeed.dart';
 import 'package:blood_bank/Admin/Admin_nav/adminProfile.dart';
 import 'package:blood_bank/Homepage/Nav/hospital_feed.dart';
 import 'package:blood_bank/Homepage/Nav/nearest_hospital.dart';
@@ -35,7 +36,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
     AdminHospitalFeed(),
     BloodRequest(),
     NearestHospital(),
-    Events(),
+    Adminevent(),
     AdminProfilePage(),
   ];
 
