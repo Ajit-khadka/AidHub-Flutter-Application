@@ -13,6 +13,7 @@ class MainPage extends StatelessWidget {
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
+            // print(snapshot);
             return const VerifyEmail();
           } else if (snapshot.hasError) {
             return const Text("error");

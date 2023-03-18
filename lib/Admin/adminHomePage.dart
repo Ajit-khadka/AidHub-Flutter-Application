@@ -9,10 +9,14 @@ import 'package:blood_bank/Homepage/Nav/par_event.dart';
 import 'package:blood_bank/Homepage/Nav/request.dart';
 import 'package:blood_bank/Homepage/Nav/profile_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
 import 'Admin_nav/adminProfileUpdate.dart';
+
+import 'controller/data_controller.dart';
 
 class AdminHomePage extends StatefulWidget {
   const AdminHomePage({super.key});
@@ -39,6 +43,13 @@ class _AdminHomePageState extends State<AdminHomePage> {
     Adminevent(),
     AdminProfilePage(),
   ];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Get.put(DataController(), permanent: true);
+  }
 
   PageController controller = PageController();
 

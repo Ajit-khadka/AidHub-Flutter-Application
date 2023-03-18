@@ -5,19 +5,23 @@ import 'dart:io';
 
 import 'package:blood_bank/Admin/Employeelist/employee.dart';
 import 'package:blood_bank/Admin/Admin_nav/adminProfileUpdate.dart';
-import 'package:blood_bank/Homepage/profile/widgets/profile_features.dart/select_photo.dart';
 import 'package:blood_bank/Homepage/profile/widgets/profile_features.dart/settings.dart';
 import 'package:blood_bank/Homepage/profile/widgets/profile_menu.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:image_cropper/image_cropper.dart';
+import 'package:get/get.dart';
+// import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import '../../../loginPage/login.dart';
+import 'package:path/path.dart' as Path;
+
+import '../controller/data_controller.dart';
+import '../utils/app_color.dart';
 
 class AdminProfilePage extends StatefulWidget {
   const AdminProfilePage({super.key});
@@ -39,9 +43,11 @@ class _AdminProfilePageState extends State<AdminProfilePage> {
   String email = "...";
   String contact = "...";
   String location = '...';
-  // String imagePath = '...';
+  String image = '';
   String status = "I am a new user";
   Timer? timer;
+
+  DataController? dataController;
 
   @override
   void initState() {
@@ -53,20 +59,23 @@ class _AdminProfilePageState extends State<AdminProfilePage> {
   Future<void> getData() async {
     User? user = _auth.currentUser;
     uid = user!.uid;
+    dataController = Get.find<DataController>();
+
     try {
       debugPrint("user.uid $uid");
       final DocumentSnapshot userDoc =
           await FirebaseFirestore.instance.collection('users').doc(uid).get();
-      setState(() {
-        name = userDoc.get('username');
-        email = userDoc.get('email');
-        contact = userDoc.get('contact');
-        location = userDoc.get('location');
-        status = userDoc.get('status');
-        // imagePath = userDoc.get('imagepath');
-        // debugPrint(email);
-        // debugPrint(location);
-      });
+      if (mounted) {
+        setState(() {
+          name = userDoc.get('username');
+          email = userDoc.get('email');
+          contact = userDoc.get('contact');
+          location = userDoc.get('location');
+          status = userDoc.get('status');
+          image = userDoc.get('image');
+          // debugPrint(image);
+        });
+      }
     } catch (e) {
       Fluttertoast.showToast(msg: "Something went wrong try again later!");
       print(e);
@@ -116,76 +125,9 @@ class _AdminProfilePageState extends State<AdminProfilePage> {
   }
 
   File? _image;
-  String defaultImage = '';
   String? e;
 
-  Future _pickImage(ImageSource source) async {
-    try {
-      final image = await ImagePicker().pickImage(source: source);
-      if (image == null) return;
-      File? img = File(image.path);
-      img = await _cropImage(imageFile: img);
-      setState(() {
-        _image = img;
-        uploadImage(img);
-        Navigator.of(context).pop();
-      });
-    } on PlatformException catch (e) {
-      // print(e);
-      Navigator.of(context).pop();
-    }
-  }
-
-  Future<File?> _cropImage({required File imageFile}) async {
-    CroppedFile? croppedImage =
-        await ImageCropper().cropImage(sourcePath: imageFile.path);
-    if (croppedImage == null) return null;
-    return File(croppedImage.path);
-  }
-
-  void _showSelectPhotoOptions(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(25.0),
-        ),
-      ),
-      builder: (context) => DraggableScrollableSheet(
-          initialChildSize: 0.28,
-          maxChildSize: 0.4,
-          minChildSize: 0.28,
-          expand: false,
-          builder: (context, imagePathController) {
-            return SingleChildScrollView(
-              controller: imagePathController,
-              child: SelectPhotoOptionsScreen(
-                onTap: _pickImage,
-              ),
-            );
-          }),
-    );
-  }
-
-  Future<void> uploadImage(img) async {
-    try {
-      firebase_storage.UploadTask uploadTask;
-      firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance
-          .ref()
-          .child('/')
-          .child('/' + img);
-
-      uploadTask = ref.putFile(File(img));
-
-      await uploadTask.whenComplete(() => null);
-      String imageUrl = await ref.getDownloadURL();
-      print('Uploaded Image URL' + imageUrl);
-    } catch (e) {
-      Fluttertoast.showToast(msg: "Something went wrong try again later!");
-      print(e);
-    }
-  }
+  File? profileImage;
 
   @override
   Widget build(BuildContext context) {
@@ -203,38 +145,61 @@ class _AdminProfilePageState extends State<AdminProfilePage> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              const SizedBox(
-                height: 15,
-              ),
-              Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 0, vertical: 15),
-                  child: Center(
-                      child: GestureDetector(
-                    behavior: HitTestBehavior.translucent,
-                    onTap: () {
-                      _showSelectPhotoOptions(context);
-                    },
-                    child: Center(
-                        child: Container(
-                      width: 130,
-                      height: 130,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Color.fromRGBO(254, 109, 115, 1),
+              Align(
+                alignment: Alignment.center,
+                child: Column(
+                  children: [
+                    InkWell(
+                      onTap: () {},
+                      child: Container(
+                        width: 120,
+                        height: 120,
+                        margin: const EdgeInsets.only(top: 35),
+                        padding: const EdgeInsets.all(2),
+                        decoration: BoxDecoration(
+                          color: AppColors.blue,
+                          borderRadius: BorderRadius.circular(70),
+                          gradient: const LinearGradient(
+                            colors: [
+                              Color.fromRGBO(254, 109, 115, 1),
+                              Color.fromRGBO(254, 109, 115, 1),
+                              Color.fromRGBO(254, 109, 115, 1),
+                              Color.fromRGBO(254, 109, 115, 1),
+                            ],
+                          ),
+                        ),
+                        child: Column(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(2),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(70),
+                              ),
+                              child: image.isEmpty
+                                  ? const CircleAvatar(
+                                      radius: 56,
+                                      backgroundColor: Colors.white,
+                                      backgroundImage:
+                                          AssetImage('images/DefaultUser.png'))
+                                  : CircleAvatar(
+                                      radius: 56,
+                                      backgroundColor: Colors.white,
+                                      backgroundImage: NetworkImage(
+                                        image,
+                                      )),
+                            ),
+                          ],
+                        ),
                       ),
-                      child: Center(
-                          child: _image == null
-                              ? const Text(
-                                  'No image selected',
-                                  style: TextStyle(fontSize: 20),
-                                )
-                              : CircleAvatar(
-                                  backgroundImage: FileImage(_image!),
-                                  radius: 200,
-                                )),
-                    )),
-                  ))),
+                    ),
+                    const SizedBox(
+                      width: 0,
+                      height: 10,
+                    ),
+                  ],
+                ),
+              ),
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,

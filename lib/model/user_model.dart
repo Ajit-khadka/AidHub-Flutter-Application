@@ -5,7 +5,7 @@ class UserModel {
   String? bloodType;
   String? contact;
   String? status;
-  String? imagePath;
+  String? image;
   String? location;
   String? role;
 
@@ -16,7 +16,7 @@ class UserModel {
     this.bloodType,
     this.contact,
     this.status,
-    this.imagePath,
+    this.image,
     this.location,
     this.role,
   });
@@ -30,7 +30,7 @@ class UserModel {
       bloodType: map['bloodType'],
       contact: map['contact'],
       status: map['status'],
-      imagePath: map['imagePath'],
+      image: map['image'],
       location: map['location'],
       role: map['role'],
     );
@@ -45,7 +45,7 @@ class UserModel {
       'status': status,
       'contact': contact,
       'location': location,
-      'imagePath': imagePath,
+      'image': image,
       'role': role,
     };
   }

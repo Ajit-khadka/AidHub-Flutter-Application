@@ -42,7 +42,7 @@ Future deleteUser() async {
     });
   } catch (e) {
     Fluttertoast.showToast(msg: "Something went wrong try again later!");
-    // print(e);
+    print(e);
   }
 }
 

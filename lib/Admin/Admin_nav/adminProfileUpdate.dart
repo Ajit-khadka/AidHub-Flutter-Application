@@ -1,16 +1,24 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:io';
+
 import 'package:blood_bank/Admin/adminHomePage.dart';
 import 'package:blood_bank/Homepage/Nav/profile_screen.dart';
 import 'package:blood_bank/Homepage/home_page.dart';
 import 'package:blood_bank/model/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart' as Path;
 
 import '../adminModel.dart';
+import '../controller/data_controller.dart';
+import '../utils/app_color.dart';
 
 class AdminUpdateProfile extends StatefulWidget {
   const AdminUpdateProfile({super.key});
@@ -87,10 +95,15 @@ class _AdminUpdateProfile extends State<AdminUpdateProfile> {
   String password = "...";
   String status = "...";
   String location = "...";
+  String image = '';
+  String imageUrl = '';
+
+  DataController? dataController;
 
   Future getUserInfo() async {
     User? user = _auth.currentUser;
     uid = user!.uid;
+    dataController = Get.find<DataController>();
     try {
       final DocumentSnapshot userDoc =
           await FirebaseFirestore.instance.collection('users').doc(uid).get();
@@ -100,6 +113,8 @@ class _AdminUpdateProfile extends State<AdminUpdateProfile> {
         contact = userDoc.get('contact');
         status = userDoc.get("status");
         location = userDoc.get("location");
+        image = userDoc.get('image');
+        // debugPrint(image);
 
         // location = userDoc.get("location");
         // debugPrint(name);
@@ -114,15 +129,16 @@ class _AdminUpdateProfile extends State<AdminUpdateProfile> {
     }
   }
 
-  void updateData() {
+  void updateData(imageUrl) {
     User? user = _auth.currentUser;
     uid = user!.uid;
     try {
-      FirebaseFirestore.instance.collection('admin').doc(uid).update({
+      FirebaseFirestore.instance.collection('users').doc(uid).update({
         'username': usernameController.text.trim(),
         'contact': contactController.text.trim(),
         'status': statusController.text.trim(),
         'location': locationController.text.trim(),
+        'image': imageUrl,
       }).then((value) {
         Fluttertoast.showToast(msg: "Your profile is updated");
       });
@@ -131,6 +147,97 @@ class _AdminUpdateProfile extends State<AdminUpdateProfile> {
       // print(e);
     }
   }
+
+  File? profileImage;
+
+  imagePickDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Image Source'),
+          content: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              const SizedBox(
+                height: 50,
+              ),
+              InkWell(
+                onTap: () async {
+                  final ImagePicker _picker = ImagePicker();
+                  final XFile? image =
+                      await _picker.pickImage(source: ImageSource.camera);
+                  if (image != null) {
+                    profileImage = File(image.path);
+                    setState(() {});
+                    Navigator.pop(context);
+                  }
+                },
+                child: const Icon(
+                  Icons.camera_alt,
+                  size: 20,
+                ),
+              ),
+              const SizedBox(
+                width: 20,
+              ),
+              InkWell(
+                onTap: () async {
+                  final ImagePicker _picker = ImagePicker();
+                  final XFile? image = await _picker.pickImage(
+                    source: ImageSource.gallery,
+                  );
+                  if (image != null) {
+                    profileImage = File(image.path);
+                    setState(() {});
+                    Navigator.pop(context);
+                  }
+                },
+                child: const Icon(
+                  Icons.image,
+                  size: 20,
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Future<String> uploadImageToFirebaseStorage(File image) async {
+    String fileName = Path.basename(image.path);
+
+    var reference =
+        FirebaseStorage.instance.ref().child('profileImages/$fileName');
+    UploadTask uploadTask = reference.putFile(image);
+    TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() => null);
+    await taskSnapshot.ref.getDownloadURL().then((value) {
+      imageUrl = value;
+      // uploadImageToFirebaseStorage(imageUrl as File);
+      updateData(imageUrl);
+
+      debugPrint('image url ' + imageUrl);
+    }).catchError((e) {
+      Fluttertoast.showToast(msg: "Something went wrong try again later!");
+      print("Error happen $e");
+    });
+
+    return imageUrl;
+  }
+
+  // uploadProfileData(imageUrl) {
+  //   try {
+  //     FirebaseFirestore.instance.collection('users').doc(uid).set({
+  //       'image': imageUrl,
+  //     }).then((value) {
+  //       Fluttertoast.showToast(msg: "Your profile is updated");
+  //     });
+  //   } catch (e) {
+  //     Fluttertoast.showToast(msg: "Something went wrong try again later!");
+  //     // print(e);
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -150,12 +257,59 @@ class _AdminUpdateProfile extends State<AdminUpdateProfile> {
           child: Column(
             children: [
               SizedBox(
-                height: 35,
+                height: 5,
               ),
-              const SizedBox(
-                height: 20,
+              InkWell(
+                onTap: () {
+                  imagePickDialog();
+                },
+                child: Container(
+                  width: 120,
+                  height: 120,
+                  margin: EdgeInsets.only(top: 35),
+                  padding: EdgeInsets.all(2),
+                  decoration: BoxDecoration(
+                    color: AppColors.blue,
+                    borderRadius: BorderRadius.circular(70),
+                    gradient: LinearGradient(
+                      colors: const [
+                        Color.fromRGBO(254, 109, 115, 1),
+                        Color.fromRGBO(254, 109, 115, 1),
+                        Color.fromRGBO(254, 109, 115, 1),
+                        Color.fromRGBO(254, 109, 115, 1),
+                      ],
+                    ),
+                  ),
+                  child: Column(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.all(2),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(70),
+                        ),
+                        child: profileImage == null
+                            ? CircleAvatar(
+                                radius: 56,
+                                backgroundColor: Colors.white,
+                                child: Icon(
+                                  Icons.camera_alt,
+                                  color: Color.fromARGB(255, 68, 68, 130),
+                                  size: 25,
+                                ),
+                              )
+                            : CircleAvatar(
+                                radius: 56,
+                                backgroundColor: Colors.white,
+                                backgroundImage: FileImage(
+                                  profileImage!,
+                                ),
+                              ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
-              Image.asset("images/Login.png", scale: 0.5),
               const SizedBox(
                 height: 20,
               ),
@@ -277,9 +431,12 @@ class _AdminUpdateProfile extends State<AdminUpdateProfile> {
                           top: 25.0,
                         ),
                         child: ElevatedButton(
-                          onPressed: () {
+                          onPressed: () async {
                             if (formkey.currentState!.validate()) {
-                              updateData();
+                              Future<String> imageUrl =
+                                  uploadImageToFirebaseStorage(profileImage!);
+                              updateData(imageUrl);
+
                               Navigator.push(context, MaterialPageRoute(
                                 builder: (context) {
                                   return AdminHomePage();

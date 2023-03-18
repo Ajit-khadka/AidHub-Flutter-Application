@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously, no_leading_underscores_for_local_identifiers
+
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -5,15 +7,16 @@ import 'package:dotted_border/dotted_border.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
 import '../../model/event_model.dart';
+import '../controller/data_controller.dart';
 import '../utils/app_color.dart';
 import '../widget/app_widget.dart';
-import '../Event_page.dart/../Event_page.dart/event_data.dart';
 
 class CreateEventView extends StatefulWidget {
   const CreateEventView({Key? key}) : super(key: key);
@@ -146,7 +149,7 @@ class _CreateEventViewState extends State<CreateEventView> {
                 const Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    "Create Event",
+                    "Select Image",
                     style: TextStyle(
                       color: Color.fromARGB(255, 68, 68, 130),
                       fontSize: 18,
@@ -186,7 +189,7 @@ class _CreateEventViewState extends State<CreateEventView> {
                             ),
                           ),
                           myText(
-                            text: 'Click and upload image/video',
+                            text: 'Click and upload image',
                             style: TextStyle(
                               color: AppColors.blue,
                               fontSize: 19,
@@ -198,7 +201,7 @@ class _CreateEventViewState extends State<CreateEventView> {
                           ),
                           elevatedButton(
                               onpress: () async {
-                                mediaDialog(context);
+                                imageDialog(context, true);
                               },
                               text: 'Upload')
                         ],
@@ -577,28 +580,11 @@ class _CreateEventViewState extends State<CreateEventView> {
 
                               if (media.isNotEmpty) {
                                 for (int i = 0; i < media.length; i++) {
-                                  if (media[i].isVideo!) {
-                                    /// if video then first upload video file and then upload thumbnail and
-                                    /// store it in the map
-                                    String thumbnailUrl = await dataController
-                                        .uploadThumbnailToFirebase(
-                                            media[i].thumbnail!);
-
-                                    String videoUrl = await dataController
-                                        .uploadImageToFirebase(media[i].video!);
-
-                                    mediaUrls.add({
-                                      'url': videoUrl,
-                                      'thumbnail': thumbnailUrl,
-                                      'isImage': false
-                                    });
-                                  } else {
-                                    /// just upload image
-                                    String imageUrl = await dataController
-                                        .uploadImageToFirebase(media[i].image!);
-                                    mediaUrls.add(
-                                        {'url': imageUrl, 'isImage': true});
-                                  }
+                                  ///upload image
+                                  String imageUrl = await dataController
+                                      .uploadImageToFirebase(media[i].image!);
+                                  mediaUrls
+                                      .add({'url': imageUrl, 'isImage': true});
                                 }
                               }
 
@@ -626,7 +612,7 @@ class _CreateEventViewState extends State<CreateEventView> {
                               await dataController
                                   .createEvent(eventData)
                                   .then((value) {
-                                debugPrint("Event is done");
+                                Fluttertoast.showToast(msg: 'Event is created');
                                 isCreatingEvent(false);
                                 resetControllers();
                               });
@@ -645,9 +631,9 @@ class _CreateEventViewState extends State<CreateEventView> {
   }
 
   getImageDialog(ImageSource source) async {
-    final ImagePicker _picker = ImagePicker();
+    final ImagePicker picker = ImagePicker();
     // Pick an image
-    final XFile? image = await _picker.pickImage(
+    final XFile? image = await picker.pickImage(
       source: source,
     );
 
@@ -689,32 +675,32 @@ class _CreateEventViewState extends State<CreateEventView> {
     Navigator.pop(context);
   }
 
-  void mediaDialog(BuildContext context) {
-    showDialog(
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text("Select Media Type"),
-            content: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                IconButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                      imageDialog(context, true);
-                    },
-                    icon: const Icon(Icons.image)),
-                IconButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                      imageDialog(context, false);
-                    },
-                    icon: const Icon(Icons.slow_motion_video_outlined)),
-              ],
-            ),
-          );
-        },
-        context: context);
-  }
+  // void mediaDialog(BuildContext context) {
+  //   showDialog(
+  //       builder: (BuildContext context) {
+  //         return AlertDialog(
+  //           title: const Text("Select Media Type"),
+  //           content: Row(
+  //             mainAxisAlignment: MainAxisAlignment.spaceAround,
+  //             children: [
+  //               IconButton(
+  //                   onPressed: () {
+  //                     Navigator.pop(context);
+  //                     imageDialog(context, true);
+  //                   },
+  //                   icon: const Icon(Icons.image)),
+  //               IconButton(
+  //                   onPressed: () {
+  //                     Navigator.pop(context);
+  //                     imageDialog(context, false);
+  //                   },
+  //                   icon: const Icon(Icons.slow_motion_video_outlined)),
+  //             ],
+  //           ),
+  //         );
+  //       },
+  //       context: context);
+  // }
 
   void imageDialog(BuildContext context, bool image) {
     showDialog(

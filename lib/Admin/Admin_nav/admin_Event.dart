@@ -2,6 +2,11 @@
 
 import 'package:blood_bank/Admin/Event_page.dart/create_event.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+import '../Event_page.dart/show_event.dart';
+import '../controller/data_controller.dart';
+import '../widget/show_event.dart';
 
 class Adminevent extends StatefulWidget {
   const Adminevent({super.key});
@@ -11,6 +16,10 @@ class Adminevent extends StatefulWidget {
 }
 
 class _AdmineventState extends State<Adminevent> {
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -31,6 +40,10 @@ class _AdmineventState extends State<Adminevent> {
           backgroundColor: const Color.fromRGBO(254, 109, 115, 1),
           child: const Icon(Icons.add),
         ),
+        body: Column(children: [
+          EventsFeed(),
+          EventsIJoined(),
+        ]),
       ),
     );
   }

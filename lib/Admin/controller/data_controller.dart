@@ -1,3 +1,5 @@
+// ignore_for_file: invalid_use_of_protected_member
+
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -22,36 +24,36 @@ class DataController extends GetxController {
   var isEventsLoading = false.obs;
 
   var isMessageSending = false.obs;
-  sendMessageToFirebase(
-      {Map<String, dynamic>? data, String? lastMessage, String? grouid}) async {
-    isMessageSending(true);
+  // sendMessageToFirebase(
+  //     {Map<String, dynamic>? data, String? lastMessage, String? grouid}) async {
+  //   isMessageSending(true);
 
-    await FirebaseFirestore.instance
-        .collection('chats')
-        .doc(grouid)
-        .collection('chatroom')
-        .add(data!);
-    await FirebaseFirestore.instance.collection('chats').doc(grouid).set({
-      'lastMessage': lastMessage,
-      'groupId': grouid,
-      'group': grouid!.split('-'),
-    }, SetOptions(merge: true));
+  //   await FirebaseFirestore.instance
+  //       .collection('chats')
+  //       .doc(grouid)
+  //       .collection('chatroom')
+  //       .add(data!);
+  //   await FirebaseFirestore.instance.collection('chats').doc(grouid).set({
+  //     'lastMessage': lastMessage,
+  //     'groupId': grouid,
+  //     'group': grouid!.split('-'),
+  //   }, SetOptions(merge: true));
 
-    isMessageSending(false);
-  }
+  //   isMessageSending(false);
+  // }
 
-  createNotification(String recUid) {
-    FirebaseFirestore.instance
-        .collection('notifications')
-        .doc(recUid)
-        .collection('myNotifications')
-        .add({
-      'message': "Send you a message.",
-      'image': myDocument!.get('image'),
-      'name': myDocument!.get('first') + " " + myDocument!.get('last'),
-      'time': DateTime.now()
-    });
-  }
+  // createNotification(String recUid) {
+  //   FirebaseFirestore.instance
+  //       .collection('notifications')
+  //       .doc(recUid)
+  //       .collection('myNotifications')
+  //       .add({
+  //     // 'message': "Send you a message.",
+  //     'image': myDocument!.get('image'),
+  //     'name': myDocument!.get('username'),
+  //     'time': DateTime.now()
+  //   });
+  // }
 
   getMyDocument() {
     FirebaseFirestore.instance
@@ -73,22 +75,6 @@ class DataController extends GetxController {
       fileUrl = value;
     });
     print("Url $fileUrl");
-    return fileUrl;
-  }
-
-  Future<String> uploadThumbnailToFirebase(Uint8List file) async {
-    String fileUrl = '';
-    String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-    var reference =
-        FirebaseStorage.instance.ref().child('myfiles/$fileName.jpg');
-    UploadTask uploadTask = reference.putData(file);
-    TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() => null);
-    await taskSnapshot.ref.getDownloadURL().then((value) {
-      fileUrl = value;
-    });
-
-    print("Thumbnail $fileUrl");
-
     return fileUrl;
   }
 

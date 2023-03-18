@@ -4,7 +4,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:blood_bank/Homepage/profile/update_profile_screen.dart';
-import 'package:blood_bank/Homepage/profile/widgets/profile_features.dart/select_photo.dart';
 import 'package:blood_bank/Homepage/profile/widgets/profile_features.dart/settings.dart';
 import 'package:blood_bank/Homepage/profile/widgets/profile_menu.dart';
 import 'package:blood_bank/welcomeScreen/welcome.dart';
@@ -13,10 +12,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+import '../../Admin/controller/data_controller.dart';
+import '../../Admin/utils/app_color.dart';
 import '../../loginPage/login.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -29,6 +32,8 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  firebase_storage.FirebaseStorage storage =
+      firebase_storage.FirebaseStorage.instance;
 
   String name = '...';
   String uid = '';
@@ -36,8 +41,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String email = "...";
   String contact = "...";
   String location = '...';
-  // String imagePath = '...';
+  String image = '';
   String status = "I am a new user";
+  DataController? dataController;
+
   Timer? timer;
 
   @override
@@ -50,24 +57,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Future<void> getData() async {
     User? user = _auth.currentUser;
     uid = user!.uid;
+    dataController = Get.find<DataController>();
     try {
       debugPrint("user.uid $uid");
+
       final DocumentSnapshot userDoc =
           await FirebaseFirestore.instance.collection('users').doc(uid).get();
       if (!mounted) {
-        return;
+        setState(() {
+          name = userDoc.get('username');
+          bloodType = userDoc.get('bloodType');
+          email = userDoc.get('email');
+          contact = userDoc.get('contact');
+          location = userDoc.get('location');
+          status = userDoc.get('status');
+          image = userDoc.get('image');
+        });
       }
-      setState(() {
-        name = userDoc.get('username');
-        bloodType = userDoc.get('bloodType');
-        email = userDoc.get('email');
-        contact = userDoc.get('contact');
-        location = userDoc.get('location');
-        status = userDoc.get('status');
-        // imagePath = userDoc.get('imagepath');
-        // debugPrint(email);
-        // debugPrint(location);
-      });
     } catch (e) {
       Fluttertoast.showToast(msg: "Something went wrong try again later!");
       print(e);
@@ -120,56 +126,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   String? e;
 
-  Future _pickImage(ImageSource source) async {
-    try {
-      final image = await ImagePicker().pickImage(source: source);
-      if (image == null) return;
-      File? img = File(image.path);
-      img = await _cropImage(imageFile: img);
-      if (!mounted) {
-        return;
-      }
-      setState(() {
-        _image = img;
-        Navigator.of(context).pop();
-      });
-    } on PlatformException catch (e) {
-      // print(e);
-      Navigator.of(context).pop();
-    }
-  }
-
-  Future<File?> _cropImage({required File imageFile}) async {
-    CroppedFile? croppedImage =
-        await ImageCropper().cropImage(sourcePath: imageFile.path);
-    if (croppedImage == null) return null;
-    return File(croppedImage.path);
-  }
-
-  void _showSelectPhotoOptions(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(25.0),
-        ),
-      ),
-      builder: (context) => DraggableScrollableSheet(
-          initialChildSize: 0.28,
-          maxChildSize: 0.4,
-          minChildSize: 0.28,
-          expand: false,
-          builder: (context, imagePathController) {
-            return SingleChildScrollView(
-              controller: imagePathController,
-              child: SelectPhotoOptionsScreen(
-                onTap: _pickImage,
-              ),
-            );
-          }),
-    );
-  }
+  File? profileImage;
 
   @override
   Widget build(BuildContext context) {
@@ -188,37 +145,63 @@ class _ProfileScreenState extends State<ProfileScreen> {
           child: Column(
             children: [
               const SizedBox(
-                height: 15,
+                height: 5,
               ),
-              Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 0, vertical: 15),
-                  child: Center(
-                      child: GestureDetector(
-                    behavior: HitTestBehavior.translucent,
-                    onTap: () {
-                      _showSelectPhotoOptions(context);
-                    },
-                    child: Center(
-                        child: Container(
-                      width: 130,
-                      height: 130,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Color.fromRGBO(254, 109, 115, 1),
+              Align(
+                alignment: Alignment.center,
+                child: Column(
+                  children: [
+                    InkWell(
+                      onTap: () {},
+                      child: Container(
+                        width: 120,
+                        height: 120,
+                        margin: const EdgeInsets.only(top: 35),
+                        padding: const EdgeInsets.all(2),
+                        decoration: BoxDecoration(
+                          color: AppColors.blue,
+                          borderRadius: BorderRadius.circular(70),
+                          gradient: const LinearGradient(
+                            colors: [
+                              Color.fromRGBO(254, 109, 115, 1),
+                              Color.fromRGBO(254, 109, 115, 1),
+                              Color.fromRGBO(254, 109, 115, 1),
+                              Color.fromRGBO(254, 109, 115, 1),
+                            ],
+                          ),
+                        ),
+                        child: Column(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(2),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(70),
+                              ),
+                              child: image.isEmpty
+                                  ? const CircleAvatar(
+                                      radius: 56,
+                                      backgroundColor: Colors.white,
+                                      backgroundImage:
+                                          AssetImage('images/DefaultUser.png'))
+                                  : CircleAvatar(
+                                      radius: 56,
+                                      backgroundColor: Colors.white,
+                                      backgroundImage: NetworkImage(
+                                        image,
+                                      )),
+                            ),
+                          ],
+                        ),
                       ),
-                      child: Center(
-                          child: _image == null
-                              ? const Text(
-                                  'No image selected',
-                                  style: TextStyle(fontSize: 20),
-                                )
-                              : CircleAvatar(
-                                  backgroundImage: FileImage(_image!),
-                                  radius: 200,
-                                )),
-                    )),
-                  ))),
+                    ),
+                    const SizedBox(
+                      width: 0,
+                      height: 10,
+                    ),
+                  ],
+                ),
+              ),
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
