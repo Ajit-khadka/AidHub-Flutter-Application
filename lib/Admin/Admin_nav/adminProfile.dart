@@ -43,7 +43,8 @@ class _AdminProfilePageState extends State<AdminProfilePage> {
   String email = "...";
   String contact = "...";
   String location = '...';
-  String image = '';
+  String image =
+      'https://cdn1.iconfinder.com/data/icons/user-pictures/100/unknown-512.png';
   String status = "I am a new user";
   Timer? timer;
 
@@ -52,7 +53,6 @@ class _AdminProfilePageState extends State<AdminProfilePage> {
   @override
   void initState() {
     super.initState();
-
     getData();
   }
 
@@ -73,7 +73,7 @@ class _AdminProfilePageState extends State<AdminProfilePage> {
           location = userDoc.get('location');
           status = userDoc.get('status');
           image = userDoc.get('image');
-          // debugPrint(image);
+          debugPrint(name);
         });
       }
     } catch (e) {

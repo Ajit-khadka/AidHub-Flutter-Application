@@ -12,6 +12,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as Path;
 import '../../Admin/utils/app_color.dart';
@@ -94,6 +95,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   String location = "...";
   String image = '';
   String imageUrl = '';
+  String cloudimage = '';
 
   Future getUserInfo() async {
     User? user = _auth.currentUser;
@@ -108,6 +110,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
         contact = userDoc.get('contact');
         status = userDoc.get("status");
         location = userDoc.get("location");
+        // cloudimage = userDoc.get("image");
         // debugPrint(name);
       });
       usernameController = TextEditingController(text: name);
@@ -121,7 +124,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     }
   }
 
-  void updateData(imageUrl) {
+  void updateData() async {
     User? user = _auth.currentUser;
     uid = user!.uid;
     try {
@@ -200,6 +203,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
 
   Future<String> uploadImageToFirebaseStorage(File image) async {
     String fileName = Path.basename(image.path);
+    
 
     var reference =
         FirebaseStorage.instance.ref().child('profileImages/$fileName');
@@ -208,7 +212,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     await taskSnapshot.ref.getDownloadURL().then((value) {
       imageUrl = value;
       // uploadImageToFirebaseStorage(imageUrl as File);
-      updateData(imageUrl);
+      updateProfilePic(imageUrl);
 
       debugPrint('image url ' + imageUrl);
     }).catchError((e) {
@@ -217,6 +221,19 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     });
 
     return imageUrl;
+  }
+
+  updateProfilePic(imageUrl) {
+    try {
+      FirebaseFirestore.instance.collection('users').doc(uid).update({
+        'image': imageUrl,
+      }).then((value) {
+        Fluttertoast.showToast(msg: "Your profile picture is updated");
+      });
+    } catch (e) {
+      Fluttertoast.showToast(msg: "Something went wrong try again later!");
+      // print(e);
+    }
   }
 
   @override
@@ -289,6 +306,66 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                     ],
                   ),
                 ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(
+                  top: 25.0,
+                ),
+                child: ElevatedButton(
+                  onPressed: () async {
+                    if (profileImage == null) {
+                      Fluttertoast.showToast(msg: "Must select profile image");
+                      return;
+                    }
+
+                    if (formkey.currentState!.validate()) {
+                      Future<String> imageUrl =
+                          uploadImageToFirebaseStorage(profileImage!);
+
+                      Navigator.push(context, MaterialPageRoute(
+                        builder: (context) {
+                          return HomePage();
+                        },
+                      ));
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    elevation: 5,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 30, vertical: 10),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                    backgroundColor: const Color.fromRGBO(254, 109, 115, 1),
+                  ),
+                  child: Text(
+                    "Change ",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 30,
+              ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Update your details ",
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 68, 68, 130),
+                    fontSize: 20,
+                    fontFamily: 'OpenSans',
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 0,
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 10,
               ),
               const SizedBox(
                 height: 20,
@@ -428,9 +505,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                         child: ElevatedButton(
                           onPressed: () {
                             if (formkey.currentState!.validate()) {
-                              Future<String> imageUrl =
-                                  uploadImageToFirebaseStorage(profileImage!);
-                              updateData(imageUrl);
+                              updateData();
 
                               Navigator.push(context, MaterialPageRoute(
                                 builder: (context) {
@@ -442,7 +517,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                           style: ElevatedButton.styleFrom(
                             elevation: 5,
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 70, vertical: 12),
+                                horizontal: 30, vertical: 10),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(100),
                             ),
@@ -459,6 +534,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                           ),
                         ),
                       ),
+                      SizedBox(height: 20,)
                     ],
                   ))
             ],

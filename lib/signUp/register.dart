@@ -396,7 +396,7 @@ class Register extends State<SignIn> {
     userModel.contact = contactController.text;
     userModel.location = locationController.text;
     userModel.status = "I am a new user";
-    userModel.image = 'images/DefaultUser.png';
+    userModel.image = 'https://cdn1.iconfinder.com/data/icons/user-pictures/100/unknown-512.png';
     userModel.role = "User";
 
     await firebaseFirestore

@@ -1,10 +1,13 @@
-// ignore_for_file: use_build_context_synchronously, no_leading_underscores_for_local_identifiers
+// ignore_for_file: sized_box_for_whitespace
 
+import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:blood_bank/Admin/Admin_nav/admin_Event.dart';
+import 'package:blood_bank/Admin/adminHomePage.dart';
+import 'package:blood_bank/Homepage/home_page.dart';
 import 'package:dotted_border/dotted_border.dart';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -19,7 +22,7 @@ import '../utils/app_color.dart';
 import '../widget/app_widget.dart';
 
 class CreateEventView extends StatefulWidget {
-  const CreateEventView({Key? key}) : super(key: key);
+  CreateEventView({Key? key}) : super(key: key);
 
   @override
   State<CreateEventView> createState() => _CreateEventViewState();
@@ -50,6 +53,7 @@ class _CreateEventViewState extends State<CreateEventView> {
     maxEntries.clear();
     endTimeController.clear();
     startTimeController.clear();
+
     startTime = const TimeOfDay(hour: 0, minute: 0);
     endTime = const TimeOfDay(hour: 0, minute: 0);
     setState(() {});
@@ -118,8 +122,13 @@ class _CreateEventViewState extends State<CreateEventView> {
 
   List<EventMediaModel> media = [];
 
+  // List<File> media = [];
+  // List thumbnail = [];
+  // List<bool> isImage = [];
+
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
     timeController.text = '${date!.hour}:${date!.minute}:${date!.second}';
     dateController.text = '${date!.day}-${date!.month}-${date!.year}';
@@ -138,28 +147,84 @@ class _CreateEventViewState extends State<CreateEventView> {
       ),
       body: SingleChildScrollView(
         child: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+          margin: const EdgeInsets.symmetric(horizontal: 20),
           child: Form(
             key: formKey,
             child: Column(
               children: [
                 const SizedBox(
-                  height: 20,
+                  height: 10,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      alignment: Alignment.center,
+                      padding: const EdgeInsets.only(left: 10, right: 10),
+                      width: 90,
+                      height: 33,
+                      decoration: BoxDecoration(
+                          border: Border(
+                              bottom: BorderSide(
+                                  color: Colors.black.withOpacity(0.6),
+                                  width: 0.6))),
+                      child: DropdownButton(
+                        isExpanded: true,
+                        underline: Container(
+                            // decoration: BoxDecoration(
+                            //   border: Border.all(
+                            //     width: 0,
+                            //     color: Colors.white,
+                            //   ),
+                            // ),
+                            ),
+
+                        // borderRadius: BorderRadius.circular(10),
+                        icon: const Icon(
+                          LineAwesomeIcons.angle_down,
+                          size: 10,
+                        ),
+                        elevation: 16,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.black,
+                        ),
+                        value: event_type,
+                        onChanged: (String? newValue) {
+                          setState(
+                            () {
+                              event_type = newValue!;
+                            },
+                          );
+                        },
+                        items: list_item
+                            .map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 15,
                 ),
                 const Align(
-                  alignment: Alignment.centerLeft,
+                  alignment: Alignment.topLeft,
                   child: Text(
                     "Select Image",
                     style: TextStyle(
                       color: Color.fromARGB(255, 68, 68, 130),
-                      fontSize: 18,
+                      fontSize: 20,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 0,
                     ),
                   ),
                 ),
                 const SizedBox(
-                  height: 20,
+                  height: 15,
                 ),
                 Container(
                   height: Get.width * 0.6,
@@ -170,7 +235,7 @@ class _CreateEventViewState extends State<CreateEventView> {
                   child: DottedBorder(
                     color: AppColors.border,
                     strokeWidth: 1.5,
-                    dashPattern: [6, 6],
+                    dashPattern: const [6, 6],
                     child: Container(
                       alignment: Alignment.center,
                       child: Column(
@@ -180,12 +245,12 @@ class _CreateEventViewState extends State<CreateEventView> {
                           SizedBox(
                             height: Get.height * 0.05,
                           ),
-                          const SizedBox(
+                          Container(
                             width: 76,
                             height: 59,
-                            child: Icon(
+                            child: const Icon(
                               Icons.upload,
-                              color: Color(0xffA6A6A6),
+                              color: Color.fromARGB(126, 0, 0, 0),
                             ),
                           ),
                           myText(
@@ -273,6 +338,8 @@ class _CreateEventViewState extends State<CreateEventView> {
                                         ],
                                       ),
                                     )
+                                  //!isImage[i]
+
                                   : Container(
                                       width: Get.width * 0.3,
                                       height: Get.width * 0.3,
@@ -316,22 +383,24 @@ class _CreateEventViewState extends State<CreateEventView> {
                 ),
                 myTextField(
                     bool: false,
-                    icon: const Icon(Icons.event_available),
+                    icon: const Icon(Icons.edit_calendar_outlined),
                     text: 'Event Name',
                     controller: titleController,
                     validator: (String input) {
                       if (input.isEmpty) {
-                        Get.snackbar('Please', "Event name is required.",
-                            colorText: Colors.white,
-                            backgroundColor: Colors.blue);
+                        Get.snackbar('Opps', "Event name is Required.",
+                            colorText: const Color.fromARGB(255, 68, 68, 130),
+                            backgroundColor:
+                                const Color.fromRGBO(254, 109, 115, 1));
+
                         return '';
                       }
 
                       if (input.length < 3) {
-                        Get.snackbar(
-                            'Please', "Event name is should be 3+ characters.",
-                            colorText: Colors.white,
-                            backgroundColor: Colors.blue);
+                        Get.snackbar('Opps', "Event name is Invalid.",
+                            colorText: const Color.fromARGB(255, 68, 68, 130),
+                            backgroundColor:
+                                const Color.fromRGBO(254, 109, 115, 1));
                         return '';
                       }
                       return null;
@@ -341,22 +410,24 @@ class _CreateEventViewState extends State<CreateEventView> {
                 ),
                 myTextField(
                     bool: false,
-                    icon: const Icon(Icons.location_city),
+                    icon: const Icon(LineAwesomeIcons.search_location),
                     text: 'Location',
                     controller: locationController,
                     validator: (String input) {
                       if (input.isEmpty) {
-                        Get.snackbar('Enter',
-                            "Location is required to create the event.",
-                            colorText: Colors.white,
-                            backgroundColor: Colors.blue);
+                        Get.snackbar('Opps', "Location is Required.",
+                            colorText: const Color.fromARGB(255, 68, 68, 130),
+                            backgroundColor:
+                                const Color.fromRGBO(254, 109, 115, 1));
                         return '';
                       }
 
                       if (input.length < 3) {
-                        Get.snackbar('Sorry', "Location is Invalid.",
-                            colorText: Colors.white,
-                            backgroundColor: Colors.blue);
+                        Get.snackbar('Opps', "Location is Invalid",
+                            colorText: const Color.fromARGB(255, 68, 68, 130),
+                            backgroundColor:
+                                const Color.fromRGBO(254, 109, 115, 1));
+
                         return '';
                       }
                       return null;
@@ -365,18 +436,19 @@ class _CreateEventViewState extends State<CreateEventView> {
                   height: 20,
                 ),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     iconTitleContainer(
                       isReadOnly: true,
-                      path: const Icon(Icons.calendar_month),
+                      path: const Icon(Icons.date_range),
                       text: 'Date',
                       controller: dateController,
                       validator: (input) {
                         if (date == null) {
-                          Get.snackbar('Pleasw', "Date is required.",
-                              colorText: Colors.white,
-                              backgroundColor: Colors.blue);
+                          Get.snackbar('Opps', "Date is Required.",
+                              colorText: const Color.fromARGB(255, 68, 68, 130),
+                              backgroundColor:
+                                  const Color.fromRGBO(254, 109, 115, 1));
                           return '';
                         }
                         return null;
@@ -384,9 +456,6 @@ class _CreateEventViewState extends State<CreateEventView> {
                       onPress: () {
                         _selectDate(context);
                       },
-                    ),
-                    const SizedBox(
-                      width: 30,
                     ),
                     iconTitleContainer(
                         path: const Icon(Icons.people),
@@ -396,9 +465,10 @@ class _CreateEventViewState extends State<CreateEventView> {
                         onPress: () {},
                         validator: (String input) {
                           if (input.isEmpty) {
-                            Get.snackbar('Please', "Entries is required.",
+                            Get.snackbar('Opps', "Entries is Required.",
                                 colorText: Colors.white,
-                                backgroundColor: Colors.blue);
+                                backgroundColor:
+                                    const Color.fromRGBO(254, 109, 115, 1));
                             return '';
                           }
                           return null;
@@ -409,7 +479,7 @@ class _CreateEventViewState extends State<CreateEventView> {
                   height: 20,
                 ),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     iconTitleContainer(
                         path: const Icon(LineAwesomeIcons.clock),
@@ -420,9 +490,6 @@ class _CreateEventViewState extends State<CreateEventView> {
                         onPress: () {
                           startTimeMethod(context);
                         }),
-                    const SizedBox(
-                      width: 30,
-                    ),
                     iconTitleContainer(
                         path: const Icon(LineAwesomeIcons.clock),
                         text: 'End Time',
@@ -437,17 +504,21 @@ class _CreateEventViewState extends State<CreateEventView> {
                 const SizedBox(
                   height: 20,
                 ),
-                const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    "About Event",
-                    style: TextStyle(
-                      color: Color.fromARGB(255, 68, 68, 130),
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 0,
+                Row(
+                  children: const [
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        "About Event",
+                        style: TextStyle(
+                          color: Color.fromARGB(255, 68, 68, 130),
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 0,
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
                 ),
                 const SizedBox(
                   height: 20,
@@ -464,9 +535,10 @@ class _CreateEventViewState extends State<CreateEventView> {
                     controller: descriptionController,
                     validator: (input) {
                       if (input!.isEmpty) {
-                        Get.snackbar('Please', "Description is required.",
-                            colorText: Colors.white,
-                            backgroundColor: Colors.blue);
+                        Get.snackbar('Opps', "Description is Required.",
+                            colorText: const Color.fromARGB(255, 68, 68, 130),
+                            backgroundColor:
+                                const Color.fromRGBO(254, 109, 115, 1));
                         return '';
                       }
                       return null;
@@ -479,27 +551,30 @@ class _CreateEventViewState extends State<CreateEventView> {
                         color: AppColors.genderTextColor,
                       ),
                       hintText:
-                          'Description of event its benefits to hospital...',
+                          'Describe people should know about the event...',
+                      // border: OutlineInputBorder(
+                      //   borderRadius: BorderRadius.circular(8.0),
+                      // ),
                     ),
                   ),
                 ),
                 const SizedBox(
-                  height: 20,
+                  height: 15,
                 ),
                 const Align(
-                  alignment: Alignment.centerLeft,
+                  alignment: Alignment.topLeft,
                   child: Text(
                     "Event Status",
                     style: TextStyle(
                       color: Color.fromARGB(255, 68, 68, 130),
-                      fontSize: 18,
+                      fontSize: 20,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 0,
                     ),
                   ),
                 ),
                 const SizedBox(
-                  height: 20,
+                  height: 15,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -514,11 +589,19 @@ class _CreateEventViewState extends State<CreateEventView> {
                         border: Border.all(
                             width: 1, color: AppColors.genderTextColor),
                       ),
+                      // decoration: BoxDecoration(
+                      //
+                      //   // borderRadius: BorderRadius.circular(8),
+                      //    border: Border(
+                      //         bottom: BorderSide(color: Colors.black.withOpacity(0.8),width: 0.6)
+                      //     )
+                      //
+                      // ),
                       child: DropdownButton(
                         isExpanded: true,
                         underline: Container(),
                         //borderRadius: BorderRadius.circular(10),
-                        icon: const Icon(LineAwesomeIcons.door_open),
+                        icon: const Icon(Icons.time_to_leave),
                         elevation: 16,
                         style: TextStyle(
                           fontWeight: FontWeight.w400,
@@ -567,9 +650,11 @@ class _CreateEventViewState extends State<CreateEventView> {
                               }
 
                               if (media.isEmpty) {
-                                Get.snackbar('Opps', "Media is required.",
-                                    colorText: Colors.white,
-                                    backgroundColor: Colors.blue);
+                                Get.snackbar('Opps', "Photo is Required.",
+                                    colorText:
+                                        const Color.fromARGB(255, 68, 68, 130),
+                                    backgroundColor:
+                                        const Color.fromRGBO(254, 109, 115, 1));
 
                                 return;
                               }
@@ -580,11 +665,28 @@ class _CreateEventViewState extends State<CreateEventView> {
 
                               if (media.isNotEmpty) {
                                 for (int i = 0; i < media.length; i++) {
-                                  ///upload image
-                                  String imageUrl = await dataController
-                                      .uploadImageToFirebase(media[i].image!);
-                                  mediaUrls
-                                      .add({'url': imageUrl, 'isImage': true});
+                                  if (media[i].isVideo!) {
+                                    /// if video then first upload video file and then upload thumbnail and
+                                    /// store it in the map
+                                    String thumbnailUrl = await dataController
+                                        .uploadThumbnailToFirebase(
+                                            media[i].thumbnail!);
+
+                                    String videoUrl = await dataController
+                                        .uploadImageToFirebase(media[i].video!);
+
+                                    mediaUrls.add({
+                                      'url': videoUrl,
+                                      'thumbnail': thumbnailUrl,
+                                      'isImage': false
+                                    });
+                                  } else {
+                                    /// just upload image
+                                    String imageUrl = await dataController
+                                        .uploadImageToFirebase(media[i].image!);
+                                    mediaUrls.add(
+                                        {'url': imageUrl, 'isImage': true});
+                                  }
                                 }
                               }
 
@@ -612,9 +714,13 @@ class _CreateEventViewState extends State<CreateEventView> {
                               await dataController
                                   .createEvent(eventData)
                                   .then((value) {
-                                Fluttertoast.showToast(msg: 'Event is created');
+                                Fluttertoast.showToast(
+                                    msg: "Event is Created ");
                                 isCreatingEvent(false);
                                 resetControllers();
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) =>
+                                        const AdminHomePage()));
                               });
                             },
                             text: 'Create Event'),
@@ -631,9 +737,9 @@ class _CreateEventViewState extends State<CreateEventView> {
   }
 
   getImageDialog(ImageSource source) async {
-    final ImagePicker picker = ImagePicker();
+    final ImagePicker _picker = ImagePicker();
     // Pick an image
-    final XFile? image = await picker.pickImage(
+    final XFile? image = await _picker.pickImage(
       source: source,
     );
 
@@ -674,33 +780,6 @@ class _CreateEventViewState extends State<CreateEventView> {
 
     Navigator.pop(context);
   }
-
-  // void mediaDialog(BuildContext context) {
-  //   showDialog(
-  //       builder: (BuildContext context) {
-  //         return AlertDialog(
-  //           title: const Text("Select Media Type"),
-  //           content: Row(
-  //             mainAxisAlignment: MainAxisAlignment.spaceAround,
-  //             children: [
-  //               IconButton(
-  //                   onPressed: () {
-  //                     Navigator.pop(context);
-  //                     imageDialog(context, true);
-  //                   },
-  //                   icon: const Icon(Icons.image)),
-  //               IconButton(
-  //                   onPressed: () {
-  //                     Navigator.pop(context);
-  //                     imageDialog(context, false);
-  //                   },
-  //                   icon: const Icon(Icons.slow_motion_video_outlined)),
-  //             ],
-  //           ),
-  //         );
-  //       },
-  //       context: context);
-  // }
 
   void imageDialog(BuildContext context, bool image) {
     showDialog(

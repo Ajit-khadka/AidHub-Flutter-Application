@@ -125,11 +125,11 @@ class _AdminUpdateProfile extends State<AdminUpdateProfile> {
       statusController = TextEditingController(text: status);
     } catch (e) {
       Fluttertoast.showToast(msg: "Something went wrong try again later!");
-      // print(e);
+      print(e);
     }
   }
 
-  void updateData(imageUrl) {
+  void updateData() {
     User? user = _auth.currentUser;
     uid = user!.uid;
     try {
@@ -138,13 +138,12 @@ class _AdminUpdateProfile extends State<AdminUpdateProfile> {
         'contact': contactController.text.trim(),
         'status': statusController.text.trim(),
         'location': locationController.text.trim(),
-        'image': imageUrl,
       }).then((value) {
         Fluttertoast.showToast(msg: "Your profile is updated");
       });
     } catch (e) {
       Fluttertoast.showToast(msg: "Something went wrong try again later!");
-      // print(e);
+      print(e);
     }
   }
 
@@ -215,7 +214,7 @@ class _AdminUpdateProfile extends State<AdminUpdateProfile> {
     await taskSnapshot.ref.getDownloadURL().then((value) {
       imageUrl = value;
       // uploadImageToFirebaseStorage(imageUrl as File);
-      updateData(imageUrl);
+      updateProfilePic(imageUrl);
 
       debugPrint('image url ' + imageUrl);
     }).catchError((e) {
@@ -226,18 +225,18 @@ class _AdminUpdateProfile extends State<AdminUpdateProfile> {
     return imageUrl;
   }
 
-  // uploadProfileData(imageUrl) {
-  //   try {
-  //     FirebaseFirestore.instance.collection('users').doc(uid).set({
-  //       'image': imageUrl,
-  //     }).then((value) {
-  //       Fluttertoast.showToast(msg: "Your profile is updated");
-  //     });
-  //   } catch (e) {
-  //     Fluttertoast.showToast(msg: "Something went wrong try again later!");
-  //     // print(e);
-  //   }
-  // }
+  updateProfilePic(imageUrl) {
+    try {
+      FirebaseFirestore.instance.collection('users').doc(uid).update({
+        'image': imageUrl,
+      }).then((value) {
+        Fluttertoast.showToast(msg: "Your profile picture is updated");
+      });
+    } catch (e) {
+      Fluttertoast.showToast(msg: "Something went wrong try again later!");
+      // print(e);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -257,7 +256,23 @@ class _AdminUpdateProfile extends State<AdminUpdateProfile> {
           child: Column(
             children: [
               SizedBox(
-                height: 5,
+                height: 15,
+              ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Change your profile picture ",
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 68, 68, 130),
+                    fontSize: 20,
+                    fontFamily: 'OpenSans',
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 0,
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 10,
               ),
               InkWell(
                 onTap: () {
@@ -266,7 +281,7 @@ class _AdminUpdateProfile extends State<AdminUpdateProfile> {
                 child: Container(
                   width: 120,
                   height: 120,
-                  margin: EdgeInsets.only(top: 35),
+                  margin: EdgeInsets.only(top: 5),
                   padding: EdgeInsets.all(2),
                   decoration: BoxDecoration(
                     color: AppColors.blue,
@@ -310,17 +325,61 @@ class _AdminUpdateProfile extends State<AdminUpdateProfile> {
                   ),
                 ),
               ),
-              const SizedBox(
-                height: 20,
+              Padding(
+                padding: const EdgeInsets.only(
+                  top: 25.0,
+                ),
+                child: ElevatedButton(
+                  onPressed: () async {
+                    if (profileImage == null) {
+                      Fluttertoast.showToast(msg: "Must select profile image");
+                      return;
+                    }
+
+                    if (formkey.currentState!.validate()) {
+                      Future<String> imageUrl =
+                          uploadImageToFirebaseStorage(profileImage!);
+
+                      Navigator.push(context, MaterialPageRoute(
+                        builder: (context) {
+                          return AdminHomePage();
+                        },
+                      ));
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    elevation: 5,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 30, vertical: 10),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                    backgroundColor: const Color.fromRGBO(254, 109, 115, 1),
+                  ),
+                  child: Text(
+                    "Change ",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
               ),
-              const Text(
-                "  Change your details ",
-                style: TextStyle(
-                  color: Color.fromARGB(255, 68, 68, 130),
-                  fontSize: 20,
-                  fontFamily: 'OpenSans',
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 0,
+              const SizedBox(
+                height: 30,
+              ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Update your details ",
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 68, 68, 130),
+                    fontSize: 20,
+                    fontFamily: 'OpenSans',
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 0,
+                  ),
                 ),
               ),
               const SizedBox(
@@ -356,8 +415,6 @@ class _AdminUpdateProfile extends State<AdminUpdateProfile> {
                         padding: const EdgeInsets.only(top: 25.0),
                         child: TextFormField(
                           controller: usernameController,
-                          // initialValue: name,
-                          // ..text = "${Get.arguments['username'].toString()}",
                           onSaved: (value) {
                             usernameController.text = value!;
                           },
@@ -433,9 +490,7 @@ class _AdminUpdateProfile extends State<AdminUpdateProfile> {
                         child: ElevatedButton(
                           onPressed: () async {
                             if (formkey.currentState!.validate()) {
-                              Future<String> imageUrl =
-                                  uploadImageToFirebaseStorage(profileImage!);
-                              updateData(imageUrl);
+                              updateData();
 
                               Navigator.push(context, MaterialPageRoute(
                                 builder: (context) {
@@ -447,7 +502,7 @@ class _AdminUpdateProfile extends State<AdminUpdateProfile> {
                           style: ElevatedButton.styleFrom(
                             elevation: 5,
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 70, vertical: 12),
+                                horizontal: 30, vertical: 10),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(100),
                             ),
@@ -464,6 +519,9 @@ class _AdminUpdateProfile extends State<AdminUpdateProfile> {
                           ),
                         ),
                       ),
+                      SizedBox(
+                        height: 20,
+                      )
                     ],
                   ))
             ],

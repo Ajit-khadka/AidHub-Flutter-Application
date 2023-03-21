@@ -1,8 +1,13 @@
 // ignore_for_file: file_names
 
+import 'package:blood_bank/Admin/Event_page.dart/show_event.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+import '../controller/data_controller.dart';
+import '../utils/app_color.dart';
 
 class AdminHospitalFeed extends StatefulWidget {
   const AdminHospitalFeed({super.key});
@@ -21,6 +26,7 @@ class _AdminHospitalFeedState extends State<AdminHospitalFeed> {
   void initState() {
     super.initState();
     getData();
+    EventsIJoined();
   }
 
   Future<void> getData() async {
@@ -36,10 +42,14 @@ class _AdminHospitalFeedState extends State<AdminHospitalFeed> {
     }
   }
 
+  eventlist() {
+    return;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(255, 255, 255, 1),
+      backgroundColor: const Color.fromRGBO(245, 243, 241, 1),
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: const Color.fromRGBO(254, 109, 115, 1),
@@ -51,32 +61,205 @@ class _AdminHospitalFeedState extends State<AdminHospitalFeed> {
       ),
       body: SingleChildScrollView(
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 0),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
           child: Column(children: [
             const SizedBox(
               height: 20,
             ),
-            RichText(
-              textAlign: TextAlign.left,
-              text: TextSpan(
-                text: 'Hello,\n',
-                style: const TextStyle(
-                    fontSize: 24,
-                    color: Color.fromARGB(255, 68, 68, 130),
-                    fontFamily: 'Poppins'),
-                children: <TextSpan>[
-                  TextSpan(
-                      text: '$name !',
-                      style: const TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.bold,
-                      )),
-                ],
+            Align(
+              alignment: Alignment.topLeft,
+              child: RichText(
+                text: TextSpan(
+                  text: ' Hello,\n',
+                  style: const TextStyle(
+                      fontSize: 24,
+                      color: Color.fromARGB(255, 68, 68, 130),
+                      fontFamily: 'Poppins'),
+                  children: <TextSpan>[
+                    TextSpan(
+                        text: ' $name !',
+                        style: const TextStyle(
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                        )),
+                  ],
+                ),
               ),
             ),
+            EventsIJoined(),
           ]),
         ),
       ),
     );
   }
+}
+
+EventsIJoined() {
+  DataController dataController = Get.find<DataController>();
+
+  DocumentSnapshot myUser = dataController.allUsers
+      .firstWhere((e) => e.id == FirebaseAuth.instance.currentUser!.uid);
+
+  String userImage = '';
+  String userName = '';
+
+  try {
+    userImage = myUser.get('image');
+  } catch (e) {
+    userImage = '';
+  }
+
+  try {
+    userName = '${myUser.get('username')}';
+  } catch (e) {
+    userName = '';
+  }
+
+  return Column(
+    children: [
+      SizedBox(
+        height: Get.height * 0.015,
+      ),
+      Material(
+        elevation: 2,
+        borderRadius: BorderRadius.circular(17),
+        child: Container(
+          decoration: BoxDecoration(boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.3),
+              spreadRadius: 1,
+              blurRadius: 10,
+              offset: const Offset(0, 1), // changes position of shadow
+            ),
+          ], color: Colors.white, borderRadius: BorderRadius.circular(17)),
+          padding: const EdgeInsets.all(10),
+          width: 350,
+          height: 230,
+          child: ListView(children: [
+            const Align(
+              alignment: Alignment.topLeft,
+              child: Text(
+                " Event List",
+                style: TextStyle(
+                  color: Color.fromRGBO(254, 109, 115, 1),
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 0,
+                ),
+              ),
+            ),
+            Divider(
+              height: 15,
+              thickness: 1,
+              color: const Color(0xff918F8F).withOpacity(0.2),
+            ),
+            Obx(
+              () => dataController.isEventsLoading.value
+                  ? const Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : ListView.builder(
+                      itemCount: dataController.joinedEvents.length,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemBuilder: (context, i) {
+                        String name =
+                            dataController.joinedEvents[i].get('event_name');
+
+                        String date =
+                            dataController.joinedEvents[i].get('date');
+
+                        date = '${date.split('-')[0]}-${date.split('-')[1]}';
+
+                        List joinedUsers = [];
+
+                        try {
+                          joinedUsers =
+                              dataController.joinedEvents[i].get('joined');
+                        } catch (e) {
+                          joinedUsers = [];
+                        }
+
+                        return Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(5),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    width: 41, height: 24,
+                                    alignment: Alignment.center,
+                                    // padding: EdgeInsets.symmetric(
+                                    //     horizontal: 10, vertical: 7),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(4),
+                                      border: Border.all(
+                                        color: const Color.fromRGBO(
+                                            254, 109, 115, 1),
+                                      ),
+                                    ),
+                                    child: Text(
+                                      date,
+                                      style: TextStyle(
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w500,
+                                        color: AppColors.black,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  Text(
+                                    name,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 16,
+                                      color: Color.fromARGB(255, 68, 68, 130),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Container(
+                                width: Get.width * 0.6,
+                                height: 50,
+                                child: ListView.builder(
+                                  itemBuilder: (ctx, index) {
+                                    DocumentSnapshot user =
+                                        dataController.allUsers.firstWhere(
+                                            (e) => e.id == joinedUsers[index]);
+
+                                    String image = '';
+
+                                    try {
+                                      image = user.get('image');
+                                    } catch (e) {
+                                      image = '';
+                                    }
+
+                                    return Container(
+                                      margin: const EdgeInsets.only(left: 15),
+                                      child: CircleAvatar(
+                                        minRadius: 13,
+                                        backgroundImage: NetworkImage(image),
+                                      ),
+                                    );
+                                  },
+                                  itemCount: joinedUsers.length,
+                                  scrollDirection: Axis.horizontal,
+                                )),
+                          ],
+                        );
+                      },
+                    ),
+            ),
+          ]),
+        ),
+      ),
+      const SizedBox(
+        height: 10,
+      ),
+    ],
+  );
 }

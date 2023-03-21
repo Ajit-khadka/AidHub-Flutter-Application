@@ -43,7 +43,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String location = '...';
   String image = '';
   String status = "I am a new user";
-  DataController? dataController;
+  // DataController? dataController;
 
   Timer? timer;
 
@@ -57,13 +57,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Future<void> getData() async {
     User? user = _auth.currentUser;
     uid = user!.uid;
-    dataController = Get.find<DataController>();
+    // dataController = Get.find<DataController>();
     try {
       debugPrint("user.uid $uid");
 
       final DocumentSnapshot userDoc =
           await FirebaseFirestore.instance.collection('users').doc(uid).get();
-      if (!mounted) {
+      if (mounted) {
         setState(() {
           name = userDoc.get('username');
           bloodType = userDoc.get('bloodType');
@@ -182,8 +182,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   ? const CircleAvatar(
                                       radius: 56,
                                       backgroundColor: Colors.white,
-                                      backgroundImage:
-                                          AssetImage('images/DefaultUser.png'))
+                                      backgroundImage: NetworkImage(
+                                          'https://cdn1.iconfinder.com/data/icons/user-pictures/100/unknown-512.png'))
                                   : CircleAvatar(
                                       radius: 56,
                                       backgroundColor: Colors.white,

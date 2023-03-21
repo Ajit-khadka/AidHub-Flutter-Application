@@ -27,9 +27,11 @@ class _HospitalFeedState extends State<HospitalFeed> {
     // debugPrint("user.uid $uid");
     final DocumentSnapshot userDoc =
         await FirebaseFirestore.instance.collection('users').doc(uid).get();
-    setState(() {
-      name = userDoc.get('username');
-    });
+    if (mounted) {
+      setState(() {
+        name = userDoc.get('username');
+      });
+    }
   }
 
   @override

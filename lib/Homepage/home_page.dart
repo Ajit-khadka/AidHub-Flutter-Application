@@ -27,7 +27,7 @@ class _HomePageState extends State<HomePage> {
 
   int _index = 0;
 
-  List<Widget> widgetsList = const [
+  final screens = [
     HospitalFeed(),
     BloodRequest(),
     NearestHospital(),
@@ -56,104 +56,101 @@ class _HomePageState extends State<HomePage> {
               },
               itemBuilder: (context, position) {
                 return Container(
-                  child: Center(child: widgetsList[_index]),
+                  child: Center(child: screens[_index]),
                 );
               }),
-          bottomNavigationBar: SafeArea(
-            child: Container(
-              margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-              decoration: BoxDecoration(
-                  color: const Color.fromRGBO(254, 109, 115, 1),
-                  borderRadius: const BorderRadius.all(Radius.circular(0)),
-                  boxShadow: [
-                    BoxShadow(
-                      spreadRadius: -10,
-                      blurRadius: 60,
-                      color: Colors.black.withOpacity(0.4),
-                      offset: const Offset(0, 25),
-                    )
-                  ]),
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 0, vertical: 15),
-                child: GNav(
-                  curve: Curves.easeIn,
-                  duration: const Duration(milliseconds: 500),
-                  tabs: [
-                    GButton(
-                      gap: gap,
-                      icon: Icons.home,
-                      iconColor: Colors.white,
-                      iconActiveColor: Colors.white,
-                      text: 'Home',
-                      textColor: Colors.white,
-                      backgroundColor: const Color.fromARGB(255, 255, 63, 63)
-                          .withOpacity(0.9),
-                      iconSize: 26,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 5),
-                    ),
-                    GButton(
-                      gap: gap,
-                      icon: Icons.bloodtype,
-                      iconColor: Colors.white,
-                      iconActiveColor: Colors.white,
-                      text: 'Blood',
-                      textColor: Colors.white,
-                      backgroundColor: const Color.fromARGB(255, 255, 63, 63)
-                          .withOpacity(0.9),
-                      iconSize: 26,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 5),
-                    ),
-                    GButton(
-                      gap: gap,
-                      icon: Icons.local_hospital_outlined,
-                      iconColor: Colors.white,
-                      iconActiveColor: Colors.white,
-                      text: 'Hospital',
-                      textColor: Colors.white,
-                      backgroundColor: const Color.fromARGB(255, 255, 63, 63)
-                          .withOpacity(0.9),
-                      iconSize: 26,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 5),
-                    ),
-                    GButton(
-                      gap: gap,
-                      icon: Icons.calendar_month_outlined,
-                      iconColor: Colors.white,
-                      iconActiveColor: Colors.white,
-                      text: 'Events',
-                      textColor: Colors.white,
-                      backgroundColor: const Color.fromARGB(255, 255, 63, 63)
-                          .withOpacity(0.9),
-                      iconSize: 26,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 5),
-                    ),
-                    GButton(
-                      gap: gap,
-                      icon: LineAwesomeIcons.user,
-                      iconColor: Colors.white,
-                      iconActiveColor: Colors.white,
-                      text: 'Profile',
-                      textColor: Colors.white,
-                      backgroundColor: const Color.fromARGB(255, 255, 63, 63)
-                          .withOpacity(0.9),
-                      iconSize: 26,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 5),
-                    ),
-                  ],
-                  selectedIndex: _index,
-                  onTabChange: (index) {
-                    setState(() {
-                      _index = index;
-                    });
-                    controller.jumpToPage(index);
-                  },
-                ),
+          bottomNavigationBar: Container(
+            margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+            decoration: BoxDecoration(
+                color: const Color.fromRGBO(254, 109, 115, 1),
+                borderRadius: const BorderRadius.all(Radius.circular(0)),
+                boxShadow: [
+                  BoxShadow(
+                    spreadRadius: -10,
+                    blurRadius: 60,
+                    color: Colors.black.withOpacity(0.4),
+                    offset: const Offset(0, 25),
+                  )
+                ]),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 15),
+              child: GNav(
+                curve: Curves.easeIn,
+                duration: const Duration(milliseconds: 500),
+                tabs: [
+                  GButton(
+                    gap: gap,
+                    icon: Icons.home,
+                    iconColor: Colors.white,
+                    iconActiveColor: Colors.white,
+                    text: 'Home',
+                    textColor: Colors.white,
+                    backgroundColor:
+                        const Color.fromARGB(255, 255, 63, 63).withOpacity(0.9),
+                    iconSize: 26,
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+                  ),
+                  GButton(
+                    gap: gap,
+                    icon: Icons.bloodtype,
+                    iconColor: Colors.white,
+                    iconActiveColor: Colors.white,
+                    text: 'Blood',
+                    textColor: Colors.white,
+                    backgroundColor:
+                        const Color.fromARGB(255, 255, 63, 63).withOpacity(0.9),
+                    iconSize: 26,
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+                  ),
+                  GButton(
+                    gap: gap,
+                    icon: Icons.local_hospital_outlined,
+                    iconColor: Colors.white,
+                    iconActiveColor: Colors.white,
+                    text: 'Hospital',
+                    textColor: Colors.white,
+                    backgroundColor:
+                        const Color.fromARGB(255, 255, 63, 63).withOpacity(0.9),
+                    iconSize: 26,
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+                  ),
+                  GButton(
+                    gap: gap,
+                    icon: Icons.calendar_month_outlined,
+                    iconColor: Colors.white,
+                    iconActiveColor: Colors.white,
+                    text: 'Events',
+                    textColor: Colors.white,
+                    backgroundColor:
+                        const Color.fromARGB(255, 255, 63, 63).withOpacity(0.9),
+                    iconSize: 26,
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+                  ),
+                  GButton(
+                    gap: gap,
+                    icon: LineAwesomeIcons.user,
+                    iconColor: Colors.white,
+                    iconActiveColor: Colors.white,
+                    text: 'Profile',
+                    textColor: Colors.white,
+                    backgroundColor:
+                        const Color.fromARGB(255, 255, 63, 63).withOpacity(0.9),
+                    iconSize: 26,
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+                  ),
+                ],
+                selectedIndex: _index,
+                onTabChange: (index) {
+                  setState(() {
+                    _index = index;
+                  });
+                  controller.jumpToPage(index);
+                },
               ),
             ),
           ),

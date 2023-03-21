@@ -1,5 +1,6 @@
 // ignore_for_file: invalid_use_of_protected_member
 
+import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -56,13 +57,17 @@ class DataController extends GetxController {
   // }
 
   getMyDocument() {
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc(auth.currentUser!.uid)
-        .snapshots()
-        .listen((event) {
-      myDocument = event;
-    });
+    try {
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(auth.currentUser!.uid)
+          .snapshots()
+          .listen((event) {
+        myDocument = event;
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 
   Future<String> uploadImageToFirebase(File file) async {
@@ -74,7 +79,24 @@ class DataController extends GetxController {
     await taskSnapshot.ref.getDownloadURL().then((value) {
       fileUrl = value;
     });
+
     print("Url $fileUrl");
+    return fileUrl;
+  }
+
+  Future<String> uploadThumbnailToFirebase(Uint8List file) async {
+    String fileUrl = '';
+    String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+    var reference =
+        FirebaseStorage.instance.ref().child('myfiles/$fileName.jpg');
+    UploadTask uploadTask = reference.putData(file);
+    TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() => null);
+    await taskSnapshot.ref.getDownloadURL().then((value) {
+      fileUrl = value;
+    });
+
+    print("Thumbnail $fileUrl");
+
     return fileUrl;
   }
 
@@ -87,7 +109,7 @@ class DataController extends GetxController {
         .then((value) {
       isCompleted = true;
       Get.snackbar('Event Uploaded', 'Event is uploaded successfully.',
-          colorText: Colors.white, backgroundColor: Colors.blue);
+          colorText: Colors.white, backgroundColor: Colors.white);
     }).catchError((e) {
       isCompleted = false;
     });
