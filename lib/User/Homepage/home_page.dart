@@ -1,29 +1,27 @@
 // ignore_for_file: use_build_context_synchronously, avoid_unnecessary_containers, file_names
 
+import 'package:blood_bank/Admin/controller/data_controller.dart';
+import 'package:blood_bank/Admin/controller/feed_controller.dart';
+import 'package:blood_bank/User/Homepage/Nav/nearest_hospital.dart';
+import 'package:blood_bank/User/Homepage/Nav/par_event.dart';
+import 'package:blood_bank/User/Homepage/Nav/profile_screen.dart';
+import 'package:blood_bank/User/Homepage/Nav/hospital_feed.dart';
+import 'package:blood_bank/User/Homepage/Nav/request.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
-import '../User/Homepage/Nav/nearest_hospital.dart';
-import '../User/Homepage/Nav/request.dart';
-
-import 'Admin_nav/adminProfile.dart';
-import 'Admin_nav/admin_Event.dart';
-import 'Admin_nav/admin_hospitafeed.dart';
-import 'controller/data_controller.dart';
-import 'controller/feed_controller.dart';
-
-class AdminHomePage extends StatefulWidget {
-  const AdminHomePage({super.key});
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
 
   @override
-  State<AdminHomePage> createState() => _AdminHomePageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
 var styleList = const TextStyle(color: Colors.black, fontSize: 24);
 
-class _AdminHomePageState extends State<AdminHomePage> {
+class _HomePageState extends State<HomePage> {
   // User? user = FirebaseAuth.instance.currentUser;
   // UserModel loggedInUser = UserModel();
 
@@ -33,11 +31,11 @@ class _AdminHomePageState extends State<AdminHomePage> {
   int _index = 0;
 
   List<Widget> widgetsList = const [
-    AdminHospitalFeed(),
+    HospitalFeed(),
     BloodRequest(),
     NearestHospital(),
-    Adminevent(),
-    AdminProfilePage(),
+    Events(),
+    ProfileScreen(),
   ];
 
   @override

@@ -6,11 +6,10 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:path/path.dart' as Path;
 
-class DataController extends GetxController {
+class FeedController extends GetxController {
   FirebaseAuth auth = FirebaseAuth.instance;
 
   DocumentSnapshot? myDocument;
@@ -72,7 +71,8 @@ class DataController extends GetxController {
   Future<String> uploadImageToFirebase(File file) async {
     String fileUrl = '';
     String fileName = Path.basename(file.path);
-    var reference = FirebaseStorage.instance.ref().child('myfiles/$fileName');
+    var reference =
+        FirebaseStorage.instance.ref().child('feedimages/$fileName');
     UploadTask uploadTask = reference.putFile(file);
     TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() => null);
     await taskSnapshot.ref.getDownloadURL().then((value) {
@@ -103,12 +103,12 @@ class DataController extends GetxController {
     bool isCompleted = false;
 
     await FirebaseFirestore.instance
-        .collection('events')
+        .collection('feeds')
         .add(eventData)
         .then((value) {
       isCompleted = true;
-      Get.snackbar('Event Uploaded', 'Event is uploaded successfully.',
-          colorText: Colors.white, backgroundColor: Colors.white);
+      // Get.snackbar('Post Uploaded', 'Post is uploaded successfully.',
+      //     colorText: Colors.white, backgroundColor: Colors.white);
     }).catchError((e) {
       isCompleted = false;
       print(e);
@@ -139,15 +139,19 @@ class DataController extends GetxController {
   getEvents() {
     isEventsLoading(true);
 
-    FirebaseFirestore.instance.collection('events').snapshots().listen((event) {
+    FirebaseFirestore.instance
+        .collection('feeds')
+        .orderBy('date', descending: true)
+        .snapshots()
+        .listen((event) {
       allEvents.assignAll(event.docs);
       filteredEvents.assignAll(event.docs);
 
-      joinedEvents.value = allEvents.where((e) {
-        List joinedIds = e.get('joined');
+      // joinedEvents.value = allEvents.where((e) {
+      //   List joinedIds = e.get('joined');
 
-        return joinedIds.contains(FirebaseAuth.instance.currentUser!.uid);
-      }).toList();
+      //   return joinedIds.contains(FirebaseAuth.instance.currentUser!.uid);
+      // }).toList();
 
       isEventsLoading(false);
     });

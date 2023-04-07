@@ -1,10 +1,7 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, library_prefixes, depend_on_referenced_packages, unused_import, use_build_context_synchronously, avoid_print, prefer_interpolation_to_compose_strings, no_leading_underscores_for_local_identifiers, unused_local_variable
 
 import 'dart:io';
 
-import 'package:blood_bank/Admin/adminHomePage.dart';
-import 'package:blood_bank/Homepage/Nav/profile_screen.dart';
-import 'package:blood_bank/Homepage/home_page.dart';
 import 'package:blood_bank/model/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -16,18 +13,17 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as Path;
 
-import '../adminModel.dart';
-import '../controller/data_controller.dart';
-import '../utils/app_color.dart';
+import '../../../Admin/utils/app_color.dart';
+import '../home_page.dart';
 
-class AdminUpdateProfile extends StatefulWidget {
-  const AdminUpdateProfile({super.key});
+class UpdateProfileScreen extends StatefulWidget {
+  const UpdateProfileScreen({super.key});
 
   @override
-  State<AdminUpdateProfile> createState() => _AdminUpdateProfile();
+  State<UpdateProfileScreen> createState() => _UpdateProfileScreenState();
 }
 
-class _AdminUpdateProfile extends State<AdminUpdateProfile> {
+class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   @override
   void initState() {
     super.initState();
@@ -37,6 +33,7 @@ class _AdminUpdateProfile extends State<AdminUpdateProfile> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   var usernameController = TextEditingController();
+  var bloodController = TextEditingController();
   var contactController = TextEditingController();
   var statusController = TextEditingController();
   var locationController = TextEditingController();
@@ -85,7 +82,7 @@ class _AdminUpdateProfile extends State<AdminUpdateProfile> {
     }
   }
 
-  var myAdmin = AdminModel();
+  var myUser = UserModel();
 
   String name = '...';
   String uid = '';
@@ -97,53 +94,52 @@ class _AdminUpdateProfile extends State<AdminUpdateProfile> {
   String location = "...";
   String image = '';
   String imageUrl = '';
-
-  DataController? dataController;
+  String cloudimage = '';
 
   Future getUserInfo() async {
     User? user = _auth.currentUser;
     uid = user!.uid;
-    dataController = Get.find<DataController>();
     try {
       final DocumentSnapshot userDoc =
           await FirebaseFirestore.instance.collection('users').doc(uid).get();
       setState(() {
         name = userDoc.get('username');
+        bloodType = userDoc.get('bloodType');
         email = userDoc.get('email');
         contact = userDoc.get('contact');
         status = userDoc.get("status");
         location = userDoc.get("location");
-        image = userDoc.get('image');
-        // debugPrint(image);
-
-        // location = userDoc.get("location");
+        // cloudimage = userDoc.get("image");
         // debugPrint(name);
       });
       usernameController = TextEditingController(text: name);
+      bloodController = TextEditingController(text: bloodType);
       contactController = TextEditingController(text: contact);
       locationController = TextEditingController(text: location);
       statusController = TextEditingController(text: status);
     } catch (e) {
       Fluttertoast.showToast(msg: "Something went wrong try again later!");
-      print(e);
+      // print(e);
     }
   }
 
-  void updateData() {
+  void updateData() async {
     User? user = _auth.currentUser;
     uid = user!.uid;
     try {
       FirebaseFirestore.instance.collection('users').doc(uid).update({
         'username': usernameController.text.trim(),
+        'bloodType': bloodController.text.trim(),
         'contact': contactController.text.trim(),
         'status': statusController.text.trim(),
         'location': locationController.text.trim(),
+        'image': imageUrl,
       }).then((value) {
         Fluttertoast.showToast(msg: "Your profile is updated");
       });
     } catch (e) {
       Fluttertoast.showToast(msg: "Something went wrong try again later!");
-      print(e);
+      // print(e);
     }
   }
 
@@ -252,27 +248,11 @@ class _AdminUpdateProfile extends State<AdminUpdateProfile> {
       ),
       body: SingleChildScrollView(
         child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 30),
+          padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 40),
           child: Column(
             children: [
-              SizedBox(
-                height: 15,
-              ),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "Change your profile picture ",
-                  style: TextStyle(
-                    color: Color.fromARGB(255, 68, 68, 130),
-                    fontSize: 20,
-                    fontFamily: 'OpenSans',
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 0,
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 10,
+              const SizedBox(
+                height: 5,
               ),
               InkWell(
                 onTap: () {
@@ -281,7 +261,7 @@ class _AdminUpdateProfile extends State<AdminUpdateProfile> {
                 child: Container(
                   width: 120,
                   height: 120,
-                  margin: EdgeInsets.only(top: 5),
+                  margin: EdgeInsets.only(top: 35),
                   padding: EdgeInsets.all(2),
                   decoration: BoxDecoration(
                     color: AppColors.blue,
@@ -342,7 +322,7 @@ class _AdminUpdateProfile extends State<AdminUpdateProfile> {
 
                       Navigator.push(context, MaterialPageRoute(
                         builder: (context) {
-                          return AdminHomePage();
+                          return HomePage();
                         },
                       ));
                     }
@@ -385,11 +365,23 @@ class _AdminUpdateProfile extends State<AdminUpdateProfile> {
               const SizedBox(
                 height: 10,
               ),
+              const SizedBox(
+                height: 20,
+              ),
               Form(
                   key: formkey,
                   child: Column(
                     children: <Widget>[
-                      const SizedBox(height: 0),
+                      const Text(
+                        "Change your details.",
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.black38,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 10),
                       //status
                       Padding(
                         padding: const EdgeInsets.only(top: 18.0),
@@ -415,6 +407,8 @@ class _AdminUpdateProfile extends State<AdminUpdateProfile> {
                         padding: const EdgeInsets.only(top: 25.0),
                         child: TextFormField(
                           controller: usernameController,
+                          // initialValue: name,
+                          // ..text = "${Get.arguments['username'].toString()}",
                           onSaved: (value) {
                             usernameController.text = value!;
                           },
@@ -436,6 +430,25 @@ class _AdminUpdateProfile extends State<AdminUpdateProfile> {
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               labelText: "Username"),
+                        ),
+                      ),
+                      //bloodType
+                      Padding(
+                        padding: const EdgeInsets.only(top: 25.0),
+                        child: TextFormField(
+                          controller: bloodController,
+                          // initialValue: bloodType,
+                          onSaved: (value) {
+                            bloodController.text = value!;
+                          },
+                          textInputAction: TextInputAction.next,
+                          decoration: InputDecoration(
+                              prefixIcon: const Icon(Icons.bloodtype),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              labelText: "Blood Type"),
+                          validator: wordLimit,
                         ),
                       ),
                       //location
@@ -488,13 +501,13 @@ class _AdminUpdateProfile extends State<AdminUpdateProfile> {
                           top: 25.0,
                         ),
                         child: ElevatedButton(
-                          onPressed: () async {
+                          onPressed: () {
                             if (formkey.currentState!.validate()) {
                               updateData();
 
                               Navigator.push(context, MaterialPageRoute(
                                 builder: (context) {
-                                  return AdminHomePage();
+                                  return HomePage();
                                 },
                               ));
                             }

@@ -1,4 +1,5 @@
-import 'package:flutter/cupertino.dart';
+// ignore_for_file: sized_box_for_whitespace, avoid_types_as_parameter_names, avoid_unnecessary_containers
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 

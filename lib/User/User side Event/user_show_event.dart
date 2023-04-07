@@ -1,21 +1,17 @@
-// ignore_for_file: non_constant_identifier_names
-
-import 'dart:math';
+// ignore_for_file: non_constant_identifier_names, sized_box_for_whitespace, avoid_print
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
-import '../controller/data_controller.dart';
-// import '../model/ticket_model.dart';
-import '../utils/app_color.dart';
-// import '../views/event_page/event_page_view.dart';
+import '../../Admin/Event/event_details.dart';
+import '../../Admin/controller/data_controller.dart';
+import '../../Admin/utils/app_color.dart';
+
 // import '../views/profile/add_profile.dart';
 
-Widget EventsFeed() {
+Widget UserEventsFeed() {
   DataController dataController = Get.find<DataController>();
 
   return Obx(() => dataController.isEventsLoading.value
@@ -26,7 +22,7 @@ Widget EventsFeed() {
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           itemBuilder: (ctx, i) {
-            return EventItem(dataController.allEvents[i]);
+            return UserEventItem(dataController.allEvents[i]);
           },
           itemCount: dataController.allEvents.length,
         ));
@@ -51,32 +47,9 @@ Widget buildCard(
     dateInformation = [];
   }
 
-  int comments = 0;
-
-  List userLikes = [];
-
-  try {
-    userLikes = eventData!.get('likes');
-  } catch (e) {
-    userLikes = [];
-  }
-
-  try {
-    comments = eventData!.get('comments').length;
-  } catch (e) {
-    comments = 0;
-  }
-
-  List eventSavedByUsers = [];
-  try {
-    eventSavedByUsers = eventData!.get('saves');
-  } catch (e) {
-    eventSavedByUsers = [];
-  }
-
   return SingleChildScrollView(
     child: Material(
-      elevation: 2,
+      // elevation: 2,
       borderRadius: const BorderRadius.all(Radius.circular(20)),
       child: Container(
         padding:
@@ -157,41 +130,6 @@ Widget buildCard(
                         color: Color.fromARGB(255, 68, 68, 130)),
                   ),
                   const Spacer(),
-                  InkWell(
-                    //
-                    onTap: () {
-                      if (eventSavedByUsers
-                          .contains(FirebaseAuth.instance.currentUser!.uid)) {
-                        FirebaseFirestore.instance
-                            .collection('events')
-                            .doc(eventData!.id)
-                            .set({
-                          'saves': FieldValue.arrayRemove(
-                              [FirebaseAuth.instance.currentUser!.uid])
-                        }, SetOptions(merge: true));
-                      } else {
-                        FirebaseFirestore.instance
-                            .collection('events')
-                            .doc(eventData!.id)
-                            .set({
-                          'saves': FieldValue.arrayUnion(
-                              [FirebaseAuth.instance.currentUser!.uid])
-                        }, SetOptions(merge: true));
-                      }
-                    },
-                    child: Container(
-                      width: 16,
-                      height: 19,
-                      child: Image.asset(
-                        'images/boomMark.png',
-                        fit: BoxFit.contain,
-                        color: eventSavedByUsers.contains(
-                                FirebaseAuth.instance.currentUser!.uid)
-                            ? const Color.fromRGBO(254, 109, 115, 1)
-                            : const Color.fromARGB(255, 68, 68, 130),
-                      ),
-                    ),
-                  ),
                 ],
               ),
             ),
@@ -214,7 +152,9 @@ Widget buildCard(
                         }
 
                         return Container(
-                          margin: const EdgeInsets.only(left: 60),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 0, vertical: 0),
+                          margin: const EdgeInsets.only(left: 9),
                           child: CircleAvatar(
                             minRadius: 15,
                             backgroundImage: NetworkImage(image),
@@ -229,102 +169,6 @@ Widget buildCard(
             const SizedBox(
               height: 2,
             ),
-            Row(
-              children: [
-                const SizedBox(
-                  width: 55,
-                ),
-                InkWell(
-                  onTap: () {
-                    if (userLikes
-                        .contains(FirebaseAuth.instance.currentUser!.uid)) {
-                      FirebaseFirestore.instance
-                          .collection('events')
-                          .doc(eventData!.id)
-                          .set({
-                        'likes': FieldValue.arrayRemove(
-                            [FirebaseAuth.instance.currentUser!.uid]),
-                      }, SetOptions(merge: true));
-                    } else {
-                      FirebaseFirestore.instance
-                          .collection('events')
-                          .doc(eventData!.id)
-                          .set({
-                        'likes': FieldValue.arrayUnion(
-                            [FirebaseAuth.instance.currentUser!.uid]),
-                      }, SetOptions(merge: true));
-                    }
-                  },
-                  child: Container(
-                    height: 30,
-                    width: 30,
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.white,
-                        )
-                      ],
-                    ),
-                    child: Icon(
-                      Icons.favorite,
-                      size: 20,
-                      color: userLikes
-                              .contains(FirebaseAuth.instance.currentUser!.uid)
-                          ? const Color.fromRGBO(254, 109, 115, 1)
-                          : const Color.fromARGB(255, 68, 68, 130),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  width: 3,
-                ),
-                Text(
-                  '${userLikes.length}',
-                  style: const TextStyle(
-                    color: Color.fromARGB(255, 68, 68, 130),
-                    fontSize: 15,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                const SizedBox(
-                  width: 20,
-                ),
-                Container(
-                  padding: const EdgeInsets.all(0),
-                  width: 17,
-                  height: 19,
-                  child: Image.asset(
-                    'images/message.png',
-                    color: const Color.fromARGB(255, 68, 68, 130),
-                  ),
-                ),
-                const SizedBox(
-                  width: 15,
-                ),
-                Text(
-                  '$comments',
-                  style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w500,
-                    color: Color.fromARGB(255, 68, 68, 130),
-                  ),
-                ),
-                const SizedBox(
-                  width: 15,
-                ),
-                Container(
-                  padding: const EdgeInsets.all(0),
-                  width: 15,
-                  height: 30,
-                  child: Image.asset(
-                    'images/send.png',
-                    fit: BoxFit.contain,
-                    color: AppColors.black,
-                  ),
-                ),
-              ],
-            ),
             const SizedBox(
               height: 3,
             ),
@@ -335,7 +179,7 @@ Widget buildCard(
   );
 }
 
-EventItem(DocumentSnapshot event) {
+UserEventItem(DocumentSnapshot event) {
   DataController dataController = Get.find<DataController>();
 
   DocumentSnapshot user =
@@ -361,35 +205,6 @@ EventItem(DocumentSnapshot event) {
 
   return Column(
     children: [
-      Row(
-        children: [
-          const SizedBox(
-            width: 23,
-            height: 60,
-          ),
-          InkWell(
-            onTap: () {
-              // Get.to(() => ProfileScreen());
-            },
-            child: CircleAvatar(
-              radius: 25,
-              backgroundColor: Colors.white,
-              backgroundImage: NetworkImage(image),
-            ),
-          ),
-          const SizedBox(
-            width: 10,
-          ),
-          Text(
-            '${user.get('username')}',
-            style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Color.fromARGB(255, 68, 68, 130),
-            ),
-          ),
-        ],
-      ),
       SizedBox(
         height: Get.height * 0.01,
       ),
@@ -400,7 +215,10 @@ EventItem(DocumentSnapshot event) {
           ),
           eventData: event,
           func: () {
-            // Get.to(() => EventPageView(event,user));
+            Get.to(() => EventPageView(
+                  event,
+                  user,
+                ));
           }),
       const SizedBox(
         height: 15,
@@ -409,7 +227,7 @@ EventItem(DocumentSnapshot event) {
   );
 }
 
-EventsIJoined() {
+UserEventsIJoined() {
   DataController dataController = Get.find<DataController>();
 
   DocumentSnapshot myUser = dataController.allUsers
@@ -458,7 +276,7 @@ EventsIJoined() {
         ],
       ),
       SizedBox(
-        height: Get.height * 0.015,
+        height: Get.height * 0.016,
       ),
       Material(
         elevation: 2,
@@ -516,7 +334,7 @@ EventsIJoined() {
                           String date =
                               dataController.joinedEvents[i].get('date');
 
-                          date = date.split('-')[0] + '-' + date.split('-')[1];
+                          date = '${date.split('-')[0]}-${date.split('-')[1]}';
 
                           List joinedUsers = [];
 

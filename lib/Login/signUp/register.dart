@@ -1,11 +1,14 @@
 // ignore_for_file: prefer_const_constructors, sort_child_properties_last, prefer_typing_uninitialized_variables
-import 'package:blood_bank/verification/verify_email.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import '../model/user_model.dart';
+
+import '../../model/user_model.dart';
+import '../verification/verify_email.dart';
+
 
 class SignIn extends StatefulWidget {
   const SignIn({super.key});

@@ -1,14 +1,14 @@
-// ignore_for_file: prefer_const_constructors, sort_child_properties_last
-import 'package:blood_bank/signUp/accept_terms.dart';
-import 'package:blood_bank/verification/verify_email.dart';
-import 'package:blood_bank/verification/forgotpassword.dart';
+// ignore_for_file: prefer_const_constructors, sort_child_properties_last, unused_local_variable
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-import '../Admin/adminHomePage.dart';
-import '../Homepage/home_page.dart';
+import '../../Admin/adminHomePage.dart';
+import '../../User/Homepage/home_page.dart';
+import '../signUp/accept_terms.dart';
+import '../verification/forgotpassword.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -335,7 +335,7 @@ class LoginPageState extends State<LoginPage> {
         builder: (context) {
           return AlertDialog(
             title: Text(
-              "Incorrect Password",
+              "Password or Username does not exist",
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Color.fromARGB(255, 68, 68, 130),

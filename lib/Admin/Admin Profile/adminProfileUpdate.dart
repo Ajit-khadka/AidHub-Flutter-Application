@@ -1,11 +1,9 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, depend_on_referenced_packages, library_prefixes, file_names, no_leading_underscores_for_local_identifiers, use_build_context_synchronously, prefer_interpolation_to_compose_strings, unused_local_variable, avoid_print
 
 import 'dart:io';
 
-import 'package:blood_bank/Admin/Admin_nav/adminProfile.dart';
-import 'package:blood_bank/Homepage/Nav/profile_screen.dart';
-import 'package:blood_bank/Homepage/home_page.dart';
-import 'package:blood_bank/model/user_model.dart';
+import 'package:blood_bank/Admin/adminHomePage.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -15,16 +13,21 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as Path;
-import '../../Admin/utils/app_color.dart';
 
-class UpdateProfileScreen extends StatefulWidget {
-  const UpdateProfileScreen({super.key});
+import '../adminModel.dart';
+import '../controller/data_controller.dart';
+import '../utils/app_color.dart';
+
+
+
+class AdminUpdateProfile extends StatefulWidget {
+  const AdminUpdateProfile({super.key});
 
   @override
-  State<UpdateProfileScreen> createState() => _UpdateProfileScreenState();
+  State<AdminUpdateProfile> createState() => _AdminUpdateProfile();
 }
 
-class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
+class _AdminUpdateProfile extends State<AdminUpdateProfile> {
   @override
   void initState() {
     super.initState();
@@ -34,7 +37,6 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   var usernameController = TextEditingController();
-  var bloodController = TextEditingController();
   var contactController = TextEditingController();
   var statusController = TextEditingController();
   var locationController = TextEditingController();
@@ -83,7 +85,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     }
   }
 
-  var myUser = UserModel();
+  var myAdmin = AdminModel();
 
   String name = '...';
   String uid = '';
@@ -95,52 +97,53 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   String location = "...";
   String image = '';
   String imageUrl = '';
-  String cloudimage = '';
+
+  DataController? dataController;
 
   Future getUserInfo() async {
     User? user = _auth.currentUser;
     uid = user!.uid;
+    dataController = Get.find<DataController>();
     try {
       final DocumentSnapshot userDoc =
           await FirebaseFirestore.instance.collection('users').doc(uid).get();
       setState(() {
         name = userDoc.get('username');
-        bloodType = userDoc.get('bloodType');
         email = userDoc.get('email');
         contact = userDoc.get('contact');
         status = userDoc.get("status");
         location = userDoc.get("location");
-        // cloudimage = userDoc.get("image");
+        image = userDoc.get('image');
+        // debugPrint(image);
+
+        // location = userDoc.get("location");
         // debugPrint(name);
       });
       usernameController = TextEditingController(text: name);
-      bloodController = TextEditingController(text: bloodType);
       contactController = TextEditingController(text: contact);
       locationController = TextEditingController(text: location);
       statusController = TextEditingController(text: status);
     } catch (e) {
       Fluttertoast.showToast(msg: "Something went wrong try again later!");
-      // print(e);
+      print(e);
     }
   }
 
-  void updateData() async {
+  void updateData() {
     User? user = _auth.currentUser;
     uid = user!.uid;
     try {
       FirebaseFirestore.instance.collection('users').doc(uid).update({
         'username': usernameController.text.trim(),
-        'bloodType': bloodController.text.trim(),
         'contact': contactController.text.trim(),
         'status': statusController.text.trim(),
         'location': locationController.text.trim(),
-        'image': imageUrl,
       }).then((value) {
         Fluttertoast.showToast(msg: "Your profile is updated");
       });
     } catch (e) {
       Fluttertoast.showToast(msg: "Something went wrong try again later!");
-      // print(e);
+      print(e);
     }
   }
 
@@ -203,7 +206,6 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
 
   Future<String> uploadImageToFirebaseStorage(File image) async {
     String fileName = Path.basename(image.path);
-    
 
     var reference =
         FirebaseStorage.instance.ref().child('profileImages/$fileName');
@@ -250,11 +252,27 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
       ),
       body: SingleChildScrollView(
         child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 40),
+          padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 30),
           child: Column(
             children: [
-              const SizedBox(
-                height: 5,
+              SizedBox(
+                height: 15,
+              ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Change your profile picture ",
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 68, 68, 130),
+                    fontSize: 20,
+                    fontFamily: 'OpenSans',
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 0,
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 10,
               ),
               InkWell(
                 onTap: () {
@@ -263,7 +281,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                 child: Container(
                   width: 120,
                   height: 120,
-                  margin: EdgeInsets.only(top: 35),
+                  margin: EdgeInsets.only(top: 5),
                   padding: EdgeInsets.all(2),
                   decoration: BoxDecoration(
                     color: AppColors.blue,
@@ -324,7 +342,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
 
                       Navigator.push(context, MaterialPageRoute(
                         builder: (context) {
-                          return HomePage();
+                          return AdminHomePage();
                         },
                       ));
                     }
@@ -367,23 +385,11 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
               const SizedBox(
                 height: 10,
               ),
-              const SizedBox(
-                height: 20,
-              ),
               Form(
                   key: formkey,
                   child: Column(
                     children: <Widget>[
-                      const Text(
-                        "Change your details.",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.black38,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 0),
                       //status
                       Padding(
                         padding: const EdgeInsets.only(top: 18.0),
@@ -409,8 +415,6 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                         padding: const EdgeInsets.only(top: 25.0),
                         child: TextFormField(
                           controller: usernameController,
-                          // initialValue: name,
-                          // ..text = "${Get.arguments['username'].toString()}",
                           onSaved: (value) {
                             usernameController.text = value!;
                           },
@@ -432,25 +436,6 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               labelText: "Username"),
-                        ),
-                      ),
-                      //bloodType
-                      Padding(
-                        padding: const EdgeInsets.only(top: 25.0),
-                        child: TextFormField(
-                          controller: bloodController,
-                          // initialValue: bloodType,
-                          onSaved: (value) {
-                            bloodController.text = value!;
-                          },
-                          textInputAction: TextInputAction.next,
-                          decoration: InputDecoration(
-                              prefixIcon: const Icon(Icons.bloodtype),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              labelText: "Blood Type"),
-                          validator: wordLimit,
                         ),
                       ),
                       //location
@@ -503,13 +488,13 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                           top: 25.0,
                         ),
                         child: ElevatedButton(
-                          onPressed: () {
+                          onPressed: () async {
                             if (formkey.currentState!.validate()) {
                               updateData();
 
                               Navigator.push(context, MaterialPageRoute(
                                 builder: (context) {
-                                  return HomePage();
+                                  return AdminHomePage();
                                 },
                               ));
                             }
@@ -534,7 +519,9 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 20,)
+                      SizedBox(
+                        height: 20,
+                      )
                     ],
                   ))
             ],

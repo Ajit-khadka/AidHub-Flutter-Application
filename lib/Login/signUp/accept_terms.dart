@@ -1,8 +1,9 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:blood_bank/loginPage/login.dart';
-import 'package:blood_bank/signUp/register.dart';
 import 'package:flutter/material.dart';
+
+import '../loginPage/login.dart';
+import 'register.dart';
 
 class Terms extends StatefulWidget {
   const Terms({super.key});
@@ -18,9 +19,6 @@ class _TermsState extends State<Terms> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: const Text(
-          'Profile',
-        ),
         leading: IconButton(
             icon: const Icon(Icons.arrow_back,
                 color: Color.fromRGBO(254, 109, 115, 1)),
@@ -30,7 +28,7 @@ class _TermsState extends State<Terms> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 25, vertical: 25),
+          padding: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
           child: Column(children: [
             Text(
               "  Blood Bank Updates ",
@@ -46,7 +44,8 @@ class _TermsState extends State<Terms> {
               height: 30,
             ),
             const Text(
-              "By Agreeing, you have accepted Blood Bank's updated Terms of Use and Privacy Policy. Blood Bank will use your data in the ways outlined in our Terms of Use and Privacy Policy. Blood Bank uses donation terms of Nepal Red Cross Society. If you Disagree, you cannot access Blood Bank's features. \n\nTerms and policy can be changed accordingly when breaches are found in system, However, User can lose their data and cannot change thier password if either :  \n\n 1. Deletes thier account \n2. Deletes their Email.",
+              // "By Agreeing, you have accepted Blood Bank's updated Terms of Use and Privacy Policy.
+              "Blood Bank will use your data in the ways outlined in our Terms of Use and Privacy Policy. Blood Bank uses donation terms of Nepal Red Cross Society. If you Disagree, you cannot access Blood Bank's features. \n\nTerms and policy can be changed accordingly when breaches are found in system, However, User can lose their data and cannot change thier password if either :  \n\n 1. Deletes thier account \n2. Deletes their Email.",
               textAlign: TextAlign.justify,
               style: TextStyle(
                 fontSize: 16,

@@ -1,6 +1,8 @@
-import 'package:blood_bank/loginPage/login.dart';
+
 import 'package:blood_bank/main_page.dart';
 import 'package:flutter/material.dart';
+
+import '../Login/loginPage/login.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
@@ -56,7 +58,7 @@ class WelcomeScreen extends StatelessWidget {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: ((context) {
-                        return const MainPage();
+                        return MainPage();
                       }),
                     ),
                   );

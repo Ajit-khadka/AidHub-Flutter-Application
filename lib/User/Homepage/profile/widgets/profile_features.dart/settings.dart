@@ -1,12 +1,14 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, avoid_print
 
-import 'package:blood_bank/loginPage/login.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
-import '../../../../model/user_model.dart';
+import '../../../../../Login/loginPage/login.dart';
+import '../../../../../model/user_model.dart';
+
 import '../profile_menu.dart';
 import 'change_pass.dart';
 

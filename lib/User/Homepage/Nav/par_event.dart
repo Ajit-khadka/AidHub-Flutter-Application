@@ -1,25 +1,24 @@
-// ignore_for_file: file_names
+// ignore_for_file: non_constant_identifier_names, unused_local_variable
 
-import 'package:blood_bank/Admin/Event/create_event.dart';
+import 'package:blood_bank/Admin/controller/data_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../Event/show_event.dart';
-import '../controller/data_controller.dart';
+import '../../User side Event/user_show_event.dart';
 
-class Adminevent extends StatefulWidget {
-  const Adminevent({super.key});
+class Events extends StatefulWidget {
+  const Events({super.key});
 
   @override
-  State<Adminevent> createState() => _AdmineventState();
+  State<Events> createState() => _EventsState();
 }
 
-class _AdmineventState extends State<Adminevent> {
+class _EventsState extends State<Events> {
   @override
   void initState() {
     super.initState();
-    EventsFeed();
-    EventsIJoined();
+    UserEventsFeed();
+    UserEventsIJoined();
   }
 
   DataController dataController = Get.find<DataController>();
@@ -29,22 +28,13 @@ class _AdmineventState extends State<Adminevent> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          automaticallyImplyLeading: false,
-          elevation: 0,
           centerTitle: true,
           backgroundColor: const Color.fromRGBO(254, 109, 115, 1),
           title: const Text(
             'Events',
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => const CreateEventView()));
-          },
-          backgroundColor: const Color.fromRGBO(254, 109, 115, 1),
-          child: const Icon(Icons.add),
+          automaticallyImplyLeading: false,
         ),
         body: SingleChildScrollView(
           child: Container(
@@ -68,12 +58,12 @@ class _AdmineventState extends State<Adminevent> {
               const SizedBox(
                 height: 15,
               ),
-              EventsFeed(),
+              UserEventsFeed(),
               Obx(() => dataController.isUsersLoading.value
                   ? const Center(
                       child: CircularProgressIndicator(),
                     )
-                  : EventsIJoined())
+                  : UserEventsIJoined())
             ]),
           ),
         ),

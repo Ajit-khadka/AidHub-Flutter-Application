@@ -1,27 +1,29 @@
-// ignore_for_file: unused_catch_clause, use_build_context_synchronously, prefer_interpolation_to_compose_strings
+// ignore_for_file: unused_catch_clause, use_build_context_synchronously, prefer_interpolation_to_compose_strings, depend_on_referenced_packages, library_prefixes, unused_import, file_names, avoid_print, unused_field
 
 import 'dart:async';
 import 'dart:io';
 
 import 'package:blood_bank/Admin/Employeelist/employee.dart';
-import 'package:blood_bank/Admin/Admin_nav/adminProfileUpdate.dart';
-import 'package:blood_bank/Homepage/profile/widgets/profile_features.dart/settings.dart';
-import 'package:blood_bank/Homepage/profile/widgets/profile_menu.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 // import 'package:image_cropper/image_cropper.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
-import '../../../loginPage/login.dart';
+
 import 'package:path/path.dart' as Path;
 
+import '../../../Login/loginPage/login.dart';
+import '../../../User/Homepage/profile/widgets/profile_features.dart/settings.dart';
+import '../../../User/Homepage/profile/widgets/profile_menu.dart';
+import '../Admin Profile/adminProfileUpdate.dart';
 import '../controller/data_controller.dart';
 import '../utils/app_color.dart';
+
+
 
 class AdminProfilePage extends StatefulWidget {
   const AdminProfilePage({super.key});

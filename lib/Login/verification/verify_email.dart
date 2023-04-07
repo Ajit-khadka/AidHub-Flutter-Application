@@ -1,9 +1,11 @@
 // ignore: file_names
 import 'dart:async';
-import 'package:blood_bank/Homepage/home_page.dart';
-import 'package:blood_bank/loginPage/login.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+import '../../User/Homepage/home_page.dart';
+import '../loginPage/login.dart';
 
 class VerifyEmail extends StatefulWidget {
   const VerifyEmail({super.key});

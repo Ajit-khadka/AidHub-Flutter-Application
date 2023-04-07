@@ -1,25 +1,22 @@
-// ignore_for_file: unused_catch_clause, use_build_context_synchronously
+// ignore_for_file: unused_catch_clause, use_build_context_synchronously, unused_field, avoid_print
 
 import 'dart:async';
 import 'dart:io';
 
-import 'package:blood_bank/Homepage/profile/update_profile_screen.dart';
-import 'package:blood_bank/Homepage/profile/widgets/profile_features.dart/settings.dart';
-import 'package:blood_bank/Homepage/profile/widgets/profile_menu.dart';
-import 'package:blood_bank/welcomeScreen/welcome.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:get/get.dart';
-import 'package:image_cropper/image_cropper.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
-import '../../Admin/controller/data_controller.dart';
-import '../../Admin/utils/app_color.dart';
-import '../../loginPage/login.dart';
+
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+
+import '../../../Admin/utils/app_color.dart';
+import '../../../Login/loginPage/login.dart';
+import '../profile/update_profile_screen.dart';
+import '../profile/widgets/profile_features.dart/settings.dart';
+import '../profile/widgets/profile_menu.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});

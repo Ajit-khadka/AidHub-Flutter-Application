@@ -1,12 +1,11 @@
-// ignore_for_file: sized_box_for_whitespace
+// ignore_for_file: sized_box_for_whitespace, use_build_context_synchronously, no_leading_underscores_for_local_identifiers, avoid_print, non_constant_identifier_names, unused_import
 
 import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:blood_bank/Admin/Admin_nav/admin_Event.dart';
 import 'package:blood_bank/Admin/adminHomePage.dart';
-import 'package:blood_bank/Homepage/home_page.dart';
+
 import 'package:dotted_border/dotted_border.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +21,7 @@ import '../utils/app_color.dart';
 import '../widget/app_widget.dart';
 
 class CreateEventView extends StatefulWidget {
-  CreateEventView({Key? key}) : super(key: key);
+  const CreateEventView({Key? key}) : super(key: key);
 
   @override
   State<CreateEventView> createState() => _CreateEventViewState();
@@ -88,7 +87,7 @@ class _CreateEventViewState extends State<CreateEventView> {
       startTimeController.text =
           '${startTime.hourOfPeriod > 9 ? "" : '0'}${startTime.hour > 12 ? '${startTime.hour - 12}' : startTime.hour}:${startTime.minute > 9 ? startTime.minute : '0${startTime.minute}'} ${startTime.hour > 12 ? 'PM' : 'AM'}';
     }
-    print("start ${startTimeController.text}");
+    debugPrint("start ${startTimeController.text}");
     setState(() {});
   }
 
@@ -128,7 +127,7 @@ class _CreateEventViewState extends State<CreateEventView> {
 
   @override
   void initState() {
-    // TODO: implement initState
+   
     super.initState();
     timeController.text = '${date!.hour}:${date!.minute}:${date!.second}';
     dateController.text = '${date!.day}-${date!.month}-${date!.year}';

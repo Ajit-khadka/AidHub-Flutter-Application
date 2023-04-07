@@ -1,24 +1,24 @@
-// ignore_for_file: file_names, non_constant_identifier_names, unused_local_variable, sized_box_for_whitespace
+// ignore_for_file: non_constant_identifier_names, unused_local_variable
 
-import 'package:blood_bank/Admin/controller/feed_controller.dart';
-import 'package:blood_bank/User/Homepage/Hospital_feed/user_show_feed.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../User/Homepage/Hospital_feed/create_feed.dart';
-import '../controller/data_controller.dart';
-import '../utils/app_color.dart';
+import '../../../Admin/controller/data_controller.dart';
+import '../../../Admin/controller/feed_controller.dart';
+import '../../../Admin/utils/app_color.dart';
+import '../Hospital_feed/create_feed.dart';
+import '../Hospital_feed/user_show_feed.dart';
 
-class AdminHospitalFeed extends StatefulWidget {
-  const AdminHospitalFeed({super.key});
+class HospitalFeed extends StatefulWidget {
+  const HospitalFeed({super.key});
 
   @override
-  State<AdminHospitalFeed> createState() => _AdminHospitalFeedState();
+  State<HospitalFeed> createState() => _HospitalFeedState();
 }
 
-class _AdminHospitalFeedState extends State<AdminHospitalFeed> {
+class _HospitalFeedState extends State<HospitalFeed> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   String name = '...';
@@ -28,7 +28,7 @@ class _AdminHospitalFeedState extends State<AdminHospitalFeed> {
   void initState() {
     super.initState();
     getData();
-    // EventsIJoined();
+    UserPostFeed();
   }
 
   FeedController feedController = Get.find<FeedController>();
@@ -80,14 +80,14 @@ class _AdminHospitalFeedState extends State<AdminHospitalFeed> {
                 alignment: Alignment.topLeft,
                 child: RichText(
                   text: TextSpan(
-                    text: ' Hello,\n',
+                    text: '  Hello,\n',
                     style: const TextStyle(
                         fontSize: 24,
                         color: Color.fromARGB(255, 68, 68, 130),
                         fontFamily: 'Poppins'),
                     children: <TextSpan>[
                       TextSpan(
-                          text: ' $name !',
+                          text: '  $name !',
                           style: const TextStyle(
                             fontSize: 32,
                             fontWeight: FontWeight.bold,
@@ -100,7 +100,7 @@ class _AdminHospitalFeedState extends State<AdminHospitalFeed> {
                   ? const Center(
                       child: CircularProgressIndicator(),
                     )
-                  : EventsIJoined()),
+                  : UserEventsIJoined()),
               const SizedBox(
                 height: 6,
               ),
@@ -129,7 +129,7 @@ class _AdminHospitalFeedState extends State<AdminHospitalFeed> {
   }
 }
 
-EventsIJoined() {
+UserEventsIJoined() {
   DataController dataController = Get.find<DataController>();
 
   DocumentSnapshot myUser = dataController.allUsers
@@ -174,7 +174,7 @@ EventsIJoined() {
             const Align(
               alignment: Alignment.topLeft,
               child: Text(
-                " Event List",
+                " Joined Event",
                 style: TextStyle(
                   color: Color.fromRGBO(254, 109, 115, 1),
                   fontSize: 20,

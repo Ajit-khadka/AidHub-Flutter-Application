@@ -1,4 +1,4 @@
-// ignore_for_file: unnecessary_null_comparison
+// ignore_for_file: unnecessary_null_comparison, avoid_print
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -89,17 +89,24 @@ class _BloodRequestState extends State<BloodRequest> {
                       subtitle: Text(userMap!['username']),
                     )
                   : Container(),
+              const SizedBox(
+                height: 0,
+              ),
               const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    '    Blood Requests',
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                        fontWeight: FontWeight.normal,
-                        fontSize: 20,
-                        color: Color.fromARGB(255, 68, 68, 130),
-                        fontFamily: 'Poppins'),
-                  ))
+                alignment: Alignment.topLeft,
+                child: Text(
+                  "    Recent Messages:",
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 68, 68, 130),
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 0,
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 6,
+              ),
             ]),
     );
   }
