@@ -1,12 +1,50 @@
 // ignore_for_file: non_constant_identifier_names, sized_box_for_whitespace, avoid_print
 
-import 'package:blood_bank/Admin/controller/feed_controller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+import 'package:blood_bank/User/Homepage/Message/apis.dart';
+import '../../../model and utils/controller/feed_controller.dart';
+import '../../../model and utils/model/chat_user.dart';
+import '../profile/visitpage/profile_visit.dart';
 
 // import '../views/profile/add_profile.dart';
+
+late final ChatUser user;
+FirebaseAuth auth = FirebaseAuth.instance;
+FirebaseFirestore firestore = FirebaseFirestore.instance;
+// String documentId = '4PdnbWIkZNorPZ2fELMs';
+late DocumentReference _documentReference;
+
+deleteFeed(String id, {Key? key}) {
+  late Future<DocumentSnapshot> _futureDocument;
+  _documentReference = FirebaseFirestore.instance.collection('feeds').doc(id);
+  _futureDocument = _documentReference.get();
+}
+
+void deleteDocument(String id) async {
+  User? user = auth.currentUser;
+  if (user != null) {
+    DocumentSnapshot document =
+        await firestore.collection('feeds').doc(id).get();
+    print(id);
+    String? creatorUid = document.get('uid');
+    if (creatorUid == user.uid) {
+      print(creatorUid);
+      print(user.uid);
+      await firestore.collection('feeds').doc(id).delete();
+      // Show a snackbar or navigate to a new page to confirm deletion
+      Fluttertoast.showToast(msg: "Post is Deleted");
+    } else {
+      Fluttertoast.showToast(msg: "You are not authorized!");
+    }
+  } else {
+    // Show a login page or redirect the user to log in before allowing document deletion
+  }
+}
 
 Widget UserPostFeed() {
   FeedController feedController = Get.find<FeedController>();
@@ -65,13 +103,6 @@ Widget buildCard(
     comments = eventData!.get('comments').length;
   } catch (e) {
     comments = 0;
-  }
-
-  List eventSavedByUsers = [];
-  try {
-    eventSavedByUsers = eventData!.get('saves');
-  } catch (e) {
-    eventSavedByUsers = [];
   }
 
   return SingleChildScrollView(
@@ -188,37 +219,19 @@ Widget buildCard(
                   ),
                   const Spacer(),
                   InkWell(
-                    //
+                    //delete data
                     onTap: () {
-                      if (eventSavedByUsers
-                          .contains(FirebaseAuth.instance.currentUser!.uid)) {
-                        FirebaseFirestore.instance
-                            .collection('feeds')
-                            .doc(eventData!.id)
-                            .set({
-                          'saves': FieldValue.arrayRemove(
-                              [FirebaseAuth.instance.currentUser!.uid])
-                        }, SetOptions(merge: true));
-                      } else {
-                        FirebaseFirestore.instance
-                            .collection('feeds')
-                            .doc(eventData!.id)
-                            .set({
-                          'saves': FieldValue.arrayUnion(
-                              [FirebaseAuth.instance.currentUser!.uid])
-                        }, SetOptions(merge: true));
-                      }
+                      // _documentReference.delete();
+                      String id = '';
+                      deleteDocument(id);
                     },
                     child: Container(
-                      width: 16,
-                      height: 19,
+                      width: 22,
+                      height: 22,
                       child: Image.asset(
-                        'images/boomMark.png',
+                        'images/delete.png',
                         fit: BoxFit.contain,
-                        color: eventSavedByUsers.contains(
-                                FirebaseAuth.instance.currentUser!.uid)
-                            ? const Color.fromRGBO(254, 109, 115, 1)
-                            : const Color.fromARGB(255, 68, 68, 130),
+                        color: const Color.fromARGB(255, 68, 68, 130),
                       ),
                     ),
                   ),
@@ -341,13 +354,16 @@ Widget buildCard(
                 const SizedBox(
                   width: 15,
                 ),
-                Container(
-                  padding: const EdgeInsets.all(0),
-                  width: 17,
-                  height: 19,
-                  child: Image.asset(
-                    'images/message.png',
-                    color: const Color.fromARGB(255, 68, 68, 130),
+                InkWell(
+                  onTap: (){},
+                  child: Container(
+                    padding: const EdgeInsets.all(0),
+                    width: 17,
+                    height: 19,
+                    child: Image.asset(
+                      'images/message.png',
+                      color: const Color.fromARGB(255, 68, 68, 130),
+                    ),
                   ),
                 ),
                 const SizedBox(
@@ -420,7 +436,7 @@ UserPostItem(DocumentSnapshot event) {
           ),
           InkWell(
             onTap: () {
-              // Get.to(() => ProfileScreen());
+              // Get.to(() => ProfileVisit(user: widget.user));
             },
             child: CircleAvatar(
               radius: 20,
@@ -498,3 +514,51 @@ UserPostMade() {
     ],
   );
 }
+
+void visitProfile(ChatUser user) {
+  // final route = MaterialPageRoute(
+  //   builder: (context) => ProfileVisit(user: user),
+  // );
+  Get.to(() => ProfileVisit(user: user));
+}
+
+
+// void deleteButton(BuildContext context) async {
+//   return showDialog<void>(
+//     context: context,
+//     barrierDismissible: false, // user must tap button!
+//     builder: (BuildContext context) {
+//       return AlertDialog(
+//         title: const Text(
+//           'Delete Feed',
+//           style: TextStyle(
+//             color: Color.fromARGB(255, 68, 68, 130),
+//             fontSize: 20,
+//             fontFamily: 'OpenSans',
+//             fontWeight: FontWeight.bold,
+//             letterSpacing: 0,
+//           ),
+//         ),
+//         content: SingleChildScrollView(
+//           child: ListBody(
+//             children: const <Widget>[
+//               Text('Do want to delete this feed?'),
+//             ],
+//           ),
+//         ),
+//         actions: <Widget>[
+//           TextButton(
+//             child: const Text('Yes'),
+//             onPressed: () {},
+//           ),
+//           TextButton(
+//             child: const Text('No'),
+//             onPressed: () {
+//               Navigator.of(context).pop();
+//             },
+//           ),
+//         ],
+//       );
+//     },
+//   );
+// }

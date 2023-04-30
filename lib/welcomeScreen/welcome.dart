@@ -2,7 +2,9 @@
 import 'package:blood_bank/main_page.dart';
 import 'package:flutter/material.dart';
 
-import '../Login/loginPage/login.dart';
+import 'Login/loginPage/login.dart';
+
+
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});

@@ -14,9 +14,10 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as Path;
 
-import '../adminModel.dart';
-import '../controller/data_controller.dart';
-import '../utils/app_color.dart';
+import '../../model and utils/controller/data_controller.dart';
+import '../../model and utils/model/adminModel.dart';
+import '../../model and utils/utils/app_color.dart';
+
 
 
 
@@ -264,7 +265,7 @@ class _AdminUpdateProfile extends State<AdminUpdateProfile> {
                   "Change your profile picture ",
                   style: TextStyle(
                     color: Color.fromARGB(255, 68, 68, 130),
-                    fontSize: 20,
+                    fontSize: 16,
                     fontFamily: 'OpenSans',
                     fontWeight: FontWeight.bold,
                     letterSpacing: 0,
@@ -375,7 +376,7 @@ class _AdminUpdateProfile extends State<AdminUpdateProfile> {
                   "Update your details ",
                   style: TextStyle(
                     color: Color.fromARGB(255, 68, 68, 130),
-                    fontSize: 20,
+                    fontSize: 16,
                     fontFamily: 'OpenSans',
                     fontWeight: FontWeight.bold,
                     letterSpacing: 0,

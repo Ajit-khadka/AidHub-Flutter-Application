@@ -1,11 +1,13 @@
 // ignore_for_file: file_names
 
-import 'package:blood_bank/Admin/Event/create_event.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../Event/show_event.dart';
-import '../controller/data_controller.dart';
+import '../../model and utils/controller/data_controller.dart';
+import '../Admin side event/create_event.dart';
+import '../Admin side event/show_event.dart';
+
 
 class Adminevent extends StatefulWidget {
   const Adminevent({super.key});

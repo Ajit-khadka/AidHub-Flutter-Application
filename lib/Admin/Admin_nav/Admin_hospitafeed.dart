@@ -1,6 +1,6 @@
 // ignore_for_file: file_names, non_constant_identifier_names, unused_local_variable, sized_box_for_whitespace
 
-import 'package:blood_bank/Admin/controller/feed_controller.dart';
+
 import 'package:blood_bank/User/Homepage/Hospital_feed/user_show_feed.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,8 +8,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../User/Homepage/Hospital_feed/create_feed.dart';
-import '../controller/data_controller.dart';
-import '../utils/app_color.dart';
+import '../../model and utils/controller/data_controller.dart';
+import '../../model and utils/controller/feed_controller.dart';
+import '../../model and utils/utils/app_color.dart';
+
 
 class AdminHospitalFeed extends StatefulWidget {
   const AdminHospitalFeed({super.key});

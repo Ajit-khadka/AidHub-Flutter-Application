@@ -1,14 +1,13 @@
 // ignore_for_file: use_build_context_synchronously, avoid_print
 
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
-import '../../../../../Login/loginPage/login.dart';
-import '../../../../../model/user_model.dart';
 
+import '../../../../../model and utils/model/user_model.dart';
+import '../../../../../welcomeScreen/Login/loginPage/login.dart';
 import '../profile_menu.dart';
 import 'change_pass.dart';
 
@@ -26,13 +25,15 @@ Future deleteUserData() async {
   User? user = _auth.currentUser;
   String uid = user!.uid;
   try {
-    CollectionReference data = FirebaseFirestore.instance.collection('users');
-    return data.doc(uid).delete().then((value) {
+    // CollectionReference feeds = FirebaseFirestore.instance.collection('feeds');
+    CollectionReference client =
+        FirebaseFirestore.instance.collection('users');
+    return client.doc(uid).delete().then((value) {
       deleteUser();
     });
   } catch (e) {
     Fluttertoast.showToast(msg: "Something went wrong try again later!");
-    // print(e);
+    print(e);
   }
 }
 
@@ -67,13 +68,13 @@ void deleteAccount(BuildContext context) async {
         content: SingleChildScrollView(
           child: ListBody(
             children: const <Widget>[
-              Text('Are you sure want to delete your account?'),
+              Text('You Cannot Recover Deleted Account!!'),
             ],
           ),
         ),
         actions: <Widget>[
           TextButton(
-            child: const Text('Yes'),
+            child: const Text('Confirm'),
             onPressed: () async {
               deleteUserData();
               Navigator.push(context, MaterialPageRoute(
@@ -84,7 +85,7 @@ void deleteAccount(BuildContext context) async {
             },
           ),
           TextButton(
-            child: const Text('No'),
+            child: const Text('Back'),
             onPressed: () {
               Navigator.of(context).pop();
             },

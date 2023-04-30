@@ -2,7 +2,6 @@
 
 import 'dart:io';
 
-import 'package:blood_bank/model/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -13,7 +12,8 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as Path;
 
-import '../../../Admin/utils/app_color.dart';
+import '../../../model and utils/model/user_model.dart';
+import '../../../model and utils/utils/app_color.dart';
 import '../home_page.dart';
 
 class UpdateProfileScreen extends StatefulWidget {
@@ -63,6 +63,8 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   String? featureLen(value) {
     if (value!.isEmpty || !RegExp(r'^[a-z A-Z]+$').hasMatch(value)) {
       return "Not a valid Feature";
+    } else if (RegExp(r'\s{2,}').hasMatch(value)) {
+      return "Contains multiple spaces";
     } else if (value.length < 6) {
       return "Minimum 6 letter";
     } else if (value.length > 20) {
@@ -140,6 +142,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     } catch (e) {
       Fluttertoast.showToast(msg: "Something went wrong try again later!");
       // print(e);
+      print(imageUrl);
     }
   }
 
@@ -248,11 +251,27 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
       ),
       body: SingleChildScrollView(
         child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 40),
+          padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 30),
           child: Column(
             children: [
-              const SizedBox(
-                height: 5,
+              SizedBox(
+                height: 15,
+              ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Change your profile picture ",
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 68, 68, 130),
+                    fontSize: 16,
+                    fontFamily: 'OpenSans',
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 0,
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 10,
               ),
               InkWell(
                 onTap: () {
@@ -347,7 +366,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                 ),
               ),
               const SizedBox(
-                height: 30,
+                height: 20,
               ),
               Align(
                 alignment: Alignment.centerLeft,
@@ -355,15 +374,12 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                   "Update your details ",
                   style: TextStyle(
                     color: Color.fromARGB(255, 68, 68, 130),
-                    fontSize: 20,
+                    fontSize: 16,
                     fontFamily: 'OpenSans',
                     fontWeight: FontWeight.bold,
                     letterSpacing: 0,
                   ),
                 ),
-              ),
-              const SizedBox(
-                height: 10,
               ),
               const SizedBox(
                 height: 20,
@@ -419,7 +435,12 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                               return "Not a valid Username";
                             }
                             if (!RegExp(r'^.{5,}$').hasMatch(value)) {
-                              return "Min 5 character";
+                              return "Minimum 5 characters";
+                            }
+                            if (RegExp(r'\s{2,}').hasMatch(value)) {
+                              return "Contains multiple spaces";
+                            } else if (value.length > 20) {
+                              return ("Maximum 20 characters");
                             } else {
                               return null;
                             }
@@ -437,6 +458,10 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                         padding: const EdgeInsets.only(top: 25.0),
                         child: TextFormField(
                           controller: bloodController,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(
+                                RegExp("[a-zA-Z+-]"))
+                          ],
                           // initialValue: bloodType,
                           onSaved: (value) {
                             bloodController.text = value!;
@@ -456,6 +481,10 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                         padding: const EdgeInsets.only(top: 25.0),
                         child: TextFormField(
                           controller: locationController,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(
+                                RegExp("[a-zA-Z]"))
+                          ],
                           // initialValue: bloodType,
                           onSaved: (value) {
                             locationController.text = value!;

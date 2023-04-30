@@ -5,9 +5,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../Admin/controller/data_controller.dart';
-import '../../../Admin/controller/feed_controller.dart';
-import '../../../Admin/utils/app_color.dart';
+import '../../../model and utils/controller/data_controller.dart';
+import '../../../model and utils/controller/feed_controller.dart';
+import '../../../model and utils/utils/app_color.dart';
 import '../Hospital_feed/create_feed.dart';
 import '../Hospital_feed/user_show_feed.dart';
 
@@ -47,6 +47,26 @@ class _HospitalFeedState extends State<HospitalFeed> {
     }
   }
 
+  Route goToRoute() {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) =>
+          const CreateFeedView(),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = Offset(0.0, 1.0);
+        const end = Offset.zero;
+        const curve = Curves.ease;
+
+        var tween =
+            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+        return SlideTransition(
+          position: animation.drive(tween),
+          child: child,
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -63,8 +83,7 @@ class _HospitalFeedState extends State<HospitalFeed> {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => const CreateFeedView()));
+            Navigator.of(context).push(goToRoute());
           },
           backgroundColor: const Color.fromRGBO(254, 109, 115, 1),
           child: const Icon(Icons.add),
@@ -256,7 +275,7 @@ UserEventsIJoined() {
                                 ],
                               ),
                             ),
-                            Container(
+                            SizedBox(
                                 width: Get.width * 0.6,
                                 height: 50,
                                 child: ListView.builder(

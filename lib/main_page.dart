@@ -7,7 +7,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import 'Login/verification/verify_email.dart';
+import 'welcomeScreen/Login/verification/verify_email.dart';
+
 
 class MainPage extends StatelessWidget {
   MainPage({Key? key}) : super(key: key);

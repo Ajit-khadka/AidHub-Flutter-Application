@@ -5,9 +5,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../Admin/Event/event_details.dart';
-import '../../Admin/controller/data_controller.dart';
-import '../../Admin/utils/app_color.dart';
+import '../../Admin/Admin side event/event_details.dart';
+import '../../model and utils/controller/data_controller.dart';
+import '../../model and utils/utils/app_color.dart';
+
+
 
 // import '../views/profile/add_profile.dart';
 

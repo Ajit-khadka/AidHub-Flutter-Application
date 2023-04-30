@@ -3,8 +3,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:blood_bank/Admin/Employeelist/employee.dart';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:firebase_auth/firebase_auth.dart';
@@ -16,13 +14,16 @@ import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
 import 'package:path/path.dart' as Path;
 
-import '../../../Login/loginPage/login.dart';
-import '../../../User/Homepage/profile/widgets/profile_features.dart/settings.dart';
-import '../../../User/Homepage/profile/widgets/profile_menu.dart';
-import '../Admin Profile/adminProfileUpdate.dart';
-import '../controller/data_controller.dart';
-import '../utils/app_color.dart';
 
+
+import '../../User/Homepage/profile/widgets/profile_features.dart/settings.dart';
+import '../../User/Homepage/profile/widgets/profile_menu.dart';
+import '../../model and utils/controller/data_controller.dart';
+import '../../model and utils/controller/feed_controller.dart';
+import '../../model and utils/utils/app_color.dart';
+import '../../welcomeScreen/Login/loginPage/login.dart';
+import '../Admin Profile/Employeelist/employee.dart';
+import '../Admin Profile/adminProfileUpdate.dart';
 
 
 class AdminProfilePage extends StatefulWidget {
@@ -45,6 +46,7 @@ class _AdminProfilePageState extends State<AdminProfilePage> {
   String email = "...";
   String contact = "...";
   String location = '...';
+  String role = '...';
   String image =
       'https://cdn1.iconfinder.com/data/icons/user-pictures/100/unknown-512.png';
   String status = "I am a new user";
@@ -75,6 +77,7 @@ class _AdminProfilePageState extends State<AdminProfilePage> {
           location = userDoc.get('location');
           status = userDoc.get('status');
           image = userDoc.get('image');
+          role = userDoc.get('role');
           debugPrint(name);
         });
       }
@@ -156,7 +159,7 @@ class _AdminProfilePageState extends State<AdminProfilePage> {
                       child: Container(
                         width: 120,
                         height: 120,
-                        margin: const EdgeInsets.only(top: 35),
+                        margin: const EdgeInsets.only(top: 15),
                         padding: const EdgeInsets.all(2),
                         decoration: BoxDecoration(
                           color: AppColors.blue,
@@ -236,10 +239,9 @@ class _AdminProfilePageState extends State<AdminProfilePage> {
               const SizedBox(
                 height: 5,
               ),
-
               Padding(
                 // height: 30,
-                padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
                 child: Text(
                   '" $status "',
                   style: const TextStyle(
@@ -248,12 +250,27 @@ class _AdminProfilePageState extends State<AdminProfilePage> {
                       fontFamily: 'Poppins'),
                 ),
               ),
-
+              const SizedBox(
+                height: 20,
+              ),
+              const Align(
+                alignment: Alignment.center,
+                child: Text(
+                  'Personal Information',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                      color: Color.fromRGBO(254, 109, 115, 1)),
+                ),
+              ),
+              const SizedBox(
+                height: 5,
+              ),
               SizedBox(
                 child: Container(
                   margin:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                  height: 220,
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  height: 340,
                   width: double.infinity,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
@@ -277,30 +294,66 @@ class _AdminProfilePageState extends State<AdminProfilePage> {
                     decoration: const BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(100)),
                         color: Colors.white),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 40, horizontal: 0),
-                      child: RichText(
-                        textAlign: TextAlign.start,
-                        text: TextSpan(
-                          text: 'Personal Information\n\n',
-                          style: const TextStyle(
-                              fontSize: 16,
-                              color: Color.fromARGB(255, 68, 68, 130),
-                              fontFamily: 'Poppins'),
-                          children: <TextSpan>[
-                            TextSpan(
-                                text: 'Email             :  $email\n',
-                                style: const TextStyle(height: 2)),
-                            TextSpan(
-                              text: 'Location       :  $location\n',
-                              style: const TextStyle(height: 2),
-                            ),
-                            TextSpan(
-                              text: 'Contact       :  $contact\n',
-                              style: const TextStyle(height: 2),
-                            ),
-                          ],
+                    child: Align(
+                      alignment: Alignment.topLeft,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 15, horizontal: 30),
+                        child: RichText(
+                          textAlign: TextAlign.start,
+                          text: TextSpan(
+                            style: const TextStyle(
+                                fontSize: 16,
+                                color: Color.fromARGB(255, 68, 68, 130),
+                                fontFamily: 'Poppins',
+                                height: 3),
+                            children: <TextSpan>[
+                              const TextSpan(
+                                text: 'Email :',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                  color: Color.fromRGBO(254, 109, 115, 1),
+                                ),
+                              ),
+                              TextSpan(
+                                  text: '\n$email\n',
+                                  style: const TextStyle(height: 0)),
+                              const TextSpan(
+                                text: 'Role',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                  color: Color.fromRGBO(254, 109, 115, 1),
+                                ),
+                              ),
+                              TextSpan(
+                                  text: '\n$role\n',
+                                  style: const TextStyle(height: 0)),
+                              const TextSpan(
+                                text: 'Location :',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                    color: Color.fromRGBO(254, 109, 115, 1)),
+                              ),
+                              TextSpan(
+                                text: '\n$location\n',
+                                style: const TextStyle(height: 0),
+                              ),
+                              const TextSpan(
+                                text: 'Contact :',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                    color: Color.fromRGBO(254, 109, 115, 1)),
+                              ),
+                              TextSpan(
+                                text: '\n$contact\n',
+                                style: const TextStyle(height: 0),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -344,6 +397,8 @@ class _AdminProfilePageState extends State<AdminProfilePage> {
 
 Future<void> logout(BuildContext context) async {
   await FirebaseAuth.instance.signOut();
+  Get.delete<DataController>(force: true);
+  Get.delete<FeedController>(force: true);
   Navigator.of(context)
       .push(MaterialPageRoute(builder: (context) => const LoginPage()));
 }

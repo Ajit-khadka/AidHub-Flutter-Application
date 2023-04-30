@@ -3,17 +3,20 @@
 import 'dart:async';
 import 'dart:io';
 
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
-import '../../../Admin/utils/app_color.dart';
-import '../../../Login/loginPage/login.dart';
+import '../../../model and utils/controller/data_controller.dart';
+import '../../../model and utils/controller/feed_controller.dart';
+import '../../../model and utils/utils/app_color.dart';
+import '../../../welcomeScreen/Login/loginPage/login.dart';
+
 import '../profile/update_profile_screen.dart';
 import '../profile/widgets/profile_features.dart/settings.dart';
 import '../profile/widgets/profile_menu.dart';
@@ -141,9 +144,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              const SizedBox(
-                height: 5,
-              ),
               Align(
                 alignment: Alignment.center,
                 child: Column(
@@ -153,7 +153,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       child: Container(
                         width: 120,
                         height: 120,
-                        margin: const EdgeInsets.only(top: 35),
+                        margin: const EdgeInsets.only(top: 15),
                         padding: const EdgeInsets.all(2),
                         decoration: BoxDecoration(
                           color: AppColors.blue,
@@ -194,7 +194,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     const SizedBox(
                       width: 0,
-                      height: 10,
+                      height: 5,
                     ),
                   ],
                 ),
@@ -233,10 +233,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               const SizedBox(
                 height: 5,
               ),
-
               Padding(
                 // height: 30,
-                padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
                 child: Text(
                   '" $status "',
                   style: const TextStyle(
@@ -245,24 +244,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       fontFamily: 'Poppins'),
                 ),
               ),
-              // Container(
-              //   width: 200,
-              //   height: 100,
-              //   decoration: const BoxDecoration(
-              //     borderRadius: BorderRadius.all(Radius.circular(50)),
-              //     boxShadow: [
-              //       BoxShadow(
-              //           color: Colors.grey, //New
-              //           blurRadius: 25.0,
-              //           offset: Offset(0, -10))
-              //     ],
-              //   ),
-              // ),
+              const SizedBox(
+                height: 20,
+              ),
+              const Align(
+                alignment: Alignment.center,
+                child: Text(
+                  'Personal Information',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                      color: Color.fromRGBO(254, 109, 115, 1)),
+                ),
+              ),
+              const SizedBox(
+                height: 5,
+              ),
               SizedBox(
                 child: Container(
                   margin:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                  height: 250,
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  height: 340,
                   width: double.infinity,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
@@ -286,34 +288,67 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     decoration: const BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(100)),
                         color: Colors.white),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 40, horizontal: 0),
-                      child: RichText(
-                        textAlign: TextAlign.start,
-                        text: TextSpan(
-                          text: 'Personal Information\n\n',
-                          style: const TextStyle(
-                              fontSize: 16,
-                              color: Color.fromARGB(255, 68, 68, 130),
-                              fontFamily: 'Poppins'),
-                          children: <TextSpan>[
-                            TextSpan(
-                                text: 'Email             :  $email\n',
-                                style: const TextStyle(height: 2)),
-                            TextSpan(
-                              text: 'Blood Type  :  $bloodType\n',
-                              style: const TextStyle(height: 2),
-                            ),
-                            TextSpan(
-                              text: 'Location       :  $location\n',
-                              style: const TextStyle(height: 2),
-                            ),
-                            TextSpan(
-                              text: 'Contact       :  $contact\n',
-                              style: const TextStyle(height: 2),
-                            ),
-                          ],
+                    child: Align(
+                      alignment: Alignment.topLeft,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 15, horizontal: 30),
+                        child: RichText(
+                          textAlign: TextAlign.start,
+                          text: TextSpan(
+                            style: const TextStyle(
+                                fontSize: 16,
+                                color: Color.fromARGB(255, 68, 68, 130),
+                                fontFamily: 'Poppins',
+                                height: 3),
+                            children: <TextSpan>[
+                              const TextSpan(
+                                text: 'Email :',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                  color: Color.fromRGBO(254, 109, 115, 1),
+                                ),
+                              ),
+                              TextSpan(
+                                  text: '\n$email\n',
+                                  style: const TextStyle(height: 0)),
+                              const TextSpan(
+                                text: 'Blood Type :',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                  color: Color.fromRGBO(254, 109, 115, 1),
+                                ),
+                              ),
+                              TextSpan(
+                                text: '\n$bloodType\n',
+                                style: const TextStyle(height: 0),
+                              ),
+                              const TextSpan(
+                                text: 'Location :',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                    color: Color.fromRGBO(254, 109, 115, 1)),
+                              ),
+                              TextSpan(
+                                text: '\n$location\n',
+                                style: const TextStyle(height: 0),
+                              ),
+                              const TextSpan(
+                                text: 'Contact :',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                    color: Color.fromRGBO(254, 109, 115, 1)),
+                              ),
+                              TextSpan(
+                                text: '\n$contact\n',
+                                style: const TextStyle(height: 0),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -354,6 +389,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
 Future<void> logout(BuildContext context) async {
   await FirebaseAuth.instance.signOut();
+  Get.delete<DataController>(force: true);
+  Get.delete<FeedController>(force: true);
+  // Get.delete<HomeController>(force: true);
   Navigator.of(context)
       .push(MaterialPageRoute(builder: (context) => const LoginPage()));
 }

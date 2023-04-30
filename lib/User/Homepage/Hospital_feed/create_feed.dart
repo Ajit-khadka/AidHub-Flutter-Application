@@ -15,11 +15,10 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
-
-import '../../../Admin/controller/feed_controller.dart';
-import '../../../Admin/utils/app_color.dart';
-import '../../../Admin/widget/app_widget.dart';
-import '../../../model/feed_model.dart';
+import '../../../model and utils/controller/feed_controller.dart';
+import '../../../model and utils/model/feed_model.dart';
+import '../../../model and utils/utils/app_color.dart';
+import '../../../model and utils/widget/app_widget.dart';
 
 class CreateFeedView extends StatefulWidget {
   const CreateFeedView({Key? key}) : super(key: key);
@@ -354,6 +353,14 @@ class _CreateFeedState extends State<CreateFeedView> {
                                   const Color.fromRGBO(254, 109, 115, 1));
                           return '';
                         }
+                        if (RegExp(r'\s{2,}').hasMatch(input)) {
+                          Get.snackbar(
+                              'Opps', "Description contains multiple spaces",
+                              colorText:
+                                  const Color.fromARGB(255, 255, 255, 255),
+                              backgroundColor:
+                                  const Color.fromRGBO(254, 109, 115, 1));
+                        }
                         return null;
                       },
                       decoration: InputDecoration(
@@ -363,8 +370,7 @@ class _CreateFeedState extends State<CreateFeedView> {
                         hintStyle: TextStyle(
                           color: AppColors.genderTextColor,
                         ),
-                        hintText:
-                            'Describe people should know about the event...',
+                        hintText: 'Describe your day...',
                       ),
                     ),
                   ),
@@ -391,7 +397,6 @@ class _CreateFeedState extends State<CreateFeedView> {
                                           255, 255, 255, 255),
                                       backgroundColor: const Color.fromRGBO(
                                           254, 109, 115, 1));
-
                                   return;
                                 }
 

@@ -1,9 +1,10 @@
 // ignore_for_file: non_constant_identifier_names, unused_local_variable
 
-import 'package:blood_bank/Admin/controller/data_controller.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../model and utils/controller/data_controller.dart';
 import '../../User side Event/user_show_event.dart';
 
 class Events extends StatefulWidget {
