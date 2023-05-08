@@ -10,7 +10,6 @@ import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
 // import '../invite_guest/invite_guest_screen.dart';
 
-
 import '../../model and utils/controller/data_controller.dart';
 import '../../model and utils/utils/app_color.dart';
 import 'join_event.dart';

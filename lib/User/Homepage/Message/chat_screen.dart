@@ -108,17 +108,13 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                   ClipRRect(
                     borderRadius: BorderRadius.circular(10),
-                    child: CachedNetworkImage(
-                      width: 40,
-                      height: 55,
-                      imageUrl:
-                          list.isNotEmpty ? list[0].image : widget.user.image,
-                      errorWidget: (context, url, error) => const CircleAvatar(
-                          child: Icon(CupertinoIcons.person)),
+                    child: CircleAvatar(
+                      backgroundImage: NetworkImage(widget.user.image),
                     ),
                   ),
                   const SizedBox(
-                    width: 30,
+                    width: 20,
+                    height: 50,
                   ),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,

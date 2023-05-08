@@ -63,7 +63,14 @@ android {
             crunchPngs false // or true
         }
     }
+
+    
 }
+
+// repositories {
+//     mavenCentral()
+//     maven { url 'https://api.mapbox.com/downloads/v2/releases/maven' }
+// }
 
 flutter {
     source '../..'
@@ -73,5 +80,6 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:31.2.0')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.7.20"
     implementation("androidx.multidex:multidex:2.0.1")
+    // implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:9.6.2'
 
 }

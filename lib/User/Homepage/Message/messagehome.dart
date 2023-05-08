@@ -28,7 +28,6 @@ class _MessageHomeScreen extends State<MessageHomeScreen> {
   void initState() {
     super.initState();
     APIs.getSelfInfo();
-  
 
     //for updating user active status according to lifecycle events
     //resume -- active or online
@@ -107,16 +106,6 @@ class _MessageHomeScreen extends State<MessageHomeScreen> {
                       : Icons.search)),
             ],
           ),
-          //floating button to add new user
-          floatingActionButton: Padding(
-            padding: const EdgeInsets.only(bottom: 10),
-            child: FloatingActionButton(
-                onPressed: () {
-                  // _addChatUserDialog();
-                },
-                child: const Icon(Icons.add_comment_rounded)),
-          ),
-
           body: StreamBuilder(
             stream: APIs.getAllUsers(),
             builder: (context, snapshot) {

@@ -135,7 +135,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
         'contact': contactController.text.trim(),
         'status': statusController.text.trim(),
         'location': locationController.text.trim(),
-        'image': imageUrl,
+        // 'image': imageUrl,
       }).then((value) {
         Fluttertoast.showToast(msg: "Your profile is updated");
       });

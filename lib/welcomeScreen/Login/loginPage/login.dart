@@ -182,24 +182,24 @@ class LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget orLine() {
-    return RichText(
-      text: TextSpan(children: const [
-        TextSpan(
-          text: ("_________________  "),
-          style: TextStyle(color: Colors.red),
-        ),
-        TextSpan(
-          text: ("  OR  "),
-          style: TextStyle(color: Color.fromARGB(255, 68, 68, 130)),
-        ),
-        TextSpan(
-          text: ("  _________________"),
-          style: TextStyle(color: Colors.red),
-        ),
-      ]),
-    );
-  }
+  // Widget orLine() {
+  //   return RichText(
+  //     text: TextSpan(children: const [
+  //       TextSpan(
+  //         text: ("_________________  "),
+  //         style: TextStyle(color: Colors.red),
+  //       ),
+  //       TextSpan(
+  //         text: ("    "),
+  //         style: TextStyle(color: Color.fromARGB(255, 68, 68, 130)),
+  //       ),
+  //       TextSpan(
+  //         text: ("  _________________"),
+  //         style: TextStyle(color: Colors.red),
+  //       ),
+  //     ]),
+  //   );
+  // }
 
   void checkRole() async {
     try {
@@ -397,6 +397,7 @@ class LoginPageState extends State<LoginPage> {
         return false; // This will prevent the user from navigating back
       },
       child: Scaffold(
+        backgroundColor: Colors.white,
         //resizeToAvoidBottomInset: false,
         body: SingleChildScrollView(
           child: Form(
@@ -407,7 +408,7 @@ class LoginPageState extends State<LoginPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   SizedBox(
-                    height: 50,
+                    height: 70,
                   ),
                   Text(
                     "LOGIN",
@@ -421,7 +422,7 @@ class LoginPageState extends State<LoginPage> {
                   ),
                   Image.asset("images/Login.png", scale: 0.5),
                   SizedBox(
-                    height: 10,
+                    height: 15,
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(
@@ -429,7 +430,7 @@ class LoginPageState extends State<LoginPage> {
                     child: Column(children: [
                       buildEmail(),
                       SizedBox(
-                        height: 20,
+                        height: 25,
                       ),
                       buildPassword(),
                       buildForgotPassword(context),
@@ -461,7 +462,7 @@ class LoginPageState extends State<LoginPage> {
                         height: 5,
                       ),
                       signUp(context),
-                      orLine(),
+                      // orLine(),
                     ]),
                   ),
                 ],

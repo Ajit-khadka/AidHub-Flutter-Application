@@ -5,41 +5,51 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:line_awesome_flutter/line_awesome_flutter.dart';
-import 'package:blood_bank/User/Homepage/Message/apis.dart';
 import '../../../model and utils/controller/feed_controller.dart';
 import '../../../model and utils/model/chat_user.dart';
-import '../profile/visitpage/profile_visit.dart';
 
 // import '../views/profile/add_profile.dart';
 
 late final ChatUser user;
 FirebaseAuth auth = FirebaseAuth.instance;
 FirebaseFirestore firestore = FirebaseFirestore.instance;
-// String documentId = '4PdnbWIkZNorPZ2fELMs';
-late DocumentReference _documentReference;
+// String selectedPhotoPath;
 
-deleteFeed(String id, {Key? key}) {
-  late Future<DocumentSnapshot> _futureDocument;
-  _documentReference = FirebaseFirestore.instance.collection('feeds').doc(id);
-  _futureDocument = _documentReference.get();
-}
+// void deleteDocument(String id) async {
+//   User? user = auth.currentUser;
+//   if (user != null) {
+//     DocumentSnapshot document =
+//         await firestore.collection('feeds').doc(id).get();
+//     print(id);
+//     String? creatorUid = document.get('uid');
+//     if (creatorUid == user.uid) {
+//       print(creatorUid);
+//       print(user.uid);
+//       await firestore.collection('feeds').doc(id).delete();
+//       // Show a snackbar or navigate to a new page to confirm deletion
+//       Fluttertoast.showToast(msg: "Post is Deleted");
+//     } else {
+//       Fluttertoast.showToast(msg: "You are not authorized!");
+//     }
+//   } else {
+//     // Show a login page or redirect the user to log in before allowing document deletion
+//   }
+// }
 
-void deleteDocument(String id) async {
+void deleteSelectedPhoto() async {
   User? user = auth.currentUser;
   if (user != null) {
-    DocumentSnapshot document =
-        await firestore.collection('feeds').doc(id).get();
-    print(id);
-    String? creatorUid = document.get('uid');
-    if (creatorUid == user.uid) {
-      print(creatorUid);
-      print(user.uid);
-      await firestore.collection('feeds').doc(id).delete();
+    QuerySnapshot querySnapshot = await firestore
+        .collection('feeds')
+        .where('uid', isEqualTo: user.uid)
+        .get();
+    List<DocumentSnapshot> documents = querySnapshot.docs;
+    if (documents.isNotEmpty) {
+      await documents.first.reference.delete();
       // Show a snackbar or navigate to a new page to confirm deletion
-      Fluttertoast.showToast(msg: "Post is Deleted");
+      Fluttertoast.showToast(msg: "Photo is Deleted");
     } else {
-      Fluttertoast.showToast(msg: "You are not authorized!");
+      Fluttertoast.showToast(msg: "Photo not found!");
     }
   } else {
     // Show a login page or redirect the user to log in before allowing document deletion
@@ -219,11 +229,9 @@ Widget buildCard(
                   ),
                   const Spacer(),
                   InkWell(
-                    //delete data
-                    onTap: () {
-                      // _documentReference.delete();
-                      String id = '';
-                      deleteDocument(id);
+                    // Delete selected photo
+                    onTap: () async {
+                      deleteSelectedPhoto();
                     },
                     child: Container(
                       width: 22,
@@ -235,6 +243,39 @@ Widget buildCard(
                       ),
                     ),
                   ),
+                  // InkWell(
+                  //   //delete data
+                  //   onTap: () async {
+                  //     String uid = '';
+                  //     final FirebaseAuth auth = FirebaseAuth.instance;
+                  //     User? user = auth.currentUser;
+                  //     uid = user!.uid;
+                  //     debugPrint("user.uid $uid");
+
+                  //     final QuerySnapshot querySnapshot = await firestore
+                  //         .collection('feeds')
+                  //         .where('uid',
+                  //             isEqualTo: uid) // get documents with matching UID
+                  //         .limit(
+                  //             1) // limit the query to only return one document
+                  //         .get();
+                  //     final List<DocumentSnapshot> documents =
+                  //         querySnapshot.docs;
+                  //     if (documents.isNotEmpty) {
+                  //       await documents.first.reference
+                  //           .delete(); // delete the first (and only) document
+                  //     }
+                  //   },
+                  //   child: Container(
+                  //     width: 22,
+                  //     height: 22,
+                  //     child: Image.asset(
+                  //       'images/delete.png',
+                  //       fit: BoxFit.contain,
+                  //       color: const Color.fromARGB(255, 68, 68, 130),
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
             ),
@@ -355,7 +396,7 @@ Widget buildCard(
                   width: 15,
                 ),
                 InkWell(
-                  onTap: (){},
+                  onTap: () {},
                   child: Container(
                     padding: const EdgeInsets.all(0),
                     width: 17,
@@ -436,7 +477,8 @@ UserPostItem(DocumentSnapshot event) {
           ),
           InkWell(
             onTap: () {
-              // Get.to(() => ProfileVisit(user: widget.user));
+              // Get.to(() => ProfileScreen());
+              // // UserPostItemmo(event);
             },
             child: CircleAvatar(
               radius: 20,
@@ -515,12 +557,21 @@ UserPostMade() {
   );
 }
 
-void visitProfile(ChatUser user) {
-  // final route = MaterialPageRoute(
-  //   builder: (context) => ProfileVisit(user: user),
-  // );
-  Get.to(() => ProfileVisit(user: user));
+// Define a function to delete a photo given its file path
+Future<void> deletePhoto(String filePath) async {
+  final QuerySnapshot querySnapshot = await firestore
+      .collection('feeds')
+      .where('url',
+          isEqualTo: filePath) // get documents with matching photo path
+      .get();
+  final List<DocumentSnapshot> documents = querySnapshot.docs;
+  if (documents.isNotEmpty) {
+    await documents.first.reference
+        .delete(); // delete the first (and only) document
+  }
 }
+
+
 
 
 // void deleteButton(BuildContext context) async {
@@ -562,3 +613,52 @@ void visitProfile(ChatUser user) {
 //     },
 //   );
 // }
+
+
+// final CollectionReference collectionRef =
+//                           FirebaseFirestore.instance.collection('feeds');
+
+//                       final QuerySnapshot querySnapshot = await collectionRef
+//                           .where('uid', isEqualTo: uid)
+//                           .get();
+
+//                       querySnapshot.docs.forEach((doc) async {
+//                         await doc.reference.delete();
+
+
+                      // final CollectionReference collectionRef =
+                      //     FirebaseFirestore.instance.collection('feeds');
+
+                      // final QuerySnapshot querySnapshot = await collectionRef
+                      //     .where('uid', isEqualTo: user.uid)
+                      //     .limit(1)
+                      //     .get();
+
+                      // print(querySnapshot);
+
+                      // querySnapshot.docs.forEach((documentSnapshot) async {
+                      //   final DocumentReference documentRef =
+                      //       documentSnapshot.reference;
+
+                      //   await documentRef.delete();
+                      // });
+
+                      // final DocumentSnapshot userDoc = await FirebaseFirestore
+                      //     .instance
+                      //     .collection('feeds')
+                      //     .doc(uid)
+                      //     .get();
+                      // print(collectionRef);
+
+                      // try {
+                      //   if (uid == userDoc) {
+                      //     FirebaseFirestore.instance
+                      //         .collection('feeds')
+                      //         .doc(eventData!.id)
+                      //         .delete();
+                      //   } else {
+                      //     print("error");
+                      //   }
+                      // } catch (e) {
+                      //   print(e);
+                      // }

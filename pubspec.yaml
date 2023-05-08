@@ -40,7 +40,6 @@ dependencies:
   email_otp: ^1.0.4
   email_auth: ^1.0.0
   get: ^4.6.5
-  country_picker: ^2.0.19
   dotted_border: ^2.0.0+3
   video_thumbnail: ^0.5.3
   flutter_svg: ^2.0.4
@@ -49,7 +48,6 @@ dependencies:
   flutter_notification_channel: ^2.0.0
   cached_network_image: ^3.2.3
   flutter_bloc: ^8.1.2
-  emoji_picker_flutter: ^1.5.4
   http: ^0.13.5
   
 
@@ -74,12 +72,25 @@ dependencies:
   basic_utils: ^5.5.1
   image_cropper: ^3.0.1
   velocity_x: ^3.6.0
+  latlong2: ^0.8.1
+  flutter_map: ^3.1.0
+  url_launcher: ^6.1.10
+  location: ^4.4.0
+  geolocator: ^9.0.2
+  geoflutterfire2: ^2.3.15
+  # mapbox_gl: ^0.16.0
+ 
+
   
   
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+  # location_repository:
+  #   path: packages/location_repository
+ 
 
 #   flutter_launcher_icons: "^0.13.0"
 #   flutter_lints: ^2.0.1
@@ -113,6 +124,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - images/
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

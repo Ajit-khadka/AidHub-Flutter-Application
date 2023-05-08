@@ -9,8 +9,6 @@ import '../../Admin/Admin side event/event_details.dart';
 import '../../model and utils/controller/data_controller.dart';
 import '../../model and utils/utils/app_color.dart';
 
-
-
 // import '../views/profile/add_profile.dart';
 
 Widget UserEventsFeed() {
@@ -153,13 +151,16 @@ Widget buildCard(
                           image = '';
                         }
 
-                        return Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 0, vertical: 0),
-                          margin: const EdgeInsets.only(left: 9),
-                          child: CircleAvatar(
-                            minRadius: 15,
-                            backgroundImage: NetworkImage(image),
+                        return SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 0, vertical: 0),
+                            margin: const EdgeInsets.only(left: 9),
+                            child: CircleAvatar(
+                              minRadius: 15,
+                              backgroundImage: NetworkImage(image),
+                            ),
                           ),
                         );
                       },
@@ -317,7 +318,7 @@ UserEventsIJoined() {
               ),
               Divider(
                 height: 15,
-                thickness: 1,
+                thickness: 0,
                 color: const Color(0xff918F8F).withOpacity(0.2),
               ),
               Obx(

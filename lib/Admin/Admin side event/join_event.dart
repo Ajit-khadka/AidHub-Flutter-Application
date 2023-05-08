@@ -9,8 +9,6 @@ import 'package:get/get.dart';
 
 import '../../model and utils/widget/app_widget.dart';
 
-
-
 class CheckOutView extends StatefulWidget {
   DocumentSnapshot? eventDoc;
 
@@ -23,7 +21,6 @@ class CheckOutView extends StatefulWidget {
 class _CheckOutViewState extends State<CheckOutView> {
   @override
   void initState() {
-    
     super.initState();
   }
 
@@ -93,24 +90,46 @@ class _CheckOutViewState extends State<CheckOutView> {
 }
 
 Future<void> joinUser(BuildContext context, {String? eventId}) async {
-  try {
-    await FirebaseFirestore.instance.collection('events').doc(eventId).set({
-      'joined': FieldValue.arrayUnion([FirebaseAuth.instance.currentUser!.uid]),
-      'max_entries': FieldValue.increment(-1),
-    }, SetOptions(merge: true)).then((value) {
-      FirebaseFirestore.instance.collection('booking').doc(eventId).set({
-        'booking': FieldValue.arrayUnion([
-          {'uid': FirebaseAuth.instance.currentUser!.uid, 'tickets': 1}
-        ])
-      }).then((value) {
-        Timer(const Duration(seconds: 1), () {
-          Fluttertoast.showToast(msg: "You joined the Event");
-          Get.back();
-        });
-      });
-    });
-  } catch (e) {
-    Fluttertoast.showToast(msg: "Check your internet connection!");
-    print(e);
+  String uid = '';
+  String id = '';
+  int max = 0;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  User? user = _auth.currentUser;
+  uid = user!.uid;
+  final DocumentSnapshot userDoc = await FirebaseFirestore.instance
+      .collection('events')
+      .doc('FmrNJPcuKq9S19sKrAbK')
+      .get();
+  id = userDoc.get('uid');
+  max = userDoc.get("max_entries");
+  print(id);
+  print(max);
+
+  if (uid == id) {
+    print("delete");
+    // } else if(max < 1){
+  } else {
+    print("add");
   }
+
+  // try {
+  //   await FirebaseFirestore.instance.collection('events').doc(eventId).set({
+  //     'joined': FieldValue.arrayUnion([FirebaseAuth.instance.currentUser!.uid]),
+  //     'max_entries': FieldValue.increment(-1),
+  //   }, SetOptions(merge: true)).then((value) {
+  //     FirebaseFirestore.instance.collection('booking').doc(eventId).set({
+  //       'booking': FieldValue.arrayUnion([
+  //         {'uid': FirebaseAuth.instance.currentUser!.uid, 'tickets': 1}
+  //       ])
+  //     }).then((value) {
+  //       Timer(const Duration(seconds: 1), () {
+  //         Fluttertoast.showToast(msg: "You joined the Event");
+  //         Get.back();
+  //       });
+  //     });
+  //   });
+  // } catch (e) {
+  //   Fluttertoast.showToast(msg: "Check your internet connection!");
+  //   print(e);
+  // }
 }

@@ -14,8 +14,6 @@ import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
 import 'package:path/path.dart' as Path;
 
-
-
 import '../../User/Homepage/profile/widgets/profile_features.dart/settings.dart';
 import '../../User/Homepage/profile/widgets/profile_menu.dart';
 import '../../model and utils/controller/data_controller.dart';
@@ -24,7 +22,6 @@ import '../../model and utils/utils/app_color.dart';
 import '../../welcomeScreen/Login/loginPage/login.dart';
 import '../Admin Profile/Employeelist/employee.dart';
 import '../Admin Profile/adminProfileUpdate.dart';
-
 
 class AdminProfilePage extends StatefulWidget {
   const AdminProfilePage({super.key});
@@ -361,15 +358,15 @@ class _AdminProfilePageState extends State<AdminProfilePage> {
                 ),
               ),
 
-              //menu
-              ProfileMenuWidget(
-                title: "Employees",
-                icon: Icons.local_hospital,
-                onPress: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const EmployeeList()));
-                },
-              ),
+              // //menu
+              // ProfileMenuWidget(
+              //   title: "Employees",
+              //   icon: Icons.local_hospital,
+              //   onPress: () {
+              //     Navigator.of(context).push(MaterialPageRoute(
+              //         builder: (context) => const EmployeeList()));
+              //   },
+              // ),
 
               ProfileMenuWidget(
                 title: "Settings",
@@ -380,13 +377,13 @@ class _AdminProfilePageState extends State<AdminProfilePage> {
                 },
               ),
 
-              ProfileMenuWidget(
-                title: "Logout",
-                icon: LineAwesomeIcons.alternate_sign_out,
-                onPress: () {
-                  logoutButton(context);
-                },
-              )
+              // ProfileMenuWidget(
+              //   title: "Logout",
+              //   icon: LineAwesomeIcons.alternate_sign_out,
+              //   onPress: () {
+              //     logoutButton(context);
+              //   },
+              // )
             ],
           ),
         ),

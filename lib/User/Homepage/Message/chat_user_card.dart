@@ -1,24 +1,13 @@
-import 'package:blood_bank/welcomeScreen/Login/forgotpage/forgotpage.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../../main.dart';
 import '../../../model and utils/model/chat_user.dart';
 import '../../../model and utils/model/message.dart';
 import '../../../model and utils/utils/message_data_formatter.dart';
 import '../profile/visitpage/profile_visit.dart';
 import 'apis.dart';
 import 'chat_screen.dart';
-
-// import '../api/apis.dart';
-// import '../helper/my_date_util.dart';
-// import '../main.dart';
-// import '../models/chat_user.dart';
-// import '../models/message.dart';
-// import '../screens/chat_screen.dart';
-// import 'apis.dart';
-// import 'dialogs/profile_dialog.dart';
 
 //card to represent a single user in home screen
 class ChatUserCard extends StatefulWidget {
@@ -66,15 +55,9 @@ class _ChatUserCardState extends State<ChatUserCard> {
                                     ProfileVisit(user: widget.user)));
                       },
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: CachedNetworkImage(
-                          width: 70,
-                          height: 50,
-                          imageUrl: widget.user.image,
-                          errorWidget: (context, url, error) =>
-                              const CircleAvatar(
-                            child: Icon(CupertinoIcons.person),
-                          ),
+                        borderRadius: BorderRadius.circular(300),
+                        child: CircleAvatar(
+                          backgroundImage: NetworkImage(widget.user.image),
                         ),
                       ),
                     ),

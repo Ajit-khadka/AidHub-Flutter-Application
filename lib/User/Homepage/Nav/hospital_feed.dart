@@ -238,41 +238,43 @@ UserEventsIJoined() {
                           children: [
                             Padding(
                               padding: const EdgeInsets.all(5),
-                              child: Row(
-                                children: [
-                                  Container(
-                                    width: 41, height: 24,
-                                    alignment: Alignment.center,
-                                    // padding: EdgeInsets.symmetric(
-                                    //     horizontal: 10, vertical: 7),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(4),
-                                      border: Border.all(
-                                        color: const Color.fromRGBO(
-                                            254, 109, 115, 1),
+                              child: SingleChildScrollView(
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      width: 41, height: 24,
+                                      alignment: Alignment.center,
+                                      // padding: EdgeInsets.symmetric(
+                                      //     horizontal: 10, vertical: 7),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(4),
+                                        border: Border.all(
+                                          color: const Color.fromRGBO(
+                                              254, 109, 115, 1),
+                                        ),
+                                      ),
+                                      child: Text(
+                                        date,
+                                        style: TextStyle(
+                                          fontSize: 10, 
+                                          fontWeight: FontWeight.w500,
+                                          color: AppColors.black,
+                                        ),
                                       ),
                                     ),
-                                    child: Text(
-                                      date,
-                                      style: TextStyle(
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.w500,
-                                        color: AppColors.black,
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      name,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 16,
+                                        color: Color.fromARGB(255, 68, 68, 130),
                                       ),
                                     ),
-                                  ),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  Text(
-                                    name,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 16,
-                                      color: Color.fromARGB(255, 68, 68, 130),
-                                    ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
                             SizedBox(
@@ -292,11 +294,14 @@ UserEventsIJoined() {
                                       image = '';
                                     }
 
-                                    return Container(
-                                      margin: const EdgeInsets.only(left: 15),
-                                      child: CircleAvatar(
-                                        minRadius: 13,
-                                        backgroundImage: NetworkImage(image),
+                                    return SingleChildScrollView(
+                                      scrollDirection: Axis.horizontal,
+                                      child: Container(
+                                        margin: const EdgeInsets.only(left: 15),
+                                        child: CircleAvatar(
+                                          minRadius: 13,
+                                          backgroundImage: NetworkImage(image),
+                                        ),
                                       ),
                                     );
                                   },

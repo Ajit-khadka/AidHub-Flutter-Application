@@ -80,48 +80,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  void logoutButton(BuildContext context) async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text(
-            'Account Logout',
-            style: TextStyle(
-              color: Color.fromARGB(255, 68, 68, 130),
-              fontSize: 20,
-              fontFamily: 'OpenSans',
-              fontWeight: FontWeight.bold,
-              letterSpacing: 0,
-            ),
-          ),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: const <Widget>[
-                Text('Are you sure want to Logout from your account?'),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Yes'),
-              onPressed: () {
-                logout(context);
-              },
-            ),
-            TextButton(
-              child: const Text('No'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   File? _image;
 
   String? e;
@@ -356,12 +314,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
 
-              //menu
-              ProfileMenuWidget(
-                title: "Contacts",
-                icon: Icons.phone,
-                onPress: () {},
-              ),
+              // //menu
+              // ProfileMenuWidget(
+              //   title: "Contacts",
+              //   icon: Icons.phone,
+              //   onPress: () {},
+              // ),
 
               ProfileMenuWidget(
                 title: "Settings",
@@ -372,26 +330,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 },
               ),
 
-              ProfileMenuWidget(
-                title: "Logout",
-                icon: LineAwesomeIcons.alternate_sign_out,
-                onPress: () {
-                  logoutButton(context);
-                },
-              )
+              // ProfileMenuWidget(
+              //   title: "Logout",
+              //   icon: LineAwesomeIcons.alternate_sign_out,
+              //   onPress: () {
+              //     logoutButton(context);
+              //   },
+              // )
             ],
           ),
         ),
       ),
     );
   }
-}
-
-Future<void> logout(BuildContext context) async {
-  await FirebaseAuth.instance.signOut();
-  Get.delete<DataController>(force: true);
-  Get.delete<FeedController>(force: true);
-  // Get.delete<HomeController>(force: true);
-  Navigator.of(context)
-      .push(MaterialPageRoute(builder: (context) => const LoginPage()));
 }
