@@ -1,8 +1,11 @@
+// ignore_for_file: avoid_unnecessary_containers
+
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
 import '../../map/AppConstants.dart';
 import '../../map/map_marker_model.dart';
@@ -19,6 +22,7 @@ class _NearestHospitalState extends State<NearestHospital>
   final pageController = PageController();
   int selectedIndex = 0;
   var currentLocation = AppConstants.myLocation;
+  var meLocation = AppConstants.myLocation;
 
   late final MapController mapController;
 
@@ -26,6 +30,10 @@ class _NearestHospitalState extends State<NearestHospital>
   void initState() {
     super.initState();
     mapController = MapController();
+  }
+
+  void _moveToTargetLocation() {
+    _animatedMapMove(meLocation, 17);
   }
 
   @override
@@ -36,7 +44,7 @@ class _NearestHospitalState extends State<NearestHospital>
           centerTitle: true,
           backgroundColor: const Color.fromRGBO(254, 109, 115, 1),
           title: const Text(
-            'Nearest Hospital',
+            'Nearest Bloodpoints',
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
           automaticallyImplyLeading: false,
@@ -62,6 +70,21 @@ class _NearestHospitalState extends State<NearestHospital>
                 ),
                 MarkerLayer(
                   markers: [
+                    Marker(
+                      width: 50.0,
+                      height: 50.0,
+                      point: meLocation,
+                      builder: (ctx) => Container(
+                        child: const Icon(
+                          Icons.my_location_rounded,
+                          color: Color.fromARGB(255, 68, 68, 130),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+                MarkerLayer(
+                  markers: [
                     for (int i = 0; i < mapMarkers.length; i++)
                       Marker(
                         height: 40,
@@ -69,6 +92,7 @@ class _NearestHospitalState extends State<NearestHospital>
                         point:
                             mapMarkers[i].location ?? AppConstants.myLocation,
                         builder: (_) {
+                          //page animation
                           return GestureDetector(
                             onTap: () {
                               pageController.animateToPage(
@@ -77,11 +101,13 @@ class _NearestHospitalState extends State<NearestHospital>
                                 curve: Curves.easeInOut,
                               );
                               selectedIndex = i;
+                              //changing location according to page
                               currentLocation = mapMarkers[i].location ??
                                   AppConstants.myLocation;
-                              _animatedMapMove(currentLocation, 11.5);
+                              _animatedMapMove(currentLocation, 17);
                               setState(() {});
                             },
+                            //unselected makers scale and opacity
                             child: AnimatedScale(
                               duration: const Duration(milliseconds: 500),
                               scale: selectedIndex == i ? 1 : 0.7,
@@ -100,6 +126,18 @@ class _NearestHospitalState extends State<NearestHospital>
                 ),
               ],
             ),
+            //my location button
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+              child: ElevatedButton(
+                onPressed: _moveToTargetLocation,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color.fromRGBO(245, 243, 241, 1),
+                ),
+                child: const Icon(LineAwesomeIcons.search_location,
+                    color: Color.fromARGB(255, 68, 68, 130)),
+              ),
+            ),
             Positioned(
               left: 0,
               right: 0,
@@ -111,12 +149,13 @@ class _NearestHospitalState extends State<NearestHospital>
                   selectedIndex = value;
                   currentLocation =
                       mapMarkers[value].location ?? AppConstants.myLocation;
-                  _animatedMapMove(currentLocation, 11.5);
+                  _animatedMapMove(currentLocation, 17);
                   setState(() {});
                 },
                 itemCount: mapMarkers.length,
                 itemBuilder: (_, index) {
                   final item = mapMarkers[index];
+                  //location pages
                   return Padding(
                     padding: const EdgeInsets.all(15.0),
                     child: Card(
@@ -124,7 +163,7 @@ class _NearestHospitalState extends State<NearestHospital>
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      color: const Color.fromARGB(255, 253, 253, 253),
+                      color: const Color.fromRGBO(245, 243, 241, 1),
                       child: Row(
                         children: [
                           const SizedBox(width: 10),
@@ -200,20 +239,18 @@ class _NearestHospitalState extends State<NearestHospital>
     );
   }
 
+//Zoomin animation
   void _animatedMapMove(LatLng destLocation, double destZoom) {
-    // Create some tweens. These serve to split up the transition from one location to another.
-    // In our case, we want to split the transition be<tween> our current map center and the destination.
     final latTween = Tween<double>(
         begin: mapController.center.latitude, end: destLocation.latitude);
     final lngTween = Tween<double>(
         begin: mapController.center.longitude, end: destLocation.longitude);
     final zoomTween = Tween<double>(begin: mapController.zoom, end: destZoom);
 
-    // Create a animation controller that has a duration and a TickerProvider.
     var controller = AnimationController(
         duration: const Duration(milliseconds: 1000), vsync: this);
-    // The animation determines what path the animation will take. You can try different Curves values, although I found
-    // fastOutSlowIn to be my favorite.
+
+    // fastOutSlowIn.
     Animation<double> animation =
         CurvedAnimation(parent: controller, curve: Curves.fastOutSlowIn);
 

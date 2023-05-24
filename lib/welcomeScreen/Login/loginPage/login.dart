@@ -41,6 +41,7 @@ class LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
+// email text field
   Widget buildEmail() {
     return Material(
       elevation: 3.5,
@@ -78,6 +79,7 @@ class LoginPageState extends State<LoginPage> {
     );
   }
 
+// password field
   Widget buildPassword() {
     return Material(
       elevation: 3.5,
@@ -127,6 +129,7 @@ class LoginPageState extends State<LoginPage> {
     );
   }
 
+//forgot pass button
   Widget buildForgotPassword(BuildContext context) {
     return Container(
         alignment: Alignment.centerRight,
@@ -153,6 +156,7 @@ class LoginPageState extends State<LoginPage> {
         ));
   }
 
+// sign up button
   Widget signUp(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -201,6 +205,7 @@ class LoginPageState extends State<LoginPage> {
   //   );
   // }
 
+//Checking ? role -> user || admin
   void checkRole() async {
     try {
       User? user = FirebaseAuth.instance.currentUser;
@@ -235,6 +240,7 @@ class LoginPageState extends State<LoginPage> {
     }
   }
 
+// validation
   void signUserIn(String email, String password) async {
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
@@ -266,6 +272,7 @@ class LoginPageState extends State<LoginPage> {
     }
   }
 
+// validatons pop up
   void fill() {
     showDialog(
         context: context,

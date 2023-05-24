@@ -7,15 +7,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:get/get.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
-import '../../../model and utils/controller/data_controller.dart';
-import '../../../model and utils/controller/feed_controller.dart';
 import '../../../model and utils/utils/app_color.dart';
-import '../../../welcomeScreen/Login/loginPage/login.dart';
 
 import '../profile/update_profile_screen.dart';
 import '../profile/widgets/profile_features.dart/settings.dart';

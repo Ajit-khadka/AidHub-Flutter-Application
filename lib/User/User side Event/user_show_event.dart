@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, sized_box_for_whitespace, avoid_print
+// ignore_for_file: non_constant_identifier_names, sized_box_for_whitespace, avoid_print, unused_local_variable
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -11,6 +11,7 @@ import '../../model and utils/utils/app_color.dart';
 
 // import '../views/profile/add_profile.dart';
 
+//Events posted by Admin
 Widget UserEventsFeed() {
   DataController dataController = Get.find<DataController>();
 
@@ -28,6 +29,7 @@ Widget UserEventsFeed() {
         ));
 }
 
+// events details
 Widget buildCard(
     {String? image, text, Function? func, DocumentSnapshot? eventData}) {
   DataController dataController = Get.find<DataController>();
@@ -268,6 +270,8 @@ UserEventsIJoined() {
           const SizedBox(
             width: 0,
           ),
+
+          // end of event page
           const Text(
             'You\'re all caught up!',
             style: TextStyle(

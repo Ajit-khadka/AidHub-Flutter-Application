@@ -1,8 +1,9 @@
-// ignore_for_file: non_constant_identifier_names, sized_box_for_whitespace, avoid_print
+// ignore_for_file: non_constant_identifier_names, sized_box_for_whitespace, avoid_print, unused_local_variable
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 
 // import '../model/ticket_model.dart';
@@ -11,6 +12,9 @@ import '../../model and utils/controller/data_controller.dart';
 import '../../model and utils/utils/app_color.dart';
 import 'event_details.dart';
 // import '../views/profile/add_profile.dart';
+
+FirebaseAuth auth = FirebaseAuth.instance;
+FirebaseFirestore firestore = FirebaseFirestore.instance;
 
 Widget EventsFeed() {
   DataController dataController = Get.find<DataController>();
@@ -141,35 +145,15 @@ Widget buildCard(
                   InkWell(
                     //
                     onTap: () {
-                      if (eventSavedByUsers
-                          .contains(FirebaseAuth.instance.currentUser!.uid)) {
-                        FirebaseFirestore.instance
-                            .collection('events')
-                            .doc(eventData!.id)
-                            .set({
-                          'saves': FieldValue.arrayRemove(
-                              [FirebaseAuth.instance.currentUser!.uid])
-                        }, SetOptions(merge: true));
-                      } else {
-                        FirebaseFirestore.instance
-                            .collection('events')
-                            .doc(eventData!.id)
-                            .set({
-                          'saves': FieldValue.arrayUnion(
-                              [FirebaseAuth.instance.currentUser!.uid])
-                        }, SetOptions(merge: true));
-                      }
+                      deleteSelectedEvent(eventData);
                     },
                     child: Container(
-                      width: 16,
-                      height: 19,
+                      width: 22,
+                      height: 22,
                       child: Image.asset(
                         'images/delete.png',
                         fit: BoxFit.contain,
-                        color: eventSavedByUsers.contains(
-                                FirebaseAuth.instance.currentUser!.uid)
-                            ? const Color.fromRGBO(254, 109, 115, 1)
-                            : const Color.fromARGB(255, 68, 68, 130),
+                        color: const Color.fromARGB(255, 68, 68, 130),
                       ),
                     ),
                   ),
@@ -220,6 +204,32 @@ Widget buildCard(
   );
 }
 
+void deleteSelectedEvent(DocumentSnapshot? eventData) async {
+  User? user = auth.currentUser;
+  try {
+    if (user != null) {
+      DocumentSnapshot document =
+          await firestore.collection('events').doc(eventData!.id).get();
+      print(eventData.id);
+      String? creatorUid = document.get('uid');
+      if (creatorUid == user.uid) {
+        print(creatorUid);
+        print(user.uid);
+        await firestore.collection('events').doc(eventData.id).delete();
+        // Show a snackbar or navigate to a new page to confirm deletion
+        Fluttertoast.showToast(msg: "Post is Deleted");
+      } else {
+        Fluttertoast.showToast(msg: "You are not authorized!");
+      }
+    } else {
+      Fluttertoast.showToast(msg: "You are not authorized!");
+    }
+  } catch (e) {
+    Fluttertoast.showToast(msg: "Check your internet connnection");
+    print(e);
+  }
+}
+
 EventItem(DocumentSnapshot event) {
   DataController dataController = Get.find<DataController>();
 
@@ -246,35 +256,6 @@ EventItem(DocumentSnapshot event) {
 
   return Column(
     children: [
-      // Row(
-      //   children: [
-      //     const SizedBox(
-      //       width: 23,
-      //       height: 60,
-      //     ),
-      //     InkWell(
-      //       onTap: () {
-      //         // Get.to(() => ProfileScreen());
-      //       },
-      //       child: CircleAvatar(
-      //         radius: 25,
-      //         backgroundColor: Colors.white,
-      //         backgroundImage: NetworkImage(image),
-      //       ),
-      //     ),
-      //     const SizedBox(
-      //       width: 10,
-      //     ),
-      //     Text(
-      //       '${user.get('username')}',
-      //       style: const TextStyle(
-      //         fontSize: 20,
-      //         fontWeight: FontWeight.bold,
-      //         color: Color.fromARGB(255, 68, 68, 130),
-      //       ),
-      //     ),
-      //   ],
-      // ),
       SizedBox(
         height: Get.height * 0.01,
       ),
@@ -422,10 +403,9 @@ EventsIJoined() {
                                 child: Row(
                                   children: [
                                     Container(
-                                      width: 41, height: 24,
+                                      width: 41,
+                                      height: 24,
                                       alignment: Alignment.center,
-                                      // padding: EdgeInsets.symmetric(
-                                      //     horizontal: 10, vertical: 7),
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(4),
                                         border: Border.all(

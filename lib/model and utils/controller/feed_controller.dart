@@ -24,36 +24,6 @@ class FeedController extends GetxController {
   var isEventsLoading = false.obs;
 
   var isMessageSending = false.obs;
-  // sendMessageToFirebase(
-  //     {Map<String, dynamic>? data, String? lastMessage, String? grouid}) async {
-  //   isMessageSending(true);
-
-  //   await FirebaseFirestore.instance
-  //       .collection('chats')
-  //       .doc(grouid)
-  //       .collection('chatroom')
-  //       .add(data!);
-  //   await FirebaseFirestore.instance.collection('chats').doc(grouid).set({
-  //     'lastMessage': lastMessage,
-  //     'groupId': grouid,
-  //     'group': grouid!.split('-'),
-  //   }, SetOptions(merge: true));
-
-  //   isMessageSending(false);
-  // }
-
-  // createNotification(String recUid) {
-  //   FirebaseFirestore.instance
-  //       .collection('notifications')
-  //       .doc(recUid)
-  //       .collection('myNotifications')
-  //       .add({
-  //     // 'message': "Send you a message.",
-  //     'image': myDocument!.get('image'),
-  //     'name': myDocument!.get('username'),
-  //     'time': DateTime.now()
-  //   });
-  // }
 
   getMyDocument() {
     try {
@@ -146,12 +116,6 @@ class FeedController extends GetxController {
         .listen((event) {
       allEvents.assignAll(event.docs);
       filteredEvents.assignAll(event.docs);
-
-      // joinedEvents.value = allEvents.where((e) {
-      //   List joinedIds = e.get('joined');
-
-      //   return joinedIds.contains(FirebaseAuth.instance.currentUser!.uid);
-      // }).toList();
 
       isEventsLoading(false);
     });

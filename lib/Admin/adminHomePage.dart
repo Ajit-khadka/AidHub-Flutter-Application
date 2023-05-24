@@ -7,13 +7,12 @@ import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
 import '../User/Homepage/Message/messagehome.dart';
 import '../User/Homepage/Nav/nearest_hospital.dart';
-import '../User/Homepage/Nav/request.dart';
 
 import '../model and utils/controller/data_controller.dart';
 import '../model and utils/controller/feed_controller.dart';
 import 'Admin_nav/adminProfile.dart';
 import 'Admin_nav/admin_Event.dart';
-import 'Admin_nav/admin_hospitafeed.dart';
+import 'Admin_nav/admin_hospitalfeed.dart';
 
 class AdminHomePage extends StatefulWidget {
   const AdminHomePage({super.key});

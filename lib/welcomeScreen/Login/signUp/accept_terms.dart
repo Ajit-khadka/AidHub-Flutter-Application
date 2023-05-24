@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../loginPage/login.dart';
 import 'register.dart';
 
+//Terms and Condition page
 class Terms extends StatefulWidget {
   const Terms({super.key});
 
@@ -31,7 +32,7 @@ class _TermsState extends State<Terms> {
           padding: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
           child: Column(children: [
             Text(
-              "  Blood Bank Updates ",
+              "  Aid Hub Updates ",
               style: TextStyle(
                 color: Color.fromARGB(255, 68, 68, 130),
                 fontSize: 22,
@@ -44,8 +45,7 @@ class _TermsState extends State<Terms> {
               height: 30,
             ),
             const Text(
-              // "By Agreeing, you have accepted Blood Bank's updated Terms of Use and Privacy Policy.
-              "Blood Bank will use your data in the ways outlined in our Terms of Use and Privacy Policy. Blood Bank uses donation terms of Nepal Red Cross Society. If you Disagree, you cannot access Blood Bank's features. \n\nTerms and policy can be changed accordingly when breaches are found in system, However, User can lose their data and cannot change thier password if either :  \n\n 1. Deletes thier account \n2. Deletes their Email.",
+              "Aid Hub will use your data in the ways outlined in our Terms of Use and Privacy Policy. Aid Hub uses donation terms of Nepal Red Cross Society. If you Disagree, you cannot access Aid Hub's features. \n\nTerms and policy can be changed accordingly when breaches are found in system, However, User can lose their data and cannot change thier password if either :  \n\n 1. Deletes their account \n2. Deletes their Email.",
               textAlign: TextAlign.justify,
               style: TextStyle(
                 fontSize: 16,

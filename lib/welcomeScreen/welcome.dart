@@ -1,11 +1,9 @@
-
 import 'package:blood_bank/main_page.dart';
 import 'package:flutter/material.dart';
 
 import 'Login/loginPage/login.dart';
 
-
-
+//welcome page
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
 
@@ -25,7 +23,7 @@ class WelcomeScreen extends StatelessWidget {
               height: 80,
             ),
             const Text(
-              "  Welcome To Blood Bank  ",
+              "  Welcome To Aid Hub  ",
               style: TextStyle(
                 color: Color.fromARGB(255, 68, 68, 130),
                 fontSize: 20,
@@ -60,7 +58,7 @@ class WelcomeScreen extends StatelessWidget {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: ((context) {
-                        return MainPage();
+                        return const MainPage();
                       }),
                     ),
                   );

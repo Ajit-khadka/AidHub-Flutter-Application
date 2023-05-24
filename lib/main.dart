@@ -4,11 +4,10 @@ import 'package:blood_bank/firebase_options.dart';
 import 'package:blood_bank/main_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+
 import 'package:flutter_notification_channel/flutter_notification_channel.dart';
 import 'package:flutter_notification_channel/notification_importance.dart';
 import 'package:get/get.dart';
-
-//global object for accessing device screen size
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,10 +31,11 @@ class MyApp extends StatelessWidget {
           fontFamily: 'Poppins',
         ),
         title: 'Blood Bank',
-        home: MainPage());
+        home: const MainPage());
   }
 }
 
+// for notification
 _initializeFirebase() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 

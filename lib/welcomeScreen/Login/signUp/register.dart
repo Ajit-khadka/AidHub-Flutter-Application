@@ -52,6 +52,7 @@ Widget text(BuildContext context) {
 class Register extends State<SignIn> {
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
 
+//conditions? Validation
   String? requiredPass(value) {
     if (value.length < 6) {
       return "Minimum 6 digit";
@@ -104,6 +105,7 @@ class Register extends State<SignIn> {
 
   String? errorMessage;
 
+//condition? hide -> icon PW
   var _isObscured;
   var _isObscured1;
 
@@ -127,7 +129,6 @@ class Register extends State<SignIn> {
               Navigator.of(context).pop();
             },
           )),
-      //resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 0, horizontal: 40),
@@ -369,6 +370,7 @@ class Register extends State<SignIn> {
     );
   }
 
+//email validation
   Future register(String email, String password) async {
     if (formkey.currentState!.validate()) {
       try {
@@ -428,6 +430,7 @@ class Register extends State<SignIn> {
         .set(userModel.toMap());
     Fluttertoast.showToast(msg: "Account created successfully :) ");
 
+//go through removing previous routes
     Navigator.pushAndRemoveUntil(
         (context),
         MaterialPageRoute(builder: (context) => VerifyEmail()),

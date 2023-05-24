@@ -1,4 +1,4 @@
-// ignore_for_file: sized_box_for_whitespace, use_build_context_synchronously, no_leading_underscores_for_local_identifiers, avoid_print, non_constant_identifier_names, unused_import
+// ignore_for_file: sized_box_for_whitespace, use_build_context_synchronously, no_leading_underscores_for_local_identifiers, avoid_print, non_constant_identifier_names, unused_import, unnecessary_null_comparison
 
 import 'dart:async';
 import 'dart:io';
@@ -13,7 +13,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
-import 'package:video_thumbnail/video_thumbnail.dart';
 
 import '../../model and utils/controller/data_controller.dart';
 import '../../model and utils/model/event_model.dart';
@@ -496,6 +495,13 @@ class _CreateEventViewState extends State<CreateEventView> {
                                 backgroundColor:
                                     const Color.fromRGBO(254, 109, 115, 1));
                           }
+                          if (RegExp(r'\d+').hasMatch(input)) {
+                            Get.snackbar('Opps', "Only Number can be entered",
+                                colorText:
+                                    const Color.fromARGB(255, 255, 255, 255),
+                                backgroundColor:
+                                    const Color.fromRGBO(254, 109, 115, 1));
+                          }
                           return null;
                         }),
                   ],
@@ -783,35 +789,6 @@ class _CreateEventViewState extends State<CreateEventView> {
     setState(() {});
     Navigator.pop(context);
   }
-
-  // getVideoDialog(ImageSource source) async {
-  //   final ImagePicker _picker = ImagePicker();
-  //   // Pick an image
-  //   final XFile? video = await _picker.pickVideo(
-  //     source: source,
-  //   );
-
-  //   if (video != null) {
-  //     // media.add(File(image.path));
-
-  //     Uint8List? uint8list = await VideoThumbnail.thumbnailData(
-  //       video: video.path,
-  //       imageFormat: ImageFormat.JPEG,
-  //       quality: 75,
-  //     );
-
-  //     media.add(EventMediaModel(
-  //         thumbnail: uint8list!, video: File(video.path), isVideo: true));
-  //     // thumbnail.add(uint8list!);
-  //     //
-  //     // isImage.add(false);
-  //   }
-
-  //   // print(thumbnail.first.path);
-  //   setState(() {});
-
-  //   Navigator.pop(context);
-  // }
 
   void imageDialog(BuildContext context, bool image) {
     showDialog(

@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'welcomeScreen/Login/verification/verify_email.dart';
 
 class MainPage extends StatefulWidget {
-  MainPage({Key? key}) : super(key: key);
+  const MainPage({Key? key}) : super(key: key);
 
   @override
   State<MainPage> createState() => _MainPageState();
@@ -21,7 +21,6 @@ class _MainPageState extends State<MainPage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   String role = '...';
-
   String uid = '';
 
   @override
@@ -30,6 +29,7 @@ class _MainPageState extends State<MainPage> {
     getData();
   }
 
+// fetching role from firebase
   Future<void> getData() async {
     User? user = _auth.currentUser;
     uid = user!.uid;
@@ -48,6 +48,7 @@ class _MainPageState extends State<MainPage> {
     }
   }
 
+// Auto-login if user is signed in
   @override
   Widget build(BuildContext context) {
     return Scaffold(

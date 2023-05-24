@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'package:latlong2/latlong.dart';
 
 class AppConstants {
@@ -7,5 +9,5 @@ class AppConstants {
   static const String mapBoxStyleId =
       'mapbox://styles/ajit-khadka/clh8usimy00xx01p6b93ub51r';
 
-  static final myLocation = LatLng(51.5090214, -0.1982948);
+  static final myLocation = LatLng(27.71243221330561, 85.3308689710242);
 }

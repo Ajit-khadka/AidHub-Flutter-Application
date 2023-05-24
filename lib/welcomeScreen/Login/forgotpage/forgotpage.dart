@@ -74,13 +74,11 @@ class Recover extends State<ForgotPass> {
               Navigator.of(context).pop();
             },
           )),
-      //  resizeToAvoidBottomInset: false,
       body: SingleChildScrollView(
         child: Padding(
             padding: const EdgeInsets.all(40),
             child: Center(
               child: Form(
-                //autovalidateMode: AutovalidateMode.onUserInteraction,
                 key: formkey,
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -88,6 +86,7 @@ class Recover extends State<ForgotPass> {
                       SizedBox(
                         height: 150,
                       ),
+                      // email text field
                       text(context),
                       TextFormField(
                         keyboardType: TextInputType.emailAddress,

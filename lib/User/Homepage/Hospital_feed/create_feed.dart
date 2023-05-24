@@ -1,4 +1,4 @@
-// ignore_for_file: sized_box_for_whitespace, use_build_context_synchronously, no_leading_underscores_for_local_identifiers, avoid_print, non_constant_identifier_names, unused_import
+// ignore_for_file: sized_box_for_whitespace, use_build_context_synchronously, no_leading_underscores_for_local_identifiers, avoid_print, non_constant_identifier_names, unused_import, unused_element, unused_local_variable
 
 import 'dart:async';
 import 'dart:io';
@@ -14,7 +14,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
-import 'package:video_thumbnail/video_thumbnail.dart';
 import '../../../model and utils/controller/feed_controller.dart';
 import '../../../model and utils/model/feed_model.dart';
 import '../../../model and utils/utils/app_color.dart';
@@ -32,26 +31,18 @@ class _CreateFeedState extends State<CreateFeedView> {
 
   TextEditingController dateController = TextEditingController();
   TextEditingController timeController = TextEditingController();
-  // TextEditingController titleController = TextEditingController();
-  // TextEditingController locationController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
-  // TextEditingController maxEntries = TextEditingController();
   TextEditingController endTimeController = TextEditingController();
   TextEditingController startTimeController = TextEditingController();
   TimeOfDay startTime = const TimeOfDay(hour: 0, minute: 0);
   TimeOfDay endTime = const TimeOfDay(hour: 0, minute: 0);
 
-  var selectedFrequency = -2;
+  // var selectedFrequency = -2;
 
   void resetControllers() {
     dateController.clear();
     timeController.clear();
-    // titleController.clear();
-    // locationController.clear();
     descriptionController.clear();
-    // maxEntries.clear();
-    // endTimeController.clear();
-    // startTimeController.clear();
 
     setState(() {});
   }
@@ -482,35 +473,6 @@ class _CreateFeedState extends State<CreateFeedView> {
     Navigator.pop(context);
   }
 
-  getVideoDialog(ImageSource source) async {
-    final ImagePicker _picker = ImagePicker();
-    // Pick an image
-    final XFile? video = await _picker.pickVideo(
-      source: source,
-    );
-
-    if (video != null) {
-      // media.add(File(image.path));
-
-      Uint8List? uint8list = await VideoThumbnail.thumbnailData(
-        video: video.path,
-        imageFormat: ImageFormat.JPEG,
-        quality: 75,
-      );
-
-      media.add(FeedMediaModel(
-          thumbnail: uint8list!, video: File(video.path), isVideo: true));
-      // thumbnail.add(uint8list!);
-      //
-      // isImage.add(false);
-    }
-
-    // print(thumbnail.first.path);
-    setState(() {});
-
-    Navigator.pop(context);
-  }
-
   void imageDialog(BuildContext context, bool image) {
     showDialog(
         builder: (BuildContext context) {
@@ -524,7 +486,8 @@ class _CreateFeedState extends State<CreateFeedView> {
                       if (image) {
                         getImageDialog(ImageSource.gallery);
                       } else {
-                        getVideoDialog(ImageSource.gallery);
+                        Fluttertoast.showToast(
+                            msg: "Please try again later ! ");
                       }
                     },
                     icon: const Icon(Icons.image)),
@@ -533,7 +496,8 @@ class _CreateFeedState extends State<CreateFeedView> {
                       if (image) {
                         getImageDialog(ImageSource.camera);
                       } else {
-                        getVideoDialog(ImageSource.camera);
+                        Fluttertoast.showToast(
+                            msg: "Please try again later ! ");
                       }
                     },
                     icon: const Icon(Icons.camera_alt)),

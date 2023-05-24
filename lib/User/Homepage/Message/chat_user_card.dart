@@ -1,5 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../../model and utils/model/chat_user.dart';
@@ -63,7 +61,7 @@ class _ChatUserCardState extends State<ChatUserCard> {
                     ),
                     title: Text(widget.user.username),
                     subtitle: Text(
-                      widget.user.bloodType,
+                      widget.user.status,
                       maxLines: 1,
                     ),
                     trailing: _message == null
@@ -74,7 +72,7 @@ class _ChatUserCardState extends State<ChatUserCard> {
                                 width: 15,
                                 height: 15,
                                 decoration: BoxDecoration(
-                                    color: Colors.greenAccent.shade400,
+                                    color: const Color.fromARGB(255, 252, 2, 2),
                                     borderRadius: BorderRadius.circular(10)),
                               )
 
@@ -86,6 +84,6 @@ class _ChatUserCardState extends State<ChatUserCard> {
                               ));
               })),
     );
-    {}
+   
   }
 }

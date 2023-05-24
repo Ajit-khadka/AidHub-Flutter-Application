@@ -1,6 +1,5 @@
-// ignore_for_file: use_build_context_synchronously, avoid_print
+// ignore_for_file: use_build_context_synchronously, avoid_print, avoid_function_literals_in_foreach_calls
 
-import 'package:blood_bank/User/Homepage/Nav/profile_screen.dart';
 import 'package:blood_bank/User/Homepage/home_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -225,8 +224,10 @@ class _SettingProfileState extends State<SettingProfile> {
   }
 }
 
+//logging out
 Future<void> logout(BuildContext context) async {
   await FirebaseAuth.instance.signOut();
+  //clear path
   Get.delete<DataController>(force: true);
   Get.delete<FeedController>(force: true);
   // Get.delete<HomeController>(force: true);

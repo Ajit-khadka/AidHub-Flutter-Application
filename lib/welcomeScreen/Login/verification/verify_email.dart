@@ -40,6 +40,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
     super.dispose();
   }
 
+//verifed?
   Future checkEmailVerified() async {
     await FirebaseAuth.instance.currentUser!.reload();
     setState(() {
@@ -49,6 +50,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
     if (isEmailVerified) timer?.cancel();
   }
 
+//send -> email verification
   Future sendVerificationEmail() async {
     try {
       final user = FirebaseAuth.instance.currentUser!;
@@ -62,6 +64,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
     }
   }
 
+// frontend and ?
   @override
   Widget build(BuildContext context) => isEmailVerified
       ? const HomePage()

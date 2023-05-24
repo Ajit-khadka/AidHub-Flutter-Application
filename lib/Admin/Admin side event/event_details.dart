@@ -1,14 +1,10 @@
-// ignore_for_file: must_be_immutable, library_private_types_in_public_api, sized_box_for_whitespace, avoid_unnecessary_containers
+// ignore_for_file: must_be_immutable, library_private_types_in_public_api, sized_box_for_whitespace, avoid_unnecessary_containers, unused_local_variable, no_leading_underscores_for_local_identifiers
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:line_awesome_flutter/line_awesome_flutter.dart';
-
-// import '../check_out/check_out_screen.dart';
-
-// import '../invite_guest/invite_guest_screen.dart';
 
 import '../../model and utils/controller/data_controller.dart';
 import '../../model and utils/utils/app_color.dart';
@@ -26,7 +22,7 @@ class EventPageView extends StatefulWidget {
 class _EventPageViewState extends State<EventPageView> {
   DataController dataController = Get.find<DataController>();
 
-  List eventSavedByUsers = [];
+  // List eventSavedByUsers = [];
 
   @override
   Widget build(BuildContext context) {
@@ -56,26 +52,26 @@ class _EventPageViewState extends State<EventPageView> {
       joinedUsers = [];
     }
 
-    int likes = 0;
-    int comments = 20;
+    // int likes = 0;
+    // int comments = 20;
 
-    try {
-      likes = widget.eventData.get('likes').length;
-    } catch (e) {
-      likes = 0;
-    }
+    // try {
+    //   likes = widget.eventData.get('likes').length;
+    // } catch (e) {
+    //   likes = 0;
+    // }
 
-    try {
-      comments = widget.eventData.get('comments').length;
-    } catch (e) {
-      comments = 0;
-    }
+    // try {
+    //   comments = widget.eventData.get('comments').length;
+    // } catch (e) {
+    //   comments = 0;
+    // }
 
-    try {
-      eventSavedByUsers = widget.eventData.get('saves');
-    } catch (e) {
-      eventSavedByUsers = [];
-    }
+    // try {
+    //   eventSavedByUsers = widget.eventData.get('saves');
+    // } catch (e) {
+    //   eventSavedByUsers = [];
+    // }
 
     return Scaffold(
       appBar: AppBar(
@@ -306,8 +302,59 @@ class _EventPageViewState extends State<EventPageView> {
                   ),
                   Expanded(
                     child: InkWell(
-                      onTap: () {
-                        Get.off(() => CheckOutView(widget.eventData));
+                      onTap: () async {
+                        String uid = "";
+                        String eventId = "";
+                        int max = 0;
+                        DocumentSnapshot? eventDoc;
+
+                        max = widget.eventData.get('max_entries');
+                        List<String> joined =
+                            List.from(widget.eventData.get('joined'));
+                        // print(joined);
+
+                        // log(max);
+
+                        final FirebaseAuth _auth = FirebaseAuth.instance;
+                        User? user = _auth.currentUser;
+                        uid = user!.uid;
+                        debugPrint(uid);
+                        eventDoc = widget.eventData;
+                        eventId = eventDoc.id;
+                        debugPrint(eventId);
+
+                        // joined? -> yes - leave || no - join  || full - msg
+
+                        try {
+                          if (joined.contains(uid)) {
+                            // Fluttertoast.showToast(msg: "Sorry, You are here");
+                            joined.remove(uid);
+                            await FirebaseFirestore.instance
+                                .collection('events')
+                                .doc(eventId)
+                                .update({'joined': joined})
+                                .then((value) => Fluttertoast.showToast(
+                                    msg: "You left the Event"))
+                                .catchError((onError) => Fluttertoast.showToast(
+                                    msg: "Check your internet connection!"));
+                            FirebaseFirestore.instance
+                                .collection('events')
+                                .doc(eventId)
+                                .update(
+                                    {'max_entries': FieldValue.increment(1)});
+                            Get.back();
+                          } else if (max <= 0) {
+                            Fluttertoast.showToast(
+                                msg: "Sorry, Entires are full");
+                            // Get.back();
+                          } else {
+                            Get.off(() => CheckOutView(widget.eventData));
+                          }
+                        } catch (e) {
+                          Fluttertoast.showToast(
+                              msg: "Check your internet connection!");
+                          // print(e);
+                        }
                       },
                       child: Container(
                         height: 50,
