@@ -1,6 +1,6 @@
-# blood_bank
+# Aid_Hub
 
-A new Flutter project.
+Help post application contains user registration,feed page, messaging, map(map box), event page, profile
 
 ## Getting Started
 
